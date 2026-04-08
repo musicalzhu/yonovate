@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32控制中心 - 状态转移</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>ESP32控制中心 - 状态转移</h1>
+        
+        <div class="navigation">
+            <a href="../index.html" class="nav-button">返回主页</a>
+            <a href="gpio_control.html" class="nav-button">GPIO控制</a>
+            <a href="logic_circuit.html" class="nav-button">逻辑电路</a>
+        </div>
+
+        <div class="ip-config">
+            <label for="esp32-ip">ESP32 IP Address: </label>
+            <input type="text" id="esp32-ip" placeholder="例如: 192.168.1.100">
+            <button class="test-btn" onclick="testConnection()">Test Connection</button>
+            <div id="connection-status" class="status"></div>
+            <p style="color: #666; font-style: italic; margin-top: 10px;">注意：此界面可在离线环境中运行，但需要连接到ESP32设备才能控制状态转移。</p>
+        </div>
+
+        <div class="controls">
+            <button class="sync-btn" onclick="syncConfigToESP()">同步配置到ESP32</button>
+            <button class="btn-danger" onclick="clearAllConfig()" style="margin-left: 10px;">清空所有配置</button>
+            <div id="sync-status" class="status"></div>
+        </div>
+
+        <!-- 配置输入源 -->
+        <div class="section">
+            <div class="section-title">1. 配置输入源</div>
+            <div>
+                <label>选择输入类型: </label>
+                <select id="input-type-select">
+                    <option value="gpio">GPIO组</option>
+                    <option value="timer">计时器</option>
+                </select>
+            </div>
+            
+            <!-- GPIO组选择区域 -->
+            <div id="gpio-input-section" style="margin-top: 10px;">
+                <label>选择GPIO组: </label>
+                <select id="input-group-select">
+                    <option value="0">GPIO 组 0 (GPIO 13, 12)</option>
+                    <option value="1">GPIO 组 1 (GPIO 15, 2)</option>
+                    <option value="2">GPIO 组 2 (GPIO 26, 25)</option>
+                    <option value="3">GPIO 组 3 (GPIO 27, 14)</option>
+                    <option value="4">E1 (AW9523)</option>
+                    <option value="5">E2 (AW9523)</option>
+                    <option value="6">E3 (AW9523)</option>
+                    <option value="7">E4 (AW9523)</option>
+                    <option value="8">E5 (AW9523)</option>
+                    <option value="9">E6 (AW9523)</option>
+                    <option value="10">E7 (AW9523)</option>
+                    <option value="11">E8 (AW9523)</option>
+                </select>
+                <label style="margin-left: 10px;">模块类型: </label>
+                <select id="input-module-type">
+                    <option value="button">普通按键（默认高电平）</option>
+                    <option value="led_button">带灯按键（默认低电平）</option>
+                </select>
+                <button class="btn-primary" onclick="addInputGroup()">添加GPIO输入组</button>
+            </div>
+            
+            <!-- 计时器配置区域 -->
+            <div id="timer-input-section" style="margin-top: 10px; display: none;">
+                <label>选择计时器名称: </label>
+                <select id="timer-name">
+                    <option value="1">计时器1</option>
+                    <option value="2">计时器2</option>
+                    <option value="3">计时器3</option>
+                    <option value="4">计时器4</option>
+                    <option value="5">计时器5</option>
+                </select>
+                <button class="btn-primary" onclick="addTimerInput()">添加计时器</button>
+            </div>
+            
+            <table id="input-groups-table">
+                <thead>
+                    <tr>
+                        <th>类型</th>
+                        <th>名称/组号</th>
+                        <th>模块类型</th>
+                        <th>当前状态</th>
+                        <th>下一状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 动态添加行 -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 状态关联输出配置 -->
+        <div class="state-machine-section">
+            <h2>状态关联输出配置</h2>
+            <div class="table-container">
+                <table id="state-output-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>状态名称</th>
+                            <th>输出类型</th>
+                            <th>模块类型</th>
+                            <th>目标</th>
+                            <th>输出值</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 表格行将通过JavaScript动态生成 -->
+                    </tbody>
+                </table>
+            </div>
+            <button class="add-btn" onclick="addStateOutput()">添加输出</button>
+        </div>
+
+        <!-- 模拟GPIO输入控制面板 -->
+        <div class="gpio-simulation">
+            <h2>GPIO输入模拟</h2>
+            <p>使用以下开关模拟GPIO输入状态变化，触发状态转移</p>
+            <div class="gpio-simulation-grid">
+                <div class="gpio-simulation-item">
+                    <label for="gpio-sim-0">GPIO组 0: </label>
+                    <label class="small-switch">
+                        <input type="checkbox" id="gpio-sim-0" onchange="simulateGPIOChange(0, this.checked)">
+                        <span class="small-slider"></span>
+                    </label>
+                    <span id="gpio-sim-0-status" class="gpio-status">未触发</span>
+                </div>
+                <div class="gpio-simulation-item">
+                    <label for="gpio-sim-1">GPIO组 1: </label>
+                    <label class="small-switch">
+                        <input type="checkbox" id="gpio-sim-1" onchange="simulateGPIOChange(1, this.checked)">
+                        <span class="small-slider"></span>
+                    </label>
+                    <span id="gpio-sim-1-status" class="gpio-status">未触发</span>
+                </div>
+                <div class="gpio-simulation-item">
+                    <label for="gpio-sim-2">GPIO组 2: </label>
+                    <label class="small-switch">
+                        <input type="checkbox" id="gpio-sim-2" onchange="simulateGPIOChange(2, this.checked)">
+                        <span class="small-slider"></span>
+                    </label>
+                    <span id="gpio-sim-2-status" class="gpio-status">未触发</span>
+                </div>
+                <div class="gpio-simulation-item">
+                    <label for="gpio-sim-3">GPIO组 3: </label>
+                    <label class="small-switch">
+                        <input type="checkbox" id="gpio-sim-3" onchange="simulateGPIOChange(3, this.checked)">
+                        <span class="small-slider"></span>
+                    </label>
+                    <span id="gpio-sim-3-status" class="gpio-status">未触发</span>
+                </div>
+                <div class="gpio-simulation-item">
+                    <label for="gpio-sim-4">E1 (AW9523): </label>
+                    <label class="small-switch">
+                        <input type="checkbox" id="gpio-sim-4" onchange="simulateGPIOChange(4, this.checked)">
+                        <span class="small-slider"></span>
+                    </label>
+                    <span id="gpio-sim-4-status" class="gpio-status">未触发</span>
+                </div>
+                <div class="gpio-simulation-item">
+                    <label for="gpio-sim-5">E2 (AW9523): </label>
+                    <label class="small-switch">
+                        <input type="checkbox" id="gpio-sim-5" onchange="simulateGPIOChange(5, this.checked)">
+                        <span class="small-slider"></span>
+                    </label>
+                    <span id="gpio-sim-5-status" class="gpio-status">未触发</span>
+                </div>
+                <div class="gpio-simulation-item">
+                    <label for="gpio-sim-6">E3 (AW9523): </label>
+                    <label class="small-switch">
+                        <input type="checkbox" id="gpio-sim-6" onchange="simulateGPIOChange(6, this.checked)">
+                        <span class="small-slider"></span>
+                    </label>
+                    <span id="gpio-sim-6-status" class="gpio-status">未触发</span>
+                </div>
+                <div class="gpio-simulation-item">
+                    <label for="gpio-sim-7">E4 (AW9523): </label>
+                    <label class="small-switch">
+                        <input type="checkbox" id="gpio-sim-7" onchange="simulateGPIOChange(7, this.checked)">
+                        <span class="small-slider"></span>
+                    </label>
+                    <span id="gpio-sim-7-status" class="gpio-status">未触发</span>
+                </div>
+                <div class="gpio-simulation-item">
+                    <label for="gpio-sim-8">E5 (AW9523): </label>
+                    <label class="small-switch">
+                        <input type="checkbox" id="gpio-sim-8" onchange="simulateGPIOChange(8, this.checked)">
+                        <span class="small-slider"></span>
+                    </label>
+                    <span id="gpio-sim-8-status" class="gpio-status">未触发</span>
+                </div>
+                <div class="gpio-simulation-item">
+                    <label for="gpio-sim-9">E6 (AW9523): </label>
+                    <label class="small-switch">
+                        <input type="checkbox" id="gpio-sim-9" onchange="simulateGPIOChange(9, this.checked)">
+                        <span class="small-slider"></span>
+                    </label>
+                    <span id="gpio-sim-9-status" class="gpio-status">未触发</span>
+                </div>
+                <div class="gpio-simulation-item">
+                    <label for="gpio-sim-10">E7 (AW9523): </label>
+                    <label class="small-switch">
+                        <input type="checkbox" id="gpio-sim-10" onchange="simulateGPIOChange(10, this.checked)">
+                        <span class="small-slider"></span>
+                    </label>
+                    <span id="gpio-sim-10-status" class="gpio-status">未触发</span>
+                </div>
+                <div class="gpio-simulation-item">
+                    <label for="gpio-sim-11">E8 (AW9523): </label>
+                    <label class="small-switch">
+                        <input type="checkbox" id="gpio-sim-11" onchange="simulateGPIOChange(11, this.checked)">
+                        <span class="small-slider"></span>
+                    </label>
+                    <span id="gpio-sim-11-status" class="gpio-status">未触发</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 状态机控制 -->
+        <div class="state-machine-control">
+            <h2>状态机控制</h2>
+            <div class="control-group">
+                <label for="initial-state">初始状态: </label>
+                <select id="initial-state">
+                    <option value="">请选择初始状态</option>
+                    <!-- 状态选项将通过JavaScript动态生成 -->
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="current-state-display">当前状态: </label>
+                <div id="current-state-display" class="state-display">未启动</div>
+            </div>
+            <button class="start-btn" onclick="startStateMachine()">启动状态机</button>
+            <button class="stop-btn" onclick="stopStateMachine()">停止状态机</button>
+            <button class="reset-btn" onclick="resetStateMachine()">重置状态机</button>
+        </div>
+    </div>
+
+    <script src="../js/state_machine.js"></script>
+</body>
+</html>

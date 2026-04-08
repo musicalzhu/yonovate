@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32控制中心 - GPIO控制</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>ESP32控制中心 - GPIO控制</h1>
+        
+        <div class="navigation">
+            <a href="../index.html" class="nav-button">返回主页</a>
+            <a href="logic_circuit.html" class="nav-button">逻辑电路</a>
+        </div>
+
+        <div class="ip-config">
+            <label for="esp32-ip">ESP32 IP Address: </label>
+            <input type="text" id="esp32-ip" placeholder="例如: 192.168.1.100">
+            <button class="test-btn" onclick="testConnection()">Test Connection</button>
+            <div id="connection-status" class="status"></div>
+            <p style="color: #666; font-style: italic; margin-top: 10px;">注意：此界面可在离线环境中运行，但需要连接到ESP32设备才能控制GPIO。</p>
+        </div>
+
+        <div class="controls">
+            <button class="sync-btn" onclick="syncConfigToESP()">同步配置到ESP32</button>
+            <div id="sync-status" class="status"></div>
+        </div>
+
+        <div id="gpio-controls-container">
+            <!-- GPIO组0 -->
+                        <!-- GPIO组0 -->
+            <div class="gpio-control">
+                <div class="gpio-title">GPIO 组 0 (GPIO 13, 12)</div>
+                <div id="mode_group_0" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_0_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_0_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>GPIO 13</div>
+                        <div class="state-display" id="state_group_0_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_0_0" onchange="setGPIOState(0, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_0_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>GPIO 12</div>
+                        <div class="state-display" id="state_group_0_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_0_1" onchange="setGPIOState(0, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_0_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- GPIO组1 -->
+            <div class="gpio-control">
+                <div class="gpio-title">GPIO 组 1 (GPIO 15, 2)</div>
+                <div id="mode_group_1" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_1_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_1_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>GPIO 15</div>
+                        <div class="state-display" id="state_group_1_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_1_0" onchange="setGPIOState(1, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_1_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>GPIO 2</div>
+                        <div class="state-display" id="state_group_1_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_1_1" onchange="setGPIOState(1, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_1_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- GPIO组2 -->
+            <div class="gpio-control">
+                <div class="gpio-title">GPIO 组 2 (GPIO 26, 25)</div>
+                <div id="mode_group_2" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_2_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_2_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>GPIO 26</div>
+                        <div class="state-display" id="state_group_2_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_2_0" onchange="setGPIOState(2, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_2_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>GPIO 25</div>
+                        <div class="state-display" id="state_group_2_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_2_1" onchange="setGPIOState(2, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_2_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- GPIO组3 -->
+            <div class="gpio-control">
+                <div class="gpio-title">GPIO 组 3 (GPIO 27, 14)</div>
+                <div id="mode_group_3" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_3_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_3_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>GPIO 27</div>
+                        <div class="state-display" id="state_group_3_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_3_0" onchange="setGPIOState(3, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_3_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>GPIO 14</div>
+                        <div class="state-display" id="state_group_3_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_3_1" onchange="setGPIOState(3, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_3_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E1 (组4) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E1 (AW9523)</div>
+                <div id="mode_group_4" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_4_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_4_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E1</div>
+                        <div class="state-display" id="state_group_4_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_4_0" onchange="setGPIOState(4, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_4_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E1 (镜像)</div>
+                        <div class="state-display" id="state_group_4_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_4_1" onchange="setGPIOState(4, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_4_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E2 (组5) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E2 (AW9523)</div>
+                <div id="mode_group_5" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_5_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_5_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E2</div>
+                        <div class="state-display" id="state_group_5_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_5_0" onchange="setGPIOState(5, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_5_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E2 (镜像)</div>
+                        <div class="state-display" id="state_group_5_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_5_1" onchange="setGPIOState(5, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_5_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E3 (组6) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E3 (AW9523)</div>
+                <div id="mode_group_6" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_6_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_6_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E3</div>
+                        <div class="state-display" id="state_group_6_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_6_0" onchange="setGPIOState(6, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_6_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E3 (镜像)</div>
+                        <div class="state-display" id="state_group_6_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_6_1" onchange="setGPIOState(6, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_6_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E4 (组7) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E4 (AW9523)</div>
+                <div id="mode_group_7" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_7_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_7_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E4</div>
+                        <div class="state-display" id="state_group_7_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_7_0" onchange="setGPIOState(7, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_7_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E4 (镜像)</div>
+                        <div class="state-display" id="state_group_7_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_7_1" onchange="setGPIOState(7, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_7_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E5 (组8) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E5 (AW9523)</div>
+                <div id="mode_group_8" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_8_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_8_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E5</div>
+                        <div class="state-display" id="state_group_8_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_8_0" onchange="setGPIOState(8, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_8_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E5 (镜像)</div>
+                        <div class="state-display" id="state_group_8_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_8_1" onchange="setGPIOState(8, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_8_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E6 (组9) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E6 (AW9523)</div>
+                <div id="mode_group_9" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_9_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_9_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E6</div>
+                        <div class="state-display" id="state_group_9_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_9_0" onchange="setGPIOState(9, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_9_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E6 (镜像)</div>
+                        <div class="state-display" id="state_group_9_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_9_1" onchange="setGPIOState(9, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_9_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E7 (组10) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E7 (AW9523)</div>
+                <div id="mode_group_10" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_10_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_10_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E7</div>
+                        <div class="state-display" id="state_group_10_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_10_0" onchange="setGPIOState(10, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_10_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E7 (镜像)</div>
+                        <div class="state-display" id="state_group_10_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_10_1" onchange="setGPIOState(10, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_10_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E8 (组11) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E8 (AW9523)</div>
+                <div id="mode_group_11" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_11_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_11_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E8</div>
+                        <div class="state-display" id="state_group_11_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_11_0" onchange="setGPIOState(11, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_11_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E8 (镜像)</div>
+                        <div class="state-display" id="state_group_11_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_11_1" onchange="setGPIOState(11, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_11_1"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 电机控制 -->
+            <div class="gpio-control">
+                <div class="gpio-title">电机控制</div>
+                <div class="motor-group">
+                    <!-- 电机 M1 -->
+                    <div class="motor-item">
+                        <div>M1 (DIR: 18, PWM: 19)</div>
+                        <div class="motor-buttons">
+                            <button onclick="setMotorState(0, 1)">正转</button>
+                            <button onclick="setMotorState(0, 2)">反转</button>
+                            <button onclick="setMotorState(0, 0)">停止</button>
+                        </div>
+                        <div class="status" id="status_motor_0"></div>
+                    </div>
+                    <!-- 电机 M2 -->
+                    <div class="motor-item">
+                        <div>M2 (DIR: 23, PWM: 16)</div>
+                        <div class="motor-buttons">
+                            <button onclick="setMotorState(1, 1)">正转</button>
+                            <button onclick="setMotorState(1, 2)">反转</button>
+                            <button onclick="setMotorState(1, 0)">停止</button>
+                        </div>
+                        <div class="status" id="status_motor_1"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <script src="../js/config.js"></script>
+    <script src="../js/gpio_control.js"></script>
+</body>
+</html>
+
+            
+            <!-- GPIO组1 -->
+            <div class="gpio-control">
+                <div class="gpio-title">GPIO 组 1 (GPIO 15, 2)</div>
+                <div id="mode_group_1" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_1_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_1_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>GPIO 15</div>
+                        <div class="state-display" id="state_group_1_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_1_0" onchange="setGPIOState(1, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_1_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>GPIO 2</div>
+                        <div class="state-display" id="state_group_1_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_1_1" onchange="setGPIOState(1, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_1_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- GPIO组2 -->
+            <div class="gpio-control">
+                <div class="gpio-title">GPIO 组 2 (GPIO 26, 25)</div>
+                <div id="mode_group_2" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_2_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_2_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>GPIO 26</div>
+                        <div class="state-display" id="state_group_2_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_2_0" onchange="setGPIOState(2, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_2_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>GPIO 25</div>
+                        <div class="state-display" id="state_group_2_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_2_1" onchange="setGPIOState(2, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_2_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- GPIO组3 -->
+            <div class="gpio-control">
+                <div class="gpio-title">GPIO 组 3 (GPIO 27, 14)</div>
+                <div id="mode_group_3" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_3_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_3_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>GPIO 27</div>
+                        <div class="state-display" id="state_group_3_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_3_0" onchange="setGPIOState(3, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_3_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>GPIO 14</div>
+                        <div class="state-display" id="state_group_3_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_3_1" onchange="setGPIOState(3, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_3_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E1 (组4) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E1 (AW9523)</div>
+                <div id="mode_group_4" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_4_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_4_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E1</div>
+                        <div class="state-display" id="state_group_4_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_4_0" onchange="setGPIOState(4, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_4_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E1 (镜像)</div>
+                        <div class="state-display" id="state_group_4_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_4_1" onchange="setGPIOState(4, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_4_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E2 (组5) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E2 (AW9523)</div>
+                <div id="mode_group_5" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_5_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_5_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E2</div>
+                        <div class="state-display" id="state_group_5_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_5_0" onchange="setGPIOState(5, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_5_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E2 (镜像)</div>
+                        <div class="state-display" id="state_group_5_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_5_1" onchange="setGPIOState(5, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_5_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E3 (组6) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E3 (AW9523)</div>
+                <div id="mode_group_6" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_6_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_6_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E3</div>
+                        <div class="state-display" id="state_group_6_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_6_0" onchange="setGPIOState(6, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_6_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E3 (镜像)</div>
+                        <div class="state-display" id="state_group_6_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_6_1" onchange="setGPIOState(6, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_6_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E4 (组7) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E4 (AW9523)</div>
+                <div id="mode_group_7" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_7_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_7_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E4</div>
+                        <div class="state-display" id="state_group_7_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_7_0" onchange="setGPIOState(7, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_7_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E4 (镜像)</div>
+                        <div class="state-display" id="state_group_7_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_7_1" onchange="setGPIOState(7, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_7_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E5 (组8) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E5 (AW9523)</div>
+                <div id="mode_group_8" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_8_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_8_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E5</div>
+                        <div class="state-display" id="state_group_8_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_8_0" onchange="setGPIOState(8, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_8_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E5 (镜像)</div>
+                        <div class="state-display" id="state_group_8_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_8_1" onchange="setGPIOState(8, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_8_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E6 (组9) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E6 (AW9523)</div>
+                <div id="mode_group_9" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_9_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_9_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E6</div>
+                        <div class="state-display" id="state_group_9_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_9_0" onchange="setGPIOState(9, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_9_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E6 (镜像)</div>
+                        <div class="state-display" id="state_group_9_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_9_1" onchange="setGPIOState(9, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_9_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E7 (组10) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E7 (AW9523)</div>
+                <div id="mode_group_10" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_10_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_10_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E7</div>
+                        <div class="state-display" id="state_group_10_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_10_0" onchange="setGPIOState(10, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_10_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E7 (镜像)</div>
+                        <div class="state-display" id="state_group_10_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_10_1" onchange="setGPIOState(10, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_10_1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AW9523扩展端口E8 (组11) -->
+            <div class="gpio-control">
+                <div class="gpio-title">E8 (AW9523)</div>
+                <div id="mode_group_11" class="mode-indicator output-mode">输出模式</div>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" id="btn_mode_11_0">输出</button>
+                    <button class="mode-btn" id="btn_mode_11_1">输入</button>
+                </div>
+                <div class="gpio-group">
+                    <div class="gpio-item">
+                        <div>E8</div>
+                        <div class="state-display" id="state_group_11_0">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_11_0" onchange="setGPIOState(11, 0, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_11_0"></div>
+                    </div>
+                    <div class="gpio-item">
+                        <div>E8 (镜像)</div>
+                        <div class="state-display" id="state_group_11_1">未设置</div>
+                        <div class="switch-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="switch_group_11_1" onchange="setGPIOState(11, 1, this.checked ? 1 : 0)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="status" id="status_group_11_1"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 电机控制 -->
+            <div class="gpio-control">
+                <div class="gpio-title">电机控制</div>
+                <div class="motor-group">
+                    <!-- 电机 M1 -->
+                    <div class="motor-item">
+                        <div>M1 (DIR: 18, PWM: 19)</div>
+                        <div class="motor-buttons">
+                            <button onclick="setMotorState(0, 1)">正转</button>
+                            <button onclick="setMotorState(0, 2)">反转</button>
+                            <button onclick="setMotorState(0, 0)">停止</button>
+                        </div>
+                        <div class="status" id="status_motor_0"></div>
+                    </div>
+                    <!-- 电机 M2 -->
+                    <div class="motor-item">
+                        <div>M2 (DIR: 23, PWM: 16)</div>
+                        <div class="motor-buttons">
+                            <button onclick="setMotorState(1, 1)">正转</button>
+                            <button onclick="setMotorState(1, 2)">反转</button>
+                            <button onclick="setMotorState(1, 0)">停止</button>
+                        </div>
+                        <div class="status" id="status_motor_1"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <script src="../js/gpio_control.js"></script>
+</body>
+</html>
