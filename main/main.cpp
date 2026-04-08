@@ -27,11 +27,8 @@ extern "C" {
 static const char *TAG = "main";
 
 // WiFi configuration
-// static const char* WIFI_SSID = "XINGHUI";
-// static const char* WIFI_PASS = "88888888";
-
-static const char* WIFI_SSID = "HUAWEI-GTJ-home";
-static const char* WIFI_PASS = "Gt-123456";
+static const char* WIFI_SSID = "XINGHUI";
+static const char* WIFI_PASS = "88888888";
 
 // ADC configuration
 // ADC configuration handle will be declared when needed to avoid unused warnings
