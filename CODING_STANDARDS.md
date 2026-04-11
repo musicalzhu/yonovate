@@ -651,6 +651,48 @@ idf.py build
 - [ ] 现有功能未被破坏
 - [ ] 边界条件已测试
 
+#### ESP32嵌入式项目测试策略
+
+由于ESP-IDF嵌入式项目通常无单元测试框架，采用以下验证方式：
+
+**Level 1: 编译时验证（强制）**
+```bash
+idf.py build
+```
+- 无编译错误/警告
+- 链接成功，生成固件
+
+**Level 2: 静态代码检查（强制）**
+- 代码边界检查：`if (len > MAX_SIZE)`
+- 空指针检查：`if (ptr == NULL)`
+- 内存管理：malloc/free配对，句柄关闭
+- 错误处理：所有分支返回正确错误码
+
+**Level 3: 功能自检（代码内实现）**
+```cpp
+// 参数验证
+if (!ssid || !password) return ESP_ERR_INVALID_ARG;
+
+// 范围验证
+if (req->content_len > 512) return ESP_ERR_INVALID_SIZE;
+
+// 状态验证
+if (!s_wifi_initialized) return ESP_ERR_INVALID_STATE;
+```
+
+**Level 4: 硬件测试（有条件时执行）**
+- 烧录固件到ESP32开发板
+- 功能API测试（HTTP请求）
+- NVS存储持久化验证
+- WiFi连接重连验证
+
+**本次WiFi配置PR验证清单：**
+- ✅ 编译通过：`yonovate-v2.bin` 生成成功
+- ✅ 静态检查：所有函数有参数/边界检查
+- ✅ 内存管理：`cJSON_Delete`/`nvs_close`正确配对
+- ✅ 错误处理：HTTP状态码/NVS错误码正确返回
+- ⏳ 硬件测试：待实际烧录验证（需开发板）
+
 ### 5. Git状态确认
 ```bash
 # 检查git状态
