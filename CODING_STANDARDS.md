@@ -684,7 +684,61 @@ git diff --cached
 
 ---
 
-## �🚨 紧急停止条件
+### 📋 执行要点（Windsurf/VSCode环境）
+
+#### 环境要求
+- **终端类型**：使用 `ESP-IDF CMD` 或 `ESP-IDF PowerShell`
+- **工作目录**：必须在项目根目录 `c:\Downloads\code-v2\v2`
+- **环境初始化**：编译前必须先执行 `export.bat`（CMD）或 `Initialize-Idf.ps1`（PowerShell）
+
+#### 标准执行流程
+
+**步骤1：Git变更检查**
+```bash
+cd c:\Downloads\code-v2\v2
+git status --short
+git diff --stat
+```
+
+**步骤2：编译验证（CMD方式）**
+```bash
+cd c:\Downloads\code-v2\v2
+C:\Espressif\frameworks\esp-idf-v5.5.3\export.bat
+idf.py build
+```
+预期输出：`Project build complete.`
+
+**步骤3：提交代码**
+```bash
+cd c:\Downloads\code-v2\v2
+git add .
+git commit -m "feat: 功能描述"
+```
+预期输出：`[master abc1234] feat: xxx`
+
+#### 验证成功标志
+
+| 命令 | 成功输出示例 |
+|------|-------------|
+| `git status --short` | `M main/main.cpp` / `?? components/new/` |
+| `idf.py build` | `Project build complete.` |
+| `git commit` | `[master e273101] feat: xxx` |
+
+#### 常见问题处理
+
+**问题1：git命令执行超时**
+- 解决：使用 `cmd /c "cd 项目路径 && git命令"` 方式执行
+
+**问题2：idf.py命令不识别**
+- 原因：未执行export.bat初始化环境
+- 解决：先执行 `C:\Espressif\frameworks\esp-idf-v5.5.3\export.bat`
+
+**问题3：中文提交信息乱码**
+- 解决：使用英文提交信息，或在批处理脚本中提交
+
+---
+
+## 🚨 紧急停止条件
 
 遇到以下情况立即停止所有操作：
 
