@@ -78,6 +78,31 @@ esp_err_t wifi_manager_update_credentials(const char* ssid, const char* password
  */
 esp_err_t wifi_manager_deinit(void);
 
+/**
+ * @brief 启动AP配网模式
+ * @details 开启设备热点，提供配网页面/API供用户配置WiFi
+ * @param ap_ssid AP热点SSID名称（设备发出的热点名）
+ * @param ap_password AP热点密码（建议8位以上，NULL表示开放网络）
+ * @return esp_err_t ESP_OK成功，其他错误码失败
+ * @note 启动后会停止STA模式，仅作为AP工作
+ */
+esp_err_t wifi_manager_start_ap_provisioning(const char* ap_ssid, const char* ap_password);
+
+/**
+ * @brief 停止AP配网模式
+ * @details 关闭AP热点，切换回STA模式
+ * @return esp_err_t ESP_OK成功，其他错误码失败
+ */
+esp_err_t wifi_manager_stop_ap_provisioning(void);
+
+/**
+ * @brief 检查当前是否处于AP配网模式
+ * @return true 当前处于AP模式
+ * @return false 当前不是AP模式（STA或未启动）
+ */
+bool wifi_manager_is_ap_mode(void);
+
 #ifdef __cplusplus
 }
+#endif
 #endif

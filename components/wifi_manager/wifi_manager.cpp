@@ -53,7 +53,9 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
 
 esp_err_t wifi_manager_init(const wifi_manager_config_t* config)
 {
-    if (!config || !config->ssid || !config->password) {
+    // SSID必须非空，密码可为空字符串（表示开放网络）
+    if (!config || !config->ssid || strlen(config->ssid) == 0) {
+        ESP_LOGE(TAG, "WiFi初始化失败: SSID不能为空");
         return ESP_ERR_INVALID_ARG;
     }
 
@@ -97,9 +99,16 @@ esp_err_t wifi_manager_init(const wifi_manager_config_t* config)
     // 配置WiFi
     wifi_config_t wifi_config = {};
     strncpy((char*)wifi_config.sta.ssid, config->ssid, sizeof(wifi_config.sta.ssid) - 1);
-    strncpy((char*)wifi_config.sta.password, config->password, sizeof(wifi_config.sta.password) - 1);
-    wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
-    wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
+    // 密码可为空字符串表示开放网络（无密码）
+    if (config->password && strlen(config->password) > 0) {
+        strncpy((char*)wifi_config.sta.password, config->password, sizeof(wifi_config.sta.password) - 1);
+        wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
+        wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
+    } else {
+        // 空密码时使用开放认证模式
+        wifi_config.sta.threshold.authmode = WIFI_AUTH_OPEN;
+        ESP_LOGI(TAG, "WiFi配置为开放网络（无密码）");
+    }
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
@@ -170,7 +179,9 @@ esp_err_t wifi_manager_reconnect(void)
 
 esp_err_t wifi_manager_update_credentials(const char* ssid, const char* password)
 {
-    if (!s_wifi_initialized || !ssid || !password) {
+    // SSID必须非空，密码可为空字符串（开放网络）
+    if (!s_wifi_initialized || !ssid || strlen(ssid) == 0) {
+        ESP_LOGE(TAG, "更新凭证失败: SSID不能为空");
         return ESP_ERR_INVALID_ARG;
     }
 
@@ -180,9 +191,15 @@ esp_err_t wifi_manager_update_credentials(const char* ssid, const char* password
     // 配置新的WiFi凭证
     wifi_config_t wifi_config = {};
     strncpy((char*)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid) - 1);
-    strncpy((char*)wifi_config.sta.password, password, sizeof(wifi_config.sta.password) - 1);
-    wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
-    wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
+    // 密码可为空字符串表示开放网络
+    if (password && strlen(password) > 0) {
+        strncpy((char*)wifi_config.sta.password, password, sizeof(wifi_config.sta.password) - 1);
+        wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
+        wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
+    } else {
+        wifi_config.sta.threshold.authmode = WIFI_AUTH_OPEN;
+        ESP_LOGI(TAG, "配置为开放网络（无密码）");
+    }
 
     esp_err_t err = esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
     if (err != ESP_OK) {
@@ -232,4 +249,79 @@ esp_err_t wifi_manager_deinit(void)
 
     ESP_LOGI(TAG, "WiFi已反初始化");
     return ESP_OK;
+}
+
+// AP配网模式静态变量
+static bool s_ap_mode_active = false;
+
+esp_err_t wifi_manager_start_ap_provisioning(const char* ap_ssid, const char* ap_password)
+{
+    if (!s_wifi_initialized) {
+        ESP_LOGE(TAG, "WiFi管理器未初始化");
+        return ESP_ERR_INVALID_STATE;
+    }
+
+    if (!ap_ssid || strlen(ap_ssid) == 0) {
+        ESP_LOGE(TAG, "AP SSID不能为空");
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    ESP_LOGI(TAG, "启动AP配网模式，SSID: %s", ap_ssid);
+
+    // 断开当前STA连接
+    esp_wifi_disconnect();
+    esp_wifi_stop();
+
+    // 配置AP模式
+    wifi_config_t wifi_config = {};
+    strncpy((char*)wifi_config.ap.ssid, ap_ssid, sizeof(wifi_config.ap.ssid) - 1);
+    wifi_config.ap.ssid_len = strlen(ap_ssid);
+    wifi_config.ap.max_connection = 4;  // 最多4个客户端
+    wifi_config.ap.channel = 1;
+
+    if (ap_password && strlen(ap_password) >= 8) {
+        strncpy((char*)wifi_config.ap.password, ap_password, sizeof(wifi_config.ap.password) - 1);
+        wifi_config.ap.authmode = WIFI_AUTH_WPA2_PSK;
+    } else {
+        wifi_config.ap.authmode = WIFI_AUTH_OPEN;  // 开放网络（无密码）
+        ESP_LOGW(TAG, "AP使用开放网络（无密码），建议设置8位以上密码");
+    }
+
+    // 设置AP模式
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
+    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &wifi_config));
+    ESP_ERROR_CHECK(esp_wifi_start());
+
+    s_ap_mode_active = true;
+
+    ESP_LOGI(TAG, "AP配网模式已启动");
+    ESP_LOGI(TAG, "请连接WiFi: %s", ap_ssid);
+    ESP_LOGI(TAG, "然后访问 http://192.168.4.1 进行配置");
+
+    return ESP_OK;
+}
+
+esp_err_t wifi_manager_stop_ap_provisioning(void)
+{
+    if (!s_ap_mode_active) {
+        ESP_LOGW(TAG, "当前不在AP模式");
+        return ESP_ERR_INVALID_STATE;
+    }
+
+    ESP_LOGI(TAG, "停止AP配网模式");
+
+    // 停止AP
+    esp_wifi_stop();
+    s_ap_mode_active = false;
+
+    // 切换回STA模式
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+
+    ESP_LOGI(TAG, "AP模式已停止，切换回STA模式");
+    return ESP_OK;
+}
+
+bool wifi_manager_is_ap_mode(void)
+{
+    return s_ap_mode_active;
 }

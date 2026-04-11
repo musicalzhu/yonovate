@@ -26,9 +26,10 @@ extern "C" {
 
 static const char *TAG = "main";
 
-// WiFi configuration
-static const char* WIFI_SSID = "XINGHUI";
-static const char* WIFI_PASS = "88888888";
+// WiFi配置使用Kconfig默认值（可通过menuconfig修改）
+// CONFIG_WIFI_DEFAULT_SSID 和 CONFIG_WIFI_DEFAULT_PASSWORD 定义在 main/Kconfig.projbuild
+#define WIFI_DEFAULT_SSID CONFIG_WIFI_DEFAULT_SSID
+#define WIFI_DEFAULT_PASS CONFIG_WIFI_DEFAULT_PASSWORD
 
 // ADC configuration
 // ADC configuration handle will be declared when needed to avoid unused warnings
@@ -142,31 +143,53 @@ extern "C" void app_main()
     // 尝试从NVS加载WiFi配置
     char saved_ssid[33] = {0};
     char saved_pass[65] = {0};
-    const char* use_ssid = WIFI_SSID;
-    const char* use_pass = WIFI_PASS;
+    bool has_wifi_config = false;
 
     if (wifi_config_store_load(saved_ssid, sizeof(saved_ssid), saved_pass, sizeof(saved_pass)) == ESP_OK) {
         ESP_LOGI(TAG, "从NVS加载WiFi配置: SSID=%s", saved_ssid);
-        use_ssid = saved_ssid;
-        use_pass = saved_pass;
+        has_wifi_config = true;
     } else {
-        ESP_LOGI(TAG, "使用默认WiFi配置");
+        ESP_LOGI(TAG, "NVS中无WiFi配置，将启动AP配网模式");
+        has_wifi_config = false;
     }
 
-    // 初始化WiFi
+    // 初始化WiFi管理器（使用默认配置或空配置）
     wifi_manager_config_t wifi_config = {
-        .ssid = use_ssid,
-        .password = use_pass,
+        .ssid = has_wifi_config ? saved_ssid : WIFI_DEFAULT_SSID,
+        .password = has_wifi_config ? saved_pass : WIFI_DEFAULT_PASS,
         .callback = wifi_connection_handler
     };
     if (wifi_manager_init(&wifi_config) != ESP_OK) {
         ESP_LOGE(TAG, "WiFi管理器初始化失败");
         gpio_monitor_update_status("wifi", false);
     } else {
-        // 启动WiFi连接
-        if (wifi_manager_start() != ESP_OK) {
-            ESP_LOGE(TAG, "WiFi启动失败");
-            gpio_monitor_update_status("wifi", false);
+        if (has_wifi_config) {
+            // 有配置：启动STA模式连接
+            if (wifi_manager_start() != ESP_OK) {
+                ESP_LOGE(TAG, "WiFi启动失败");
+                gpio_monitor_update_status("wifi", false);
+            }
+        } else {
+            // 无配置：启动AP配网模式
+            ESP_LOGI(TAG, "启动AP配网模式，等待用户配置...");
+            if (wifi_manager_start_ap_provisioning("Yonovate-Setup", "12345678") == ESP_OK) {
+                ESP_LOGI(TAG, "AP配网模式已启动，请连接WiFi: Yonovate-Setup，密码: 12345678");
+                ESP_LOGI(TAG, "然后访问 http://192.168.4.1/api/wifi/config 进行配置");
+                // AP模式下也需要启动Web服务器，否则用户无法访问配置API
+                if (!server) {
+                    server = web_server_start();
+                    if (server) {
+                        ESP_LOGI(TAG, "Web服务器启动成功（AP模式）");
+                        gpio_monitor_update_status("webserver", true);
+                    } else {
+                        ESP_LOGE(TAG, "Web服务器启动失败");
+                        gpio_monitor_update_status("webserver", false);
+                    }
+                }
+            } else {
+                ESP_LOGE(TAG, "AP配网模式启动失败");
+                gpio_monitor_update_status("wifi", false);
+            }
         }
     }
     

@@ -30,6 +30,7 @@ esp_err_t logic_circuit_handler(httpd_req_t *req);
 esp_err_t gpio_state_handler(httpd_req_t *req);
 esp_err_t state_machine_http_handler(httpd_req_t *req);
 esp_err_t wifi_config_handler(httpd_req_t *req);
+esp_err_t ping_handler(httpd_req_t *req);
 
 // TAG常量，用于ESP_LOG函数
 static const char *TAG = "WEB_SERVER";
@@ -234,6 +235,23 @@ httpd_handle_t web_server_start(void)
         .user_ctx = NULL
     };
     register_uri_checked(server, &wifi_config_options_uri, "OPTIONS");
+
+    httpd_uri_t wifi_config_delete_uri = {
+        .uri      = "/wifi/config",
+        .method   = HTTP_DELETE,
+        .handler  = wifi_config_handler,
+        .user_ctx = NULL
+    };
+    register_uri_checked(server, &wifi_config_delete_uri, "DELETE");
+
+    // Ping健康检查URI
+    httpd_uri_t ping_uri = {
+        .uri      = "/ping",
+        .method   = HTTP_GET,
+        .handler  = ping_handler,
+        .user_ctx = NULL
+    };
+    register_uri_checked(server, &ping_uri, "GET");
 
     ESP_LOGI(TAG, "HTTP server started successfully, listening on port: %d", config.server_port);
     return server;
@@ -589,14 +607,13 @@ esp_err_t system_status_handler(httpd_req_t *req)
 
 // 逻辑电路请求处理函数在逻辑电路组件中实现
 // 此处仅保留函数声明，实际实现请参考 logic_circuit.cpp
-
-/**
  * @brief WiFi配置处理程序
  * @param req HTTP请求结构体
  * @return esp_err_t ESP_OK成功，其他错误码失败
- * @details 处理GET/POST/OPTIONS请求，支持查询和更新WiFi配置
+ * @details 处理GET/POST/DELETE/OPTIONS请求，支持查询、更新和清除WiFi配置
  *          GET: 返回当前存储的WiFi配置（不含密码）
  *          POST: 更新WiFi配置并触发重连
+ *          DELETE: 清除NVS中的WiFi配置（恢复未配网状态）
  *          OPTIONS: CORS预检响应
  */
 esp_err_t wifi_config_handler(httpd_req_t *req)
@@ -605,7 +622,7 @@ esp_err_t wifi_config_handler(httpd_req_t *req)
     if (req->method == HTTP_OPTIONS) {
         httpd_resp_set_type(req, "application/json");
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-        httpd_resp_set_hdr(req, "Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        httpd_resp_set_hdr(req, "Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
         httpd_resp_set_hdr(req, "Access-Control-Allow-Headers", "Content-Type");
         httpd_resp_send(req, NULL, 0);
         return ESP_OK;
@@ -734,6 +751,61 @@ esp_err_t wifi_config_handler(httpd_req_t *req)
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
         httpd_resp_send(req, ok, strlen(ok));
         cJSON_Delete(json);
+        return ESP_OK;
+    }
+
+    // DELETE请求 - 清除WiFi配置
+    if (req->method == HTTP_DELETE) {
+        ESP_LOGI(TAG, "接收到清除WiFi配置请求");
+
+        esp_err_t err = wifi_config_store_erase();
+        if (err != ESP_OK) {
+            char msg[128];
+            snprintf(msg, sizeof(msg), "{\"status\":\"error\",\"message\":\"清除配置失败: %s\"}",
+                     esp_err_to_name(err));
+            httpd_resp_set_status(req, "500 Internal Server Error");
+            httpd_resp_set_type(req, "application/json");
+            httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+            httpd_resp_send(req, msg, strlen(msg));
+            return ESP_FAIL;
+        }
+
+        const char *ok = "{\"status\":\"success\",\"message\":\"WiFi配置已清除，请重新配网\"}";
+        httpd_resp_set_type(req, "application/json");
+        httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+        httpd_resp_send(req, ok, strlen(ok));
+        ESP_LOGI(TAG, "WiFi配置已清除");
+        return ESP_OK;
+    }
+
+    return ESP_OK;
+}
+
+/**
+ * @brief Ping健康检查处理程序
+ * @param req HTTP请求结构体
+ * @return esp_err_t ESP_OK成功
+ * @details 返回简单的JSON状态，用于前端连通性测试
+ *          响应格式: {"status":"ok"}
+ */
+esp_err_t ping_handler(httpd_req_t *req)
+{
+    // 处理OPTIONS请求（CORS预检）
+    if (req->method == HTTP_OPTIONS) {
+        httpd_resp_set_type(req, "application/json");
+        httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+        httpd_resp_set_hdr(req, "Access-Control-Allow-Methods", "GET, OPTIONS");
+        httpd_resp_set_hdr(req, "Access-Control-Allow-Headers", "Content-Type");
+        httpd_resp_send(req, NULL, 0);
+        return ESP_OK;
+    }
+
+    // GET请求 - 返回健康状态
+    if (req->method == HTTP_GET) {
+        const char *resp = "{\"status\":\"ok\"}";
+        httpd_resp_set_type(req, "application/json");
+        httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+        httpd_resp_send(req, resp, strlen(resp));
         return ESP_OK;
     }
 

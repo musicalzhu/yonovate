@@ -17,7 +17,60 @@
                 <li><a href="pages/logic_circuit.html">逻辑电路</a></li>
                 <li><a href="pages/state_machine.html">状态转移</a></li>
             </ul>
+            
+            <!-- Ping连通性测试 -->
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+                <h3>设备连通性测试</h3>
+                <p>测试ESP32设备是否在线：</p>
+                <button id="pingBtn" onclick="pingDevice()" style="padding: 8px 16px; background: #007acc; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Ping设备
+                </button>
+                <span id="pingResult" style="margin-left: 10px; color: #666;"></span>
+            </div>
         </div>
     </div>
+
+    <script>
+        /**
+         * @brief Ping设备连通性测试
+         * @details 调用GET /ping接口验证设备在线状态
+         *          成功返回 {"status":"ok"}
+         */
+        async function pingDevice() {
+            const resultEl = document.getElementById('pingResult');
+            const btn = document.getElementById('pingBtn');
+            
+            resultEl.textContent = '检测中...';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch('/ping', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'ok') {
+                    resultEl.textContent = '✅ 设备在线';
+                    resultEl.style.color = '#28a745';
+                } else {
+                    resultEl.textContent = '⚠️ 响应异常: ' + JSON.stringify(data);
+                    resultEl.style.color = '#ffc107';
+                }
+            } catch (error) {
+                resultEl.textContent = '❌ 连接失败: ' + error.message;
+                resultEl.style.color = '#dc3545';
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>

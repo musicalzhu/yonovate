@@ -42,5 +42,5 @@
       "path": "C:\\WINDOWS\\System32\\cmd.exe"
     }
   },
-  "terminal.integrated.defaultProfile.windows": "ESP-IDF PowerShell"
+  "terminal.integrated.defaultProfile.windows": "Command Prompt"
 }

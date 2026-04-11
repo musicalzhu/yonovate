@@ -1,0 +1,17 @@
+menu "WiFi Configuration"
+
+    config WIFI_DEFAULT_SSID
+        string "默认WiFi SSID"
+        default "XINGHUI"
+        help
+            设备未配置WiFi时使用的默认SSID。
+            用户可通过POST /api/wifi/config接口修改配置。
+
+    config WIFI_DEFAULT_PASSWORD
+        string "默认WiFi密码"
+        default "88888888"
+        help
+            设备未配置WiFi时使用的默认密码。
+            可为空字符串表示开放网络（无密码）。
+
+endmenu

@@ -5,6 +5,40 @@
 
 ---
 
+## 📋 CR-2024-04-11: 新增Ping健康检查接口与IDE配置优化
+
+### 基本信息
+| 项目 | 内容 |
+|------|------|
+| **状态** | ✅ 已完成（待硬件测试） |
+| **分支** | master |
+| **日期** | 2024-04-11 |
+| **AI助手** | Cascade |
+
+### 相关Commit
+```
+待提交: feat: 新增GET /ping接口及前端连通性测试按钮
+```
+
+### 修改内容
+1. **新增API** `web_server.cpp`: 添加 `/ping` HTTP端点（GET/OPTIONS），返回 `{"status":"ok"}`
+2. **前端增强** `web_project/index.html`: 添加Ping测试按钮和JavaScript fetch调用
+3. **IDE配置** `.vscode/settings.json`: 优化终端配置，默认使用Command Prompt
+4. **任务配置** `.vscode/tasks.json`: 添加Git检查任务，移除Clean Temp Files任务
+5. **清理临时文件**: 删除 `git_status.bat`、`git_check.bat`、`build_ap_feature.bat`、`clean_temp.bat`
+
+### 验证结果
+- [ ] 编译通过
+- [ ] 硬件测试通过
+- [x] 代码审查通过
+
+### 遇到的问题与解决方案
+**问题**: bash工具在Windows环境下执行git命令I/O超时
+**根因**: bash工具在独立cmd.exe进程中执行，与IDE终端环境隔离
+**解决方案**: 使用VSCode任务配置执行git命令，或IDE终端手动执行
+
+---
+
 ## 📋 CR-2024-04-11: WiFi配置存储功能完善
 
 ### 基本信息
