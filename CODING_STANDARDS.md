@@ -3,6 +3,41 @@
 > 适用于：Cursor、VSCode、Windsurf、Claude Desktop、GitHub Copilot等所有AI编程助手
 > 专注领域：ESP32/嵌入式开发、C/C++、固件开发
 
+---
+
+## 📖 规则文件作用与价值
+
+### 为什么要使用规则文件？
+
+本规则文件（`CODING_STANDARDS.md`）是**AI编程助手的行为准则**，旨在：
+
+| 作用层级 | 具体价值 | 示例 |
+|---------|---------|------|
+| **约束AI行为** | 强制规范AI操作边界，防止越界 | 禁止假设文件存在，必须工具验证 |
+| **保障代码质量** | 检查清单确保每次修改符合标准 | 编译→静态检查→功能自检→硬件测试 |
+| **降低沟通成本** | 标准化流程，减少反复确认 | 提交前7步强制检查清单 |
+| **知识沉淀** | 积累项目特定最佳实践 | ESP32测试策略、常见问题处理 |
+| **自我保护** | 明确"紧急停止条件" | 发现矛盾立即停止操作 |
+
+### 核心价值
+
+> **让AI从"随心编程"变成"规范编程"**
+
+通过明确的规则，确保：
+- ✅ 每次代码修改都经过验证
+- ✅ 所有提交符合项目标准
+- ✅ 团队协作有一致的行为准则
+- ✅ 项目风险可控，可追溯
+
+### 如何使用本规则？
+
+1. **每次操作前回顾** - 执行Git/编译/修改前，查看相关章节
+2. **遵循检查清单** - 按清单逐项检查，不打折扣
+3. **记录CR版本** - 重要修改记录到 `CR_HISTORY.md`
+4. **持续改进** - 遇到新问题及时更新规则
+
+---
+
 ## 🚨 核心安全原则
 
 ### 1. **真实性验证原则**
@@ -836,43 +871,9 @@ git commit -m "feat: description"
 
 **重要：这些规则是强制性的，违反规则会导致严重后果。每次操作前必须回顾相关规则，并进行自我验证。**
 
----
-
-## 📋 CR版本记录
-
-### CR-2024-04-11: WiFi配置存储功能完善
-**状态**: ✅ 已完成（待硬件测试）  
-**分支**: master  
-**相关Commit**:
-```
-0bd52d6 docs: add ESP32 embedded testing strategy and CR verification guide
-631b82e docs: add verified git and build execution examples
-b76831c docs: update CODING_STANDARDS with git and build execution guide
-e273101 feat: add WiFi config store with NVS persistence and HTTP API
-```
-
-**修改内容**:
-1. **新增组件** `wifi_config_store/`: NVS持久化存储WiFi凭证
-2. **扩展API** `web_server.cpp`: 添加 `/api/wifi/config` HTTP端点
-3. **WiFi管理器增强** `wifi_manager.cpp`: 添加 `update_credentials` 动态更新
-4. **主程序集成** `main.cpp`: 启动时加载NVS配置
-5. **环境配置** `.vscode/`: ESP-IDF CMD默认终端，Git/Build任务
-6. **规则文档** `CODING_STANDARDS.md`: 完善测试策略和执行指南
-
-**验证结果**:
-- ✅ 编译通过: `yonovate-v2.bin` (0xdc870 bytes, 14% free)
-- ✅ 静态检查: 参数/边界/空指针检查完善
-- ✅ 内存管理: cJSON/NVS句柄正确释放
-- ✅ 错误处理: HTTP/NVS错误码正确返回
-- ✅ 规则合规: 中文日志/注释，OCP设计
-- ⏳ 硬件测试: 待烧录验证（需开发板）
-
-**待完成**:
-- [ ] 烧录固件到ESP32开发板
-- [ ] HTTP API功能测试
-- [ ] NVS持久化验证
-- [ ] WiFi重连功能验证
+**重要修改请记录到**: `CR_HISTORY.md`
 
 ---
 
 *版本：1.0 | 更新日期：2026-04-11 | 适用：所有ESP32/嵌入式AI编程项目*
+*配套文档：`CR_HISTORY.md` - 代码审查历史记录*
