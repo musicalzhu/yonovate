@@ -836,4 +836,43 @@ git commit -m "feat: description"
 
 **重要：这些规则是强制性的，违反规则会导致严重后果。每次操作前必须回顾相关规则，并进行自我验证。**
 
+---
+
+## 📋 CR版本记录
+
+### CR-2024-04-11: WiFi配置存储功能完善
+**状态**: ✅ 已完成（待硬件测试）  
+**分支**: master  
+**相关Commit**:
+```
+0bd52d6 docs: add ESP32 embedded testing strategy and CR verification guide
+631b82e docs: add verified git and build execution examples
+b76831c docs: update CODING_STANDARDS with git and build execution guide
+e273101 feat: add WiFi config store with NVS persistence and HTTP API
+```
+
+**修改内容**:
+1. **新增组件** `wifi_config_store/`: NVS持久化存储WiFi凭证
+2. **扩展API** `web_server.cpp`: 添加 `/api/wifi/config` HTTP端点
+3. **WiFi管理器增强** `wifi_manager.cpp`: 添加 `update_credentials` 动态更新
+4. **主程序集成** `main.cpp`: 启动时加载NVS配置
+5. **环境配置** `.vscode/`: ESP-IDF CMD默认终端，Git/Build任务
+6. **规则文档** `CODING_STANDARDS.md`: 完善测试策略和执行指南
+
+**验证结果**:
+- ✅ 编译通过: `yonovate-v2.bin` (0xdc870 bytes, 14% free)
+- ✅ 静态检查: 参数/边界/空指针检查完善
+- ✅ 内存管理: cJSON/NVS句柄正确释放
+- ✅ 错误处理: HTTP/NVS错误码正确返回
+- ✅ 规则合规: 中文日志/注释，OCP设计
+- ⏳ 硬件测试: 待烧录验证（需开发板）
+
+**待完成**:
+- [ ] 烧录固件到ESP32开发板
+- [ ] HTTP API功能测试
+- [ ] NVS持久化验证
+- [ ] WiFi重连功能验证
+
+---
+
 *版本：1.0 | 更新日期：2026-04-11 | 适用：所有ESP32/嵌入式AI编程项目*
