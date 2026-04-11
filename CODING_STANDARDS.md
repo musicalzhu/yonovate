@@ -724,6 +724,32 @@ git commit -m "feat: 功能描述"
 | `idf.py build` | `Project build complete.` |
 | `git commit` | `[master e273101] feat: xxx` |
 
+#### 实际验证成功案例（2024-04-11）
+
+**方式1：ESP-IDF 5.5 CMD（推荐）**
+```batch
+C:\Espressif\frameworks\esp-idf-v5.5.3>cd C:\Downloads\code-v2\v2
+C:\Downloads\code-v2\v2>idf.py build
+```
+输出：
+```
+Bootloader binary size 0x6630 bytes. 0x9d0 bytes (9%) free.
+yonovate-v2.bin binary size 0xdc870 bytes. 0x23790 bytes (14%) free.
+Project build complete.
+```
+
+**方式2：VSCode终端（ESP-IDF CMD配置）**
+- 默认终端：`"terminal.integrated.defaultProfile.windows": "ESP-IDF CMD"`
+- 直接执行：`idf.py build`
+
+**方式3：批处理脚本（解决引号转义问题）**
+```batch
+@echo off
+cd /d c:\Downloads\code-v2\v2
+git add .
+git commit -m "feat: description"
+```
+
 #### 常见问题处理
 
 **问题1：git命令执行超时**
