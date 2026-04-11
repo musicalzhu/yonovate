@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdio.h>
 #include "esp_log.h"
 #include "esp_adc/adc_oneshot.h"
 #include "driver/gpio.h"
@@ -14,6 +13,7 @@
 #include "logic_circuit.h"
 #include "state_machine.h"
 #include "oled.h"
+#include "wifi_config_store.h"
 
 // 声明测试函数
 extern "C" void test_aw9523_i2c_communication(void);
@@ -40,7 +40,7 @@ static httpd_handle_t server = NULL;
 static void wifi_connection_handler(bool connected, const char* ip_address)
 {
     if (connected) {
-        ESP_LOGI(TAG, "WiFi connected, IP address: %s", ip_address);
+        ESP_LOGI(TAG, "WiFi已连接, IP地址: %s", ip_address);
         gpio_monitor_update_status("wifi", true);
         gpio_monitor_update_ip(ip_address);
         
@@ -48,15 +48,15 @@ static void wifi_connection_handler(bool connected, const char* ip_address)
         if (!server) {
             server = web_server_start();
             if (server) {
-                ESP_LOGI(TAG, "Web server started successfully");
+                ESP_LOGI(TAG, "Web服务器启动成功");
                 gpio_monitor_update_status("webserver", true);
             } else {
-                ESP_LOGE(TAG, "Failed to start web server");
+                ESP_LOGE(TAG, "Web服务器启动失败");
                 gpio_monitor_update_status("webserver", false);
             }
         }
     } else {
-        ESP_LOGI(TAG, "WiFi disconnected");
+        ESP_LOGI(TAG, "WiFi已断开连接");
         gpio_monitor_update_status("wifi", false);
         gpio_monitor_update_status("webserver", false);
         
@@ -136,10 +136,27 @@ extern "C" void app_main()
         gpio_monitor_update_step("状态机已启动");
     }
 
+    // 初始化WiFi配置存储
+    wifi_config_store_init();
+
+    // 尝试从NVS加载WiFi配置
+    char saved_ssid[33] = {0};
+    char saved_pass[65] = {0};
+    const char* use_ssid = WIFI_SSID;
+    const char* use_pass = WIFI_PASS;
+
+    if (wifi_config_store_load(saved_ssid, sizeof(saved_ssid), saved_pass, sizeof(saved_pass)) == ESP_OK) {
+        ESP_LOGI(TAG, "从NVS加载WiFi配置: SSID=%s", saved_ssid);
+        use_ssid = saved_ssid;
+        use_pass = saved_pass;
+    } else {
+        ESP_LOGI(TAG, "使用默认WiFi配置");
+    }
+
     // 初始化WiFi
     wifi_manager_config_t wifi_config = {
-        .ssid = WIFI_SSID,
-        .password = WIFI_PASS,
+        .ssid = use_ssid,
+        .password = use_pass,
         .callback = wifi_connection_handler
     };
     if (wifi_manager_init(&wifi_config) != ESP_OK) {

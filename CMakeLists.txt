@@ -16,6 +16,7 @@ set(EXTRA_COMPONENT_DIRS
     components/motor_control
     components/system_status
     components/aw9523
+    components/wifi_config_store
 )
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)

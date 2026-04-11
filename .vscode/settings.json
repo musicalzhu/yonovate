@@ -1,10 +1,11 @@
 {
   "C_Cpp.intelliSenseEngine": "default",
-  "idf.port": "/dev/ttyUSB0",
-  "files.associations": {
-    "i2c_master.h": "c"
-  },
+  "idf.port": "COM5",
   "idf.flashType": "UART",
+  "idf.monitorPort": "COM5",
+  "idf.espIdfPath": "c:\\Espressif\\frameworks\\esp-idf-v5.5.3",
+  "idf.toolsPath": "c:\\Espressif",
+  "idf.pythonInstallPath": "c:\\Espressif\\python_env\\idf5.5_py3.11_env\\Scripts\\python.exe",
   "idf.openOcdConfigs": [
     "interface/ftdi/esp32_devkitj_v1.cfg",
     "target/esp32.cfg"
@@ -12,14 +13,34 @@
   "idf.customExtraVars": {
     "IDF_TARGET": "esp32"
   },
-  "clangd.path": "/home/shengnan/.espressif/tools/esp-clang/esp-19.1.2_20250312/esp-clang/bin/clangd",
-  "clangd.arguments": [
-    "--background-index",
-    "--query-driver=/home/shengnan/.espressif/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc",
-    "--compile-commands-dir=/home/shengnan/yonovate/v2/build"
-  ],
-  "idf.pythonInstallPath": "/usr/bin/python3",
-  "idf.monitorPort": "/dev/ttyUSB0",
-  "idf.espIdfPath": "/home/shengnan/esp/v5.5/esp-idf",
-  "idf.toolsPath": "/home/shengnan/.espressif"
+  "files.associations": {
+    "i2c_master.h": "c"
+  },
+
+  "terminal.integrated.profiles.windows": {
+    "ESP-IDF PowerShell": {
+      "path": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "args": [
+        "-ExecutionPolicy", "Bypass",
+        "-NoExit",
+        "-File", "C:\\Espressif\\Initialize-Idf.ps1",
+        "-IdfId", "esp-idf-v5.5.3-v5.5"
+      ]
+    },
+    "ESP-IDF CMD": {
+      "path": "C:\\WINDOWS\\System32\\cmd.exe",
+      "args": [
+        "/k",
+        "C:\\Espressif\\frameworks\\esp-idf-v5.5.3\\export.bat"
+      ]
+    },
+    "PowerShell": {
+      "source": "PowerShell",
+      "args": ["-ExecutionPolicy", "Bypass"]
+    },
+    "Command Prompt": {
+      "path": "C:\\WINDOWS\\System32\\cmd.exe"
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "ESP-IDF PowerShell"
 }

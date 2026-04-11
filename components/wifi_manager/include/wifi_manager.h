@@ -63,6 +63,15 @@ bool wifi_manager_is_connected(void);
 esp_err_t wifi_manager_reconnect(void);
 
 /**
+ * @brief 更新WiFi凭证并重新连接
+ * 
+ * @param ssid 新的SSID
+ * @param password 新的密码
+ * @return esp_err_t
+ */
+esp_err_t wifi_manager_update_credentials(const char* ssid, const char* password);
+
+/**
  * @brief 反初始化WiFi管理器
  * 
  * @return esp_err_t

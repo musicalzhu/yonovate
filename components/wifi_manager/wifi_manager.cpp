@@ -168,6 +168,39 @@ esp_err_t wifi_manager_reconnect(void)
     return esp_wifi_connect();
 }
 
+esp_err_t wifi_manager_update_credentials(const char* ssid, const char* password)
+{
+    if (!s_wifi_initialized || !ssid || !password) {
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    // 断开当前连接
+    esp_wifi_disconnect();
+
+    // 配置新的WiFi凭证
+    wifi_config_t wifi_config = {};
+    strncpy((char*)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid) - 1);
+    strncpy((char*)wifi_config.sta.password, password, sizeof(wifi_config.sta.password) - 1);
+    wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
+    wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
+
+    esp_err_t err = esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "设置WiFi配置失败: %s", esp_err_to_name(err));
+        return err;
+    }
+
+    // 使用新凭证重新连接
+    err = esp_wifi_connect();
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "WiFi连接失败: %s", esp_err_to_name(err));
+        return err;
+    }
+
+    ESP_LOGI(TAG, "WiFi凭证已更新，正在使用新配置连接...");
+    return ESP_OK;
+}
+
 esp_err_t wifi_manager_deinit(void)
 {
     if (!s_wifi_initialized) {

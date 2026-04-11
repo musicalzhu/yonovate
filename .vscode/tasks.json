@@ -1,0 +1,147 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "ESP-IDF Build (CMD)",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "C:\\Espressif\\frameworks\\esp-idf-v5.5.3\\export.bat && idf.py build"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^(.*):([0-9]+):([0-9]+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      }
+    },
+    {
+      "label": "ESP-IDF Build (PowerShell)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy", "Bypass",
+        "-Command",
+        "& C:\\Espressif\\Initialize-Idf.ps1 -IdfId esp-idf-v5.5.3-v5.5; Set-Location c:\\Downloads\\code-v2\\v2; idf.py build"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "ESP-IDF Full Clean",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "C:\\Espressif\\frameworks\\esp-idf-v5.5.3\\export.bat && idf.py fullclean"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "ESP-IDF Set Target (esp32)",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "C:\\Espressif\\frameworks\\esp-idf-v5.5.3\\export.bat && idf.py set-target esp32"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "ESP-IDF Flash",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "C:\\Espressif\\frameworks\\esp-idf-v5.5.3\\export.bat && idf.py -p COM5 flash"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "ESP-IDF Monitor",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "C:\\Espressif\\frameworks\\esp-idf-v5.5.3\\export.bat && idf.py -p COM5 monitor"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Git Status Check",
+      "type": "shell",
+      "command": "git",
+      "args": [
+        "-C", "c:\\Downloads\\code-v2\\v2",
+        "status", "--short"
+      ],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Git Diff",
+      "type": "shell",
+      "command": "git",
+      "args": [
+        "-C", "c:\\Downloads\\code-v2\\v2",
+        "diff", "--stat"
+      ],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    }
+  ]
+}

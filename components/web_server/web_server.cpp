@@ -19,6 +19,8 @@
 #include "motor_control.h"
 #include "state_machine.h"
 #include "logic_circuit.h"
+#include "wifi_config_store.h"
+#include "wifi_manager.h"
 
 // 函数前向声明
 esp_err_t gpio_control_handler(httpd_req_t *req);
@@ -27,6 +29,7 @@ esp_err_t system_status_handler(httpd_req_t *req);
 esp_err_t logic_circuit_handler(httpd_req_t *req);
 esp_err_t gpio_state_handler(httpd_req_t *req);
 esp_err_t state_machine_http_handler(httpd_req_t *req);
+esp_err_t wifi_config_handler(httpd_req_t *req);
 
 // TAG常量，用于ESP_LOG函数
 static const char *TAG = "WEB_SERVER";
@@ -206,7 +209,32 @@ httpd_handle_t web_server_start(void)
         .user_ctx = NULL
     };
     register_uri_checked(server, &state_machine_options_uri, "OPTIONS");
-    
+
+    // WiFi配置URI
+    httpd_uri_t wifi_config_get_uri = {
+        .uri      = "/wifi/config",
+        .method   = HTTP_GET,
+        .handler  = wifi_config_handler,
+        .user_ctx = NULL
+    };
+    register_uri_checked(server, &wifi_config_get_uri, "GET");
+
+    httpd_uri_t wifi_config_post_uri = {
+        .uri      = "/wifi/config",
+        .method   = HTTP_POST,
+        .handler  = wifi_config_handler,
+        .user_ctx = NULL
+    };
+    register_uri_checked(server, &wifi_config_post_uri, "POST");
+
+    httpd_uri_t wifi_config_options_uri = {
+        .uri      = "/wifi/config",
+        .method   = HTTP_OPTIONS,
+        .handler  = wifi_config_handler,
+        .user_ctx = NULL
+    };
+    register_uri_checked(server, &wifi_config_options_uri, "OPTIONS");
+
     ESP_LOGI(TAG, "HTTP server started successfully, listening on port: %d", config.server_port);
     return server;
 }
@@ -561,3 +589,153 @@ esp_err_t system_status_handler(httpd_req_t *req)
 
 // 逻辑电路请求处理函数在逻辑电路组件中实现
 // 此处仅保留函数声明，实际实现请参考 logic_circuit.cpp
+
+/**
+ * @brief WiFi配置处理程序
+ * @param req HTTP请求结构体
+ * @return esp_err_t ESP_OK成功，其他错误码失败
+ * @details 处理GET/POST/OPTIONS请求，支持查询和更新WiFi配置
+ *          GET: 返回当前存储的WiFi配置（不含密码）
+ *          POST: 更新WiFi配置并触发重连
+ *          OPTIONS: CORS预检响应
+ */
+esp_err_t wifi_config_handler(httpd_req_t *req)
+{
+    // 处理OPTIONS请求（CORS预检）
+    if (req->method == HTTP_OPTIONS) {
+        httpd_resp_set_type(req, "application/json");
+        httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+        httpd_resp_set_hdr(req, "Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        httpd_resp_set_hdr(req, "Access-Control-Allow-Headers", "Content-Type");
+        httpd_resp_send(req, NULL, 0);
+        return ESP_OK;
+    }
+
+    // GET请求 - 返回当前存储的WiFi配置
+    if (req->method == HTTP_GET) {
+        char ssid[33] = {0};
+        char pass[65] = {0};
+        cJSON *root = cJSON_CreateObject();
+        if (root == NULL) {
+            httpd_resp_send_500(req);
+            return ESP_FAIL;
+        }
+
+        if (wifi_config_store_load(ssid, sizeof(ssid), pass, sizeof(pass)) == ESP_OK) {
+            cJSON_AddStringToObject(root, "status", "success");
+            cJSON_AddBoolToObject(root, "stored", true);
+            cJSON_AddStringToObject(root, "ssid", ssid);
+        } else {
+            cJSON_AddStringToObject(root, "status", "success");
+            cJSON_AddBoolToObject(root, "stored", false);
+            cJSON_AddStringToObject(root, "ssid", "");
+        }
+
+        char *json_str = cJSON_PrintUnformatted(root);
+        cJSON_Delete(root);
+        if (json_str == NULL) {
+            httpd_resp_send_500(req);
+            return ESP_FAIL;
+        }
+
+        httpd_resp_set_type(req, "application/json");
+        httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+        httpd_resp_send(req, json_str, strlen(json_str));
+        free(json_str);
+        return ESP_OK;
+    }
+
+    // POST请求 - 更新WiFi配置
+    if (req->method == HTTP_POST) {
+        // 限制请求体大小
+        if (req->content_len == 0 || req->content_len > 512) {
+            const char *err = "{\"status\":\"error\",\"message\":\"请求体大小无效\"}";
+            httpd_resp_set_status(req, "400 Bad Request");
+            httpd_resp_set_type(req, "application/json");
+            httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+            httpd_resp_send(req, err, strlen(err));
+            return ESP_FAIL;
+        }
+
+        char *buf = (char *)malloc(req->content_len + 1);
+        if (buf == NULL) {
+            httpd_resp_send_500(req);
+            return ESP_FAIL;
+        }
+
+        int r = httpd_req_recv(req, buf, req->content_len);
+        if (r <= 0) {
+            free(buf);
+            if (r == HTTPD_SOCK_ERR_TIMEOUT) {
+                httpd_resp_send_408(req);
+            }
+            return ESP_FAIL;
+        }
+        buf[r] = '\0';
+
+        cJSON *json = cJSON_Parse(buf);
+        free(buf);
+        if (json == NULL) {
+            const char *err = "{\"status\":\"error\",\"message\":\"JSON格式错误\"}";
+            httpd_resp_set_status(req, "400 Bad Request");
+            httpd_resp_set_type(req, "application/json");
+            httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+            httpd_resp_send(req, err, strlen(err));
+            return ESP_FAIL;
+        }
+
+        cJSON *ssid_item = cJSON_GetObjectItem(json, "ssid");
+        cJSON *pass_item = cJSON_GetObjectItem(json, "password");
+        if (!ssid_item || !cJSON_IsString(ssid_item) || ssid_item->valuestring == NULL ||
+            strlen(ssid_item->valuestring) == 0) {
+            cJSON_Delete(json);
+            const char *err = "{\"status\":\"error\",\"message\":\"缺少SSID参数\"}";
+            httpd_resp_set_status(req, "400 Bad Request");
+            httpd_resp_set_type(req, "application/json");
+            httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+            httpd_resp_send(req, err, strlen(err));
+            return ESP_FAIL;
+        }
+
+        const char *ssid_str = ssid_item->valuestring;
+        const char *pass_str = "";
+        if (pass_item && cJSON_IsString(pass_item) && pass_item->valuestring != NULL) {
+            pass_str = pass_item->valuestring;
+        }
+
+        esp_err_t saverr = wifi_config_store_save(ssid_str, pass_str);
+        if (saverr != ESP_OK) {
+            char msg[128];
+            snprintf(msg, sizeof(msg), "{\"status\":\"error\",\"message\":\"NVS保存失败: %s\"}",
+                     esp_err_to_name(saverr));
+            httpd_resp_set_status(req, "500 Internal Server Error");
+            httpd_resp_set_type(req, "application/json");
+            httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+            httpd_resp_send(req, msg, strlen(msg));
+            cJSON_Delete(json);
+            return ESP_FAIL;
+        }
+
+        esp_err_t werr = wifi_manager_update_credentials(ssid_str, pass_str);
+
+        if (werr != ESP_OK) {
+            char msg[128];
+            snprintf(msg, sizeof(msg), "{\"status\":\"warn\",\"message\":\"已保存但重连失败: %s\"}",
+                     esp_err_to_name(werr));
+            httpd_resp_set_type(req, "application/json");
+            httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+            httpd_resp_send(req, msg, strlen(msg));
+            cJSON_Delete(json);
+            return ESP_OK;
+        }
+
+        const char *ok = "{\"status\":\"success\",\"message\":\"WiFi配置已保存，正在重新连接\"}";
+        httpd_resp_set_type(req, "application/json");
+        httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+        httpd_resp_send(req, ok, strlen(ok));
+        cJSON_Delete(json);
+        return ESP_OK;
+    }
+
+    return ESP_OK;
+}
