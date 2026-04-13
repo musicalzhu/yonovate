@@ -133,65 +133,102 @@ extern "C" void app_main()
         ESP_LOGE(TAG, "状态机启动失败");
         gpio_monitor_update_status("state_machine", false);
     } else {
-        ESP_LOGI(TAG, "状态机启动成功");
-        gpio_monitor_update_step("状态机已启动");
+        ESP_LOGI(TAG, "State machine started successfully");
+        gpio_monitor_update_step("State machine started");
     }
 
-    // 初始化WiFi配置存储
+    // ========== WiFi Smart Dual Mode Startup ==========
+    ESP_LOGI(TAG, "========================================");
+    ESP_LOGI(TAG, "WiFi Smart Dual Mode Initializing");
+    ESP_LOGI(TAG, "========================================");
+    
+    // Initialize WiFi config storage
+    ESP_LOGI(TAG, "[1/7] Initializing WiFi config storage (NVS)...");
     wifi_config_store_init();
+    ESP_LOGI(TAG, "[1/7] OK NVS init done");
 
-    // 尝试从NVS加载WiFi配置
+    // Try to load WiFi config from NVS
+    ESP_LOGI(TAG, "[2/7] Loading WiFi config from NVS...");
     char saved_ssid[33] = {0};
     char saved_pass[65] = {0};
     bool has_wifi_config = false;
 
     if (wifi_config_store_load(saved_ssid, sizeof(saved_ssid), saved_pass, sizeof(saved_pass)) == ESP_OK) {
-        ESP_LOGI(TAG, "从NVS加载WiFi配置: SSID=%s", saved_ssid);
+        ESP_LOGI(TAG, "[2/7] OK Loaded WiFi config from NVS");
+        ESP_LOGI(TAG, "       SSID: %s", saved_ssid);
+        ESP_LOGI(TAG, "       Pass len: %zu", strlen(saved_pass));
         has_wifi_config = true;
     } else {
-        ESP_LOGI(TAG, "NVS中无WiFi配置，将启动AP配网模式");
+        ESP_LOGI(TAG, "[2/7] WARN No WiFi config in NVS, using default");
         has_wifi_config = false;
     }
 
-    // 初始化WiFi管理器（使用默认配置或空配置）
+    // Prepare WiFi config
+    const char* target_ssid = has_wifi_config ? saved_ssid : WIFI_DEFAULT_SSID;
+    const char* target_pass = has_wifi_config ? saved_pass : WIFI_DEFAULT_PASS;
+    
+    ESP_LOGI(TAG, "[3/7] WiFi config params:");
+    ESP_LOGI(TAG, "       Target SSID: %s", target_ssid);
+    ESP_LOGI(TAG, "       Config src: %s", has_wifi_config ? "NVS saved" : "factory default");
+    ESP_LOGI(TAG, "       AP SSID: Yonovate-Setup");
+    ESP_LOGI(TAG, "       AP pass: 12345678");
+    ESP_LOGI(TAG, "       AP IP: 192.168.4.1");
+    
     wifi_manager_config_t wifi_config = {
-        .ssid = has_wifi_config ? saved_ssid : WIFI_DEFAULT_SSID,
-        .password = has_wifi_config ? saved_pass : WIFI_DEFAULT_PASS,
+        .ssid = target_ssid,
+        .password = target_pass,
         .callback = wifi_connection_handler
     };
-    if (wifi_manager_init(&wifi_config) != ESP_OK) {
-        ESP_LOGE(TAG, "WiFi管理器初始化失败");
-        gpio_monitor_update_status("wifi", false);
-    } else {
-        if (has_wifi_config) {
-            // 有配置：启动STA模式连接
-            if (wifi_manager_start() != ESP_OK) {
-                ESP_LOGE(TAG, "WiFi启动失败");
-                gpio_monitor_update_status("wifi", false);
-            }
+    
+    ESP_LOGI(TAG, "[4/7] Starting smart dual mode WiFi...");
+    ESP_LOGI(TAG, "       Flow: Start APSTA → Wait STA 30s → Close AP if OK, keep AP if fail");
+    
+    // Smart dual mode: start AP+STA, close AP if STA connects within 30s, keep AP if fails
+    esp_err_t ret = wifi_manager_start_smart_dual_mode(&wifi_config, 
+                                                        "Yonovate-Setup", 
+                                                        "12345678",
+                                                        30000);
+    
+    ESP_LOGI(TAG, "[5/7] Smart dual mode result: %s", esp_err_to_name(ret));
+    
+    if (ret == ESP_OK) {
+        ESP_LOGI(TAG, "[6/7] Checking WiFi connection status...");
+        
+        // Check current mode
+        if (wifi_manager_is_connected()) {
+            // STA connected, now in pure STA mode
+            ESP_LOGI(TAG, "[6/7] OK STA connected!");
+            ESP_LOGI(TAG, "[7/7] OK Current mode: STA mode (connected to router)");
+            gpio_monitor_update_status("wifi", true);
+            gpio_monitor_update_status("ap", false);
         } else {
-            // 无配置：启动AP配网模式
-            ESP_LOGI(TAG, "启动AP配网模式，等待用户配置...");
-            if (wifi_manager_start_ap_provisioning("Yonovate-Setup", "12345678") == ESP_OK) {
-                ESP_LOGI(TAG, "AP配网模式已启动，请连接WiFi: Yonovate-Setup，密码: 12345678");
-                ESP_LOGI(TAG, "然后访问 http://192.168.4.1/api/wifi/config 进行配置");
-                // AP模式下也需要启动Web服务器，否则用户无法访问配置API
-                if (!server) {
-                    server = web_server_start();
-                    if (server) {
-                        ESP_LOGI(TAG, "Web服务器启动成功（AP模式）");
-                        gpio_monitor_update_status("webserver", true);
-                    } else {
-                        ESP_LOGE(TAG, "Web服务器启动失败");
-                        gpio_monitor_update_status("webserver", false);
-                    }
+            // STA connection failed, stay in AP provisioning mode
+            ESP_LOGW(TAG, "[6/7] FAIL STA connection timeout/failed");
+            ESP_LOGI(TAG, "[7/7] WARN Current mode: AP provisioning (waiting for config)");
+            ESP_LOGI(TAG, "       Connect to WiFi: Yonovate-Setup");
+            ESP_LOGI(TAG, "       Visit http://192.168.4.1 to config");
+            gpio_monitor_update_status("wifi", false);
+            gpio_monitor_update_status("ap", true);
+            
+            // Start web server in AP mode
+            ESP_LOGI(TAG, "       Starting web server (AP mode)...");
+            if (!server) {
+                server = web_server_start();
+                if (server) {
+                    ESP_LOGI(TAG, "       OK Web server started (AP mode)");
+                    gpio_monitor_update_status("webserver", true);
+                } else {
+                    ESP_LOGE(TAG, "       FAIL Web server start failed");
                 }
-            } else {
-                ESP_LOGE(TAG, "AP配网模式启动失败");
-                gpio_monitor_update_status("wifi", false);
             }
         }
+    } else {
+        ESP_LOGE(TAG, "[6/7] FAIL WiFi smart dual mode start failed: %s", esp_err_to_name(ret));
+        ESP_LOGE(TAG, "[7/7] FAIL WiFi function unavailable");
+        gpio_monitor_update_status("wifi", false);
     }
     
-
+    ESP_LOGI(TAG, "========================================");
+    ESP_LOGI(TAG, "WiFi init flow complete");
+    ESP_LOGI(TAG, "========================================");
 }

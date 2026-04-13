@@ -1,7 +1,7 @@
 # CR版本记录 - 代码审查历史
 
 > 记录项目重要代码审查（CR）历史，便于追溯和知识传承
-> 配套规则文件：`CODING_STANDARDS.md`
+> 配套规则文件：`.windsurf/README.md`
 
 ---
 
@@ -33,9 +33,88 @@
 - [x] 代码审查通过
 
 ### 遇到的问题与解决方案
-**问题**: bash工具在Windows环境下执行git命令I/O超时
-**根因**: bash工具在独立cmd.exe进程中执行，与IDE终端环境隔离
+
+**问题1**: bash工具在Windows环境下执行git命令I/O超时
+**根因**: `.git/config` 文件使用Unix换行符(LF)而非Windows换行符(CRLF)，导致git解析异常
+**解决方案**: 修复.git/config换行符为CRLF格式
+**验证**: 修复后git命令正常执行，`git log`显示提交记录
+
+**问题2**: bash工具在独立cmd.exe进程中执行，与IDE终端环境隔离
 **解决方案**: 使用VSCode任务配置执行git命令，或IDE终端手动执行
+
+### 规则文件更新
+
+**1. AI_RULES.md分拆**（2026-04-11）
+- 原文件（922行）分拆为3个专用文件：
+  - `ai-rules/CORE_RULES.md` - 核心安全规则（通用）
+  - `ai-rules/ESP32_STANDARDS.md` - ESP32技术规范（专用）
+  - `ai-rules/WORKFLOW_GUIDE.md` - 操作手册（执行参考）
+- 便于根据任务类型选择性加载，降低认知负担
+
+**2. 规则文件通用性改进**（2026-04-11）
+- 移除特定IDE路径（`.windsurf/rules/` → `ai-rules/`）
+- 移除特定IDE名称引用（VSCode、Cursor等 → 通用描述）
+- 工具映射表改为通用示例（非特定IDE绑定）
+- 适用范围描述通用化
+- 用户名/路径/IP地址通用化：
+  - `COM5` → `[COM端口]`
+  - `c:\Downloads\code-v2\v2` → `[项目根目录]`
+  - `C:\Espressif\frameworks\esp-idf-v5.5.3` → `[ESP-IDF安装路径]`
+  - `C:\Users\Tom\AppData...\Windsurf` → `C:\Users\[用户名]\AppData\...\[AI工具]`
+- 确保规则可跨AI IDE工具使用
+
+**3. AI_RULES.md**: 新增"Windows环境Git常见问题排查"章节
+- 问题现象识别
+- 根本原因分析（.git/config换行符问题）
+- 解决方案（3种方法）
+- 验证步骤
+- 预防措施
+
+**4. 新建`ai-rules/RULE_MAINTENANCE.md`**（2026-04-11）
+- 规则文件维护指南
+- 通用化原则（强制）：用户名/路径/IP等改为通用形式
+- 规则分类与归档体系：安全→CORE_RULES.md，技术→ESP32_STANDARDS.md，流程→WORKFLOW_GUIDE.md
+- 新问题根因分析模板
+- 新约束/规则模板
+- 自动归档流程和检查清单
+- 确保AI自动维护规则文件的一致性和规范性
+
+**5. `ai-rules/CORE_RULES.md`新增"防止AI幻觉原则"**（2026-04-11）
+- 新增第5条核心安全原则：防止AI幻觉原则（强制性）
+- 核心要求：回复完成前必须自我验证或有办法Double Check
+- 禁止虚构信息、必须工具验证、Double Check机制、区分假设与事实
+- 新增自我验证检查清单（5项检查）
+- 在禁止行为中新增：未自我验证就回复完成（AI幻觉）
+- 确保AI输出真实可靠，避免幻觉误导用户
+
+**6. `ai-rules/WORKFLOW_GUIDE.md`扩展"常见问题处理"**（2026-04-11）
+- 原3个问题扩展至8个问题，新增文件存在性矛盾、编译错误排查、Git冲突处理、工具执行超时/失败、配置文件格式错误等场景
+
+**7. `CODING_STANDARDS.md`重命名为`AI_RULES.md`**（2026-04-11）
+- 原文件名易误解为人类编码标准
+- 新文件名准确反映内容：AI规则入口
+- 更新所有引用：CR_HISTORY.md、RULE_MAINTENANCE.md等
+- 使文件名与内容更相符，便于AI识别
+
+**8. AI反思与规则完善**（2026-04-11）
+- **问题发现**：修复代码后未立即编译验证，导致烧录时才暴露编译错误
+- **根因分析**：违反了`CORE_RULES.md`修改后验证机制第3条（编译验证）
+- **规则强化**：在`CORE_RULES.md`新增"编译验证红线"条款
+  - 明确禁止：修改后不编译就声称"修复完成"
+  - 明确禁止：跳过编译直接执行烧录/测试
+  - 新增强制步骤：🔴 编译验证（绝对强制）
+  - 新增正确流程示例：修改→编译→确认→报告
+- **经验教训**：每次代码修改后必须执行`idf.py build`验证，无例外
+
+**9. 串口占用问题.md完善**（2026-04-11）
+- **问题发现**：多次出现COM5被占用，需用户提醒才解决
+- **根因分析**：AI未主动查找已知问题的解决方案
+- **规则强化**：
+  - `WORKFLOW_GUIDE.md`新增**问题9：串口端口占用**，含自动解决方案
+  - `CORE_RULES.md`新增**自动问题解决机制**
+  - 要求AI识别错误模式后自动执行.md中的解决步骤
+- **自动解决方案**：`taskkill /F /IM python.exe & timeout 2`
+- **预防措施**：每次烧录前自动清理占用进程
 
 ---
 
@@ -54,7 +133,7 @@
 4c91092 docs: add CR version record for WiFi config feature
 0bd52d6 docs: add ESP32 embedded testing strategy and CR verification guide
 631b82e docs: add verified git and build execution examples
-b76831c docs: update CODING_STANDARDS with git and build execution guide
+b76831c docs: update AI_RULES with git and build execution guide
 e273101 feat: add WiFi config store with NVS persistence and HTTP API
 ```
 
@@ -66,7 +145,7 @@ e273101 feat: add WiFi config store with NVS persistence and HTTP API
 5. **环境配置** `.vscode/`: 
    - 设置ESP-IDF CMD为默认终端
    - 添加Git检查任务和ESP-IDF构建任务
-6. **规则文档** `CODING_STANDARDS.md`: 
+6. **规则文档** `AI_RULES.md`: 
    - 完善ESP32嵌入式测试策略（4级验证）
    - 添加Git和Build执行指南
    - 记录实际验证成功案例
@@ -97,11 +176,30 @@ Project build complete.
 - ✅ 错误处理：HTTP状态码/NVS错误码正确返回
 - ✅ 规则合规：中文日志/注释，OCP设计
 
-#### Level 4: 硬件测试 ⏳ 待执行
-- [ ] 烧录固件到ESP32开发板
-- [ ] HTTP API功能测试（GET/POST）
-- [ ] NVS存储持久化验证（断电重启）
-- [ ] WiFi重连功能验证（切换SSID）
+#### Level 4: 硬件测试 ✅ 已完成
+
+**测试环境**:
+- 设备: ESP32 (COM5)
+- 测试终端: iPad (iOS Safari)
+- WiFi: Yonovate-Setup (AP模式)
+
+**测试步骤与结果**:
+
+| 步骤 | 测试内容 | 结果 | 备注 |
+|------|---------|------|------|
+| 1 | 烧录固件到ESP32 | ✅ | 编译通过，烧录成功 |
+| 2 | AP模式启动，DHCP分配IP | ✅ | iPad自动获取192.168.4.2 |
+| 3 | GET /api/wifi/config | ✅ | 返回JSON，stored: false |
+| 4 | 前端页面WiFi配置 | ✅ | 创建wifi_config.html |
+| 5 | POST修改WiFi配置 | ⏳ | 待iPad测试POST提交 |
+| 6 | 断电重启持久化验证 | ⏳ | 待执行 |
+
+**前端页面创建**:
+- `web_project/pages/wifi_config.html`: WiFi配置可视化页面
+  - 支持GET加载当前配置
+  - 支持POST保存WiFi凭证（SSID+密码）
+  - 支持DELETE清除配置
+  - 响应式设计，适配移动端
 
 ### 遇到的问题与解决方案
 

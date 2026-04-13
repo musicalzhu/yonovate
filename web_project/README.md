@@ -13,13 +13,16 @@
 ### 2. 获取 ESP32 IP 地址
 通过串口监视器查看 ESP32 的 IP 地址：
 ```bash
-cd /home/shengnan/yonovate/v2
-idf.py -p /dev/ttyUSB0 monitor
+cd [项目根目录]
+idf.py -p [串口设备] monitor
+# Windows示例: idf.py -p COM5 monitor
+# Linux示例: idf.py -p /dev/ttyUSB0 monitor
 ```
 
 在日志中找到类似这样的信息：
 ```
-I (4177) wifi_manager: WiFi连接成功，IP地址: 192.168.124.6
+I (4177) wifi_manager: WiFi connection successful, IP: [IP地址]
+# 示例: 192.168.1.100
 ```
 
 ### 3. 配置前端 IP 地址
@@ -28,7 +31,7 @@ I (4177) wifi_manager: WiFi连接成功，IP地址: 192.168.124.6
 编辑 `web_project/js/config.js`：
 ```javascript
 const ESP32_CONFIG = {
-    IP: '192.168.124.6',  // 修改为您的 ESP32 IP 地址
+    IP: '[IP地址]',  // 修改为ESP32实际IP地址
     PORT: 80,
 };
 ```
@@ -42,7 +45,8 @@ const ESP32_CONFIG = {
 ### 4. 打开前端页面
 直接在浏览器中打开本地文件：
 ```
-file:///home/shengnan/yonovate/v2/web_project/pages/gpio_control.html
+file:///[项目路径]/web_project/pages/gpio_control.html
+# Windows示例: file:///C:/Projects/yonovate/web_project/pages/gpio_control.html
 ```
 
 或者在文件管理器中双击打开 `gpio_control.html`

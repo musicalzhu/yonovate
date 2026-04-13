@@ -79,6 +79,21 @@ esp_err_t wifi_manager_update_credentials(const char* ssid, const char* password
 esp_err_t wifi_manager_deinit(void);
 
 /**
+ * @brief 智能双模式启动：先尝试连接STA，超时成功后关闭AP省电，失败则保持AP配网模式
+ * 
+ * @param config WiFi配置（STA要连接的WiFi）
+ * @param ap_ssid AP模式的SSID（设备发出的热点名）
+ * @param ap_password AP模式的密码
+ * @param timeout_ms STA连接超时时间（毫秒），建议30000（30秒）
+ * @return esp_err_t ESP_OK表示成功启动
+ * @note 连接成功后会关闭AP进入纯STA模式；连接失败则进入纯AP配网模式
+ */
+esp_err_t wifi_manager_start_smart_dual_mode(const wifi_manager_config_t* config,
+                                              const char* ap_ssid,
+                                              const char* ap_password,
+                                              uint32_t timeout_ms);
+
+/**
  * @brief 启动AP配网模式
  * @details 开启设备热点，提供配网页面/API供用户配置WiFi
  * @param ap_ssid AP热点SSID名称（设备发出的热点名）
@@ -104,5 +119,4 @@ bool wifi_manager_is_ap_mode(void);
 
 #ifdef __cplusplus
 }
-#endif
 #endif

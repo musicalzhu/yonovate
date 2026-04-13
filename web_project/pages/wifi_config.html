@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32控制中心 - WiFi配置</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .wifi-form {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .btn-submit {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .btn-submit:hover {
+            background: #45a049;
+        }
+        .btn-clear {
+            background: #f44336;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-clear:hover {
+            background: #da190b;
+        }
+        .status-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .current-config {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .current-config h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ESP32控制中心 - WiFi配置</h1>
+        
+        <div class="navigation">
+            <a href="../index.html" class="nav-button">返回主页</a>
+            <a href="gpio_control.html" class="nav-button">GPIO控制</a>
+            <a href="logic_circuit.html" class="nav-button">逻辑电路</a>
+        </div>
+
+        <div class="ip-config">
+            <label for="esp32-ip">ESP32 IP地址: </label>
+            <input type="text" id="esp32-ip" placeholder="例如: 192.168.4.1" value="192.168.4.1">
+            <button class="test-btn" onclick="loadCurrentConfig()">加载当前配置</button>
+            <div id="connection-status" class="status"></div>
+        </div>
+
+        <div class="current-config" id="currentConfig" style="display: none;">
+            <h3>当前WiFi配置</h3>
+            <p id="configStatus"></p>
+        </div>
+
+        <div class="wifi-form">
+            <h2>配置WiFi连接</h2>
+            <p style="color: #666; font-style: italic;">
+                配置后ESP32将尝试连接此WiFi网络。如果连接失败，将重新启动AP配网模式。
+            </p>
+            
+            <div class="form-group">
+                <label for="wifi-ssid">WiFi名称 (SSID):</label>
+                <input type="text" id="wifi-ssid" placeholder="输入你的WiFi名称" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="wifi-password">WiFi密码:</label>
+                <input type="password" id="wifi-password" placeholder="输入WiFi密码（至少8位）" minlength="8">
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button class="btn-submit" onclick="saveWiFiConfig()">保存配置</button>
+                <button class="btn-clear" onclick="clearWiFiConfig()">清除配置</button>
+            </div>
+            
+            <div id="statusBox" class="status-box"></div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * @brief 获取ESP32 IP地址
+         * @returns {string} IP地址
+         */
+        function getEsp32Ip() {
+            return document.getElementById('esp32-ip').value.trim() || '192.168.4.1';
+        }
+
+        /**
+         * @brief 显示状态信息
+         * @param {string} message 消息内容
+         * @param {string} type 类型: success/error/info
+         */
+        function showStatus(message, type = 'info') {
+            const statusBox = document.getElementById('statusBox');
+            statusBox.className = 'status-box status-' + type;
+            statusBox.innerHTML = message;
+            statusBox.style.display = 'block';
+        }
+
+        /**
+         * @brief 隐藏状态信息
+         */
+        function hideStatus() {
+            document.getElementById('statusBox').style.display = 'none';
+        }
+
+        /**
+         * @brief 加载当前WiFi配置
+         * @details 调用GET /api/wifi/config获取当前存储的WiFi配置
+         */
+        async function loadCurrentConfig() {
+            const ip = getEsp32Ip();
+            const statusDiv = document.getElementById('connection-status');
+            const configDiv = document.getElementById('currentConfig');
+            const configStatus = document.getElementById('configStatus');
+            
+            statusDiv.textContent = '加载中...';
+            statusDiv.className = 'status';
+            
+            try {
+                const response = await fetch(`http://${ip}/api/wifi/config`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.stored) {
+                    configStatus.innerHTML = `
+                        <strong>状态:</strong> 已存储配置<br>
+                        <strong>SSID:</strong> ${data.ssid || '未知'}
+                    `;
+                    document.getElementById('wifi-ssid').value = data.ssid || '';
+                } else {
+                    configStatus.innerHTML = '<strong>状态:</strong> 未存储WiFi配置（AP配网模式）';
+                }
+                
+                configDiv.style.display = 'block';
+                statusDiv.textContent = '✓ 连接成功';
+                statusDiv.className = 'status success';
+                
+            } catch (error) {
+                console.error('加载配置失败:', error);
+                statusDiv.textContent = '✗ 连接失败: ' + error.message;
+                statusDiv.className = 'status error';
+                configDiv.style.display = 'none';
+            }
+        }
+
+        /**
+         * @brief 保存WiFi配置
+         * @details 调用POST /api/wifi/config保存WiFi配置到ESP32
+         */
+        async function saveWiFiConfig() {
+            const ip = getEsp32Ip();
+            const ssid = document.getElementById('wifi-ssid').value.trim();
+            const password = document.getElementById('wifi-password').value;
+            
+            // 验证输入
+            if (!ssid) {
+                showStatus('请输入WiFi名称（SSID）', 'error');
+                return;
+            }
+            
+            if (password.length > 0 && password.length < 8) {
+                showStatus('WiFi密码至少需要8位（或留空连接开放网络）', 'error');
+                return;
+            }
+            
+            showStatus('正在保存配置...', 'info');
+            
+            try {
+                const response = await fetch(`http://${ip}/api/wifi/config`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ssid: ssid,
+                        password: password
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showStatus(`
+                        <strong>✓ 保存成功!</strong><br>
+                        WiFi配置已保存到ESP32。<br>
+                        <small>重启后将尝试连接: ${ssid}</small>
+                    `, 'success');
+                    
+                    // 刷新当前配置显示
+                    loadCurrentConfig();
+                } else {
+                    showStatus(`<strong>保存失败:</strong> ${data.message || '未知错误'}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('保存配置失败:', error);
+                showStatus(`<strong>保存失败:</strong> ${error.message}<br><small>请确认IP地址正确且设备在线</small>`, 'error');
+            }
+        }
+
+        /**
+         * @brief 清除WiFi配置
+         * @details 调用DELETE /api/wifi/config清除存储的WiFi配置
+         */
+        async function clearWiFiConfig() {
+            const ip = getEsp32Ip();
+            
+            if (!confirm('确定要清除WiFi配置吗？ESP32将回到AP配网模式。')) {
+                return;
+            }
+            
+            showStatus('正在清除配置...', 'info');
+            
+            try {
+                const response = await fetch(`http://${ip}/api/wifi/config`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showStatus(`
+                        <strong>✓ 清除成功!</strong><br>
+                        WiFi配置已清除。<br>
+                        <small>重启后将进入AP配网模式</small>
+                    `, 'success');
+                    
+                    // 清空输入框
+                    document.getElementById('wifi-ssid').value = '';
+                    document.getElementById('wifi-password').value = '';
+                    
+                    // 刷新当前配置显示
+                    loadCurrentConfig();
+                } else {
+                    showStatus(`<strong>清除失败:</strong> ${data.message || '未知错误'}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('清除配置失败:', error);
+                showStatus(`<strong>清除失败:</strong> ${error.message}`, 'error');
+            }
+        }
+
+        // 页面加载时自动加载当前配置
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCurrentConfig();
+        });
+    </script>
+</body>
+</html>

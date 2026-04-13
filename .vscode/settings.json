@@ -15,32 +15,5 @@
   },
   "files.associations": {
     "i2c_master.h": "c"
-  },
-
-  "terminal.integrated.profiles.windows": {
-    "ESP-IDF PowerShell": {
-      "path": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-      "args": [
-        "-ExecutionPolicy", "Bypass",
-        "-NoExit",
-        "-File", "C:\\Espressif\\Initialize-Idf.ps1",
-        "-IdfId", "esp-idf-v5.5.3-v5.5"
-      ]
-    },
-    "ESP-IDF CMD": {
-      "path": "C:\\WINDOWS\\System32\\cmd.exe",
-      "args": [
-        "/k",
-        "C:\\Espressif\\frameworks\\esp-idf-v5.5.3\\export.bat"
-      ]
-    },
-    "PowerShell": {
-      "source": "PowerShell",
-      "args": ["-ExecutionPolicy", "Bypass"]
-    },
-    "Command Prompt": {
-      "path": "C:\\WINDOWS\\System32\\cmd.exe"
-    }
-  },
-  "terminal.integrated.defaultProfile.windows": "Command Prompt"
+  }
 }

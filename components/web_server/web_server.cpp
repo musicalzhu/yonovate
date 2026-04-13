@@ -31,6 +31,7 @@ esp_err_t gpio_state_handler(httpd_req_t *req);
 esp_err_t state_machine_http_handler(httpd_req_t *req);
 esp_err_t wifi_config_handler(httpd_req_t *req);
 esp_err_t ping_handler(httpd_req_t *req);
+static esp_err_t wifi_config_page_handler(httpd_req_t *req);
 
 // TAG常量，用于ESP_LOG函数
 static const char *TAG = "WEB_SERVER";
@@ -51,7 +52,7 @@ httpd_handle_t web_server_start(void)
     
     // 配置HTTP服务器
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-    config.max_uri_handlers = 20;
+    config.max_uri_handlers = 25;  // 增加槽位以支持所有API（原20个不足）
     config.stack_size = 16384;
     
     // 启动HTTP服务器
@@ -211,9 +212,9 @@ httpd_handle_t web_server_start(void)
     };
     register_uri_checked(server, &state_machine_options_uri, "OPTIONS");
 
-    // WiFi配置URI
+    // WiFi配置URI（带/api前缀，与main.cpp提示一致）
     httpd_uri_t wifi_config_get_uri = {
-        .uri      = "/wifi/config",
+        .uri      = "/api/wifi/config",
         .method   = HTTP_GET,
         .handler  = wifi_config_handler,
         .user_ctx = NULL
@@ -221,7 +222,7 @@ httpd_handle_t web_server_start(void)
     register_uri_checked(server, &wifi_config_get_uri, "GET");
 
     httpd_uri_t wifi_config_post_uri = {
-        .uri      = "/wifi/config",
+        .uri      = "/api/wifi/config",
         .method   = HTTP_POST,
         .handler  = wifi_config_handler,
         .user_ctx = NULL
@@ -229,7 +230,7 @@ httpd_handle_t web_server_start(void)
     register_uri_checked(server, &wifi_config_post_uri, "POST");
 
     httpd_uri_t wifi_config_options_uri = {
-        .uri      = "/wifi/config",
+        .uri      = "/api/wifi/config",
         .method   = HTTP_OPTIONS,
         .handler  = wifi_config_handler,
         .user_ctx = NULL
@@ -237,7 +238,7 @@ httpd_handle_t web_server_start(void)
     register_uri_checked(server, &wifi_config_options_uri, "OPTIONS");
 
     httpd_uri_t wifi_config_delete_uri = {
-        .uri      = "/wifi/config",
+        .uri      = "/api/wifi/config",
         .method   = HTTP_DELETE,
         .handler  = wifi_config_handler,
         .user_ctx = NULL
@@ -252,6 +253,15 @@ httpd_handle_t web_server_start(void)
         .user_ctx = NULL
     };
     register_uri_checked(server, &ping_uri, "GET");
+
+    // WiFi配置页面URI（内联HTML，无需文件系统）
+    httpd_uri_t wifi_page_uri = {
+        .uri      = "/",
+        .method   = HTTP_GET,
+        .handler  = wifi_config_page_handler,
+        .user_ctx = NULL
+    };
+    register_uri_checked(server, &wifi_page_uri, "GET");
 
     ESP_LOGI(TAG, "HTTP server started successfully, listening on port: %d", config.server_port);
     return server;
@@ -607,6 +617,7 @@ esp_err_t system_status_handler(httpd_req_t *req)
 
 // 逻辑电路请求处理函数在逻辑电路组件中实现
 // 此处仅保留函数声明，实际实现请参考 logic_circuit.cpp
+/**
  * @brief WiFi配置处理程序
  * @param req HTTP请求结构体
  * @return esp_err_t ESP_OK成功，其他错误码失败
@@ -664,6 +675,7 @@ esp_err_t wifi_config_handler(httpd_req_t *req)
 
     // POST请求 - 更新WiFi配置
     if (req->method == HTTP_POST) {
+        ESP_LOGI(TAG, "接收到WiFi配置POST请求, content_len=%d", req->content_len);
         // 限制请求体大小
         if (req->content_len == 0 || req->content_len > 512) {
             const char *err = "{\"status\":\"error\",\"message\":\"请求体大小无效\"}";
@@ -693,7 +705,7 @@ esp_err_t wifi_config_handler(httpd_req_t *req)
         cJSON *json = cJSON_Parse(buf);
         free(buf);
         if (json == NULL) {
-            const char *err = "{\"status\":\"error\",\"message\":\"JSON格式错误\"}";
+            const char *err = "{\"status\":\"error\",\"message\":\"JSON parse error\"}";
             httpd_resp_set_status(req, "400 Bad Request");
             httpd_resp_set_type(req, "application/json");
             httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -703,10 +715,11 @@ esp_err_t wifi_config_handler(httpd_req_t *req)
 
         cJSON *ssid_item = cJSON_GetObjectItem(json, "ssid");
         cJSON *pass_item = cJSON_GetObjectItem(json, "password");
+        cJSON *is_default_item = cJSON_GetObjectItem(json, "is_default");
         if (!ssid_item || !cJSON_IsString(ssid_item) || ssid_item->valuestring == NULL ||
             strlen(ssid_item->valuestring) == 0) {
             cJSON_Delete(json);
-            const char *err = "{\"status\":\"error\",\"message\":\"缺少SSID参数\"}";
+            const char *err = "{\"status\":\"error\",\"message\":\"Missing SSID param\"}";
             httpd_resp_set_status(req, "400 Bad Request");
             httpd_resp_set_type(req, "application/json");
             httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -720,24 +733,49 @@ esp_err_t wifi_config_handler(httpd_req_t *req)
             pass_str = pass_item->valuestring;
         }
 
+        // Check if this is restore default config operation
+        bool is_restore_default = (is_default_item && cJSON_IsBool(is_default_item) &&
+                                   cJSON_IsTrue(is_default_item));
+
         esp_err_t saverr = wifi_config_store_save(ssid_str, pass_str);
         if (saverr != ESP_OK) {
+            cJSON_Delete(json);
             char msg[128];
-            snprintf(msg, sizeof(msg), "{\"status\":\"error\",\"message\":\"NVS保存失败: %s\"}",
+            snprintf(msg, sizeof(msg), "{\"status\":\"error\",\"message\":\"NVS save failed: %s\"}",
                      esp_err_to_name(saverr));
             httpd_resp_set_status(req, "500 Internal Server Error");
             httpd_resp_set_type(req, "application/json");
             httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
             httpd_resp_send(req, msg, strlen(msg));
-            cJSON_Delete(json);
             return ESP_FAIL;
         }
 
+        // For restore default, just save config and try to connect (don't require success)
+        // For normal save, require connection to succeed
         esp_err_t werr = wifi_manager_update_credentials(ssid_str, pass_str);
 
+        if (is_restore_default) {
+            // Restore default: config saved is success, connection is optional
+            if (werr == ESP_OK) {
+                const char *ok = "{\"status\":\"success\",\"message\":\"Default config restored, connected successfully\"}";
+                httpd_resp_set_type(req, "application/json");
+                httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+                httpd_resp_send(req, ok, strlen(ok));
+            } else {
+                // Connection failed but config is saved - this is OK for default restore
+                const char *ok = "{\"status\":\"success\",\"message\":\"Default config restored, will try connect on next boot\"}";
+                httpd_resp_set_type(req, "application/json");
+                httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+                httpd_resp_send(req, ok, strlen(ok));
+            }
+            cJSON_Delete(json);
+            return ESP_OK;
+        }
+
+        // Normal save: require connection success
         if (werr != ESP_OK) {
             char msg[128];
-            snprintf(msg, sizeof(msg), "{\"status\":\"warn\",\"message\":\"已保存但重连失败: %s\"}",
+            snprintf(msg, sizeof(msg), "{\"status\":\"warn\",\"message\":\"Saved but reconnect failed: %s\"}",
                      esp_err_to_name(werr));
             httpd_resp_set_type(req, "application/json");
             httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -746,7 +784,7 @@ esp_err_t wifi_config_handler(httpd_req_t *req)
             return ESP_OK;
         }
 
-        const char *ok = "{\"status\":\"success\",\"message\":\"WiFi配置已保存，正在重新连接\"}";
+        const char *ok = "{\"status\":\"success\",\"message\":\"WiFi config saved, reconnecting...\"}";
         httpd_resp_set_type(req, "application/json");
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
         httpd_resp_send(req, ok, strlen(ok));
@@ -779,6 +817,256 @@ esp_err_t wifi_config_handler(httpd_req_t *req)
     }
 
     return ESP_OK;
+}
+
+/**
+ * @brief 内联WiFi配置页面HTML内容
+ * @details 简化的单页面配置界面，直接嵌入固件，无需文件系统
+ */
+static const char* wifi_config_page_html = R"rawliteral(<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 WiFi配置</title>
+    <style>
+        body { font-family: Arial; max-width: 400px; margin: 20px auto; padding: 10px; background: #f5f5f5; }
+        h1 { color: #333; text-align: center; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #666; font-size: 14px; margin-bottom: 20px; }
+        .box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+        input:focus { border-color: #4CAF50; outline: none; }
+        button { width: 100%; padding: 14px; margin-top: 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        .btn-save { background: #4CAF50; color: white; }
+        .btn-clear { background: #f44336; color: white; }
+        .status { margin-top: 15px; padding: 12px; border-radius: 4px; font-size: 14px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warn { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .current { background: #e7f3ff; padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 14px; border-left: 4px solid #2196F3; }
+    </style>
+</head>
+<body>
+    <h1>ESP32 WiFi配置</h1>
+    <div class="subtitle">配网模式 (AP: Yonovate-Setup) <span style="color:#999;font-size:12px;">v1.5</span></div>
+    <div class="box">
+        <div class="current" id="current">正在连接设备...</div>
+        <div class="form-group">
+            <label>WiFi名称 (SSID)</label>
+            <input type="text" id="ssid" placeholder="输入你的WiFi名称">
+        </div>
+        <div class="form-group">
+            <label>WiFi密码</label>
+            <input type="password" id="password" placeholder="至少8位，留空表示开放网络">
+        </div>
+        <button class="btn-save" onclick="save()">保存配置</button>
+        <button class="btn-clear" onclick="clearConfig()">清除配置</button>
+        <button style="background:#FF9800;color:white;width:100%;padding:14px;margin-top:10px;border:none;border-radius:4px;cursor:pointer;font-size:16px;" onclick="resetDefault()">恢复默认配置</button>
+        <div id="status" style="margin-top:15px;padding:12px;border-radius:4px;display:none;"></div>
+        
+        <!-- 备选方案：传统表单提交 -->
+        <form id="fallbackForm" action="/api/wifi/config" method="POST" style="display:none;margin-top:20px;padding:15px;border:1px dashed #ccc;background:#f9f9f9;">
+            <p style="margin:0 0 10px 0;color:#666;">JavaScript方式失败，使用备选表单提交：</p>
+            <input type="text" name="ssid" id="formSsid" placeholder="WiFi名称"><br><br>
+            <input type="password" name="password" id="formPassword" placeholder="WiFi密码"><br><br>
+            <input type="submit" value="表单方式保存" style="width:auto;padding:8px 16px;background:#2196F3;color:white;border:none;border-radius:4px;cursor:pointer;">
+        </form>
+    </div>
+    <script>
+        function showStatus(msg, type) {
+            var el = document.getElementById('status');
+            el.className = type;
+            el.innerHTML = msg;
+            el.style.display = 'block';
+        }
+        function loadCurrent() {
+            document.getElementById('current').innerHTML = '<strong>状态:</strong> 正在连接设备...';
+            var retryCount = 0;
+            var maxRetries = 3;
+            
+            function tryLoad() {
+                var xhr = new XMLHttpRequest();
+                xhr.timeout = 5000;
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            try {
+                                var d = JSON.parse(xhr.responseText);
+                                if (d.stored) {
+                                    document.getElementById('current').innerHTML = '<strong>当前配置:</strong> ' + d.ssid;
+                                    document.getElementById('ssid').value = d.ssid;
+                                    showStatus('已保存配置: ' + d.ssid, 'success');
+                                } else {
+                                    document.getElementById('current').innerHTML = '<strong>当前状态:</strong> 未配置（等待配网）';
+                                    document.getElementById('status').style.display = 'none';
+                                }
+                            } catch(e) {
+                                document.getElementById('current').innerHTML = '<strong>当前状态:</strong> 数据解析错误';
+                            }
+                        } else if (xhr.status === 0) {
+                            // Network error or timeout
+                            if (retryCount < maxRetries) {
+                                retryCount++;
+                                document.getElementById('current').innerHTML = '<strong>状态:</strong> 连接中... (重试 ' + retryCount + '/' + maxRetries + ')';
+                                setTimeout(tryLoad, 1000);
+                            } else {
+                                document.getElementById('current').innerHTML = '<strong>状态:</strong> 设备响应超时，请确认已连接到: <strong>Yonovate-Setup</strong>';
+                            }
+                        } else {
+                            document.getElementById('current').innerHTML = '<strong>状态:</strong> HTTP错误 ' + xhr.status + '，请刷新重试';
+                        }
+                    }
+                };
+                xhr.onerror = function() {
+                    if (retryCount < maxRetries) {
+                        retryCount++;
+                        document.getElementById('current').innerHTML = '<strong>状态:</strong> 连接中... (重试 ' + retryCount + '/' + maxRetries + ')';
+                        setTimeout(tryLoad, 1000);
+                    } else {
+                        document.getElementById('current').innerHTML = '<strong>状态:</strong> 网络错误，请确认已连接到: <strong>Yonovate-Setup</strong>';
+                    }
+                };
+                xhr.open('GET', '/api/wifi/config', true);
+                xhr.send();
+            }
+            tryLoad();
+        }
+        function save() {
+            var statusEl = document.getElementById('status');
+            statusEl.style.display = 'block';
+            statusEl.className = 'info';
+            statusEl.innerHTML = '正在保存配置...';
+            
+            var ssid = document.getElementById('ssid').value.trim();
+            var password = document.getElementById('password').value;
+            
+            if (!ssid) { 
+                statusEl.className = 'error';
+                statusEl.innerHTML = '请输入WiFi名称（SSID）';
+                return; 
+            }
+            if (password.length > 0 && password.length < 8) { 
+                statusEl.className = 'error';
+                statusEl.innerHTML = '密码至少需要8位，或留空连接开放网络';
+                return; 
+            }
+            
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            var d = JSON.parse(xhr.responseText);
+                            if (d.status === 'success') {
+                                statusEl.className = 'success';
+                                statusEl.innerHTML = '<strong>保存成功！</strong><br>WiFi配置已写入ESP32<br>SSID: ' + ssid + '<br>设备正在尝试连接该WiFi...';
+                                document.getElementById('current').innerHTML = '<strong>当前配置:</strong> ' + ssid + ' <small>(连接中...)</small>';
+                            } else if (d.status === 'warn') {
+                                // 配置已保存但连接失败（警告而非错误）
+                                statusEl.className = 'warn';
+                                statusEl.innerHTML = '<strong>配置已保存，但连接遇到问题：</strong><br>' + (d.message || '请检查WiFi信号或密码') + '<br><small>设备将保持AP配网模式，可重新配置</small>';
+                                document.getElementById('current').innerHTML = '<strong>当前配置:</strong> ' + ssid + ' <small>(待连接)</small>';
+                            } else {
+                                statusEl.className = 'error';
+                                statusEl.innerHTML = '<strong>保存失败:</strong> ' + (d.message || '未知错误');
+                            }
+                        } catch(e) {
+                            statusEl.className = 'error';
+                            statusEl.innerHTML = '响应解析失败: ' + e.message;
+                        }
+                    } else {
+                        statusEl.className = 'error';
+                        statusEl.innerHTML = '保存失败，HTTP错误: ' + xhr.status;
+                    }
+                }
+            };
+            xhr.onerror = function() {
+                statusEl.className = 'error';
+                statusEl.innerHTML = '请求出错（网络错误），请检查连接';
+            };
+            xhr.open('POST', '/api/wifi/config', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ssid: ssid, password: password}));
+        }
+        function clearConfig() {
+            if (!confirm('确定要清除WiFi配置吗？\n清除后ESP32将重启进入AP配网模式。')) return;
+            showStatus('正在清除配置...', 'info');
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            var d = JSON.parse(xhr.responseText);
+                            if (d.status === 'success') {
+                                showStatus('<strong>清除成功！</strong><br>WiFi配置已删除，设备已进入AP配网模式', 'success');
+                                document.getElementById('ssid').value = '';
+                                document.getElementById('password').value = '';
+                                document.getElementById('current').innerHTML = '<strong>当前状态:</strong> 未配置（等待配网）';
+                            } else {
+                                showStatus('<strong>清除失败:</strong> ' + (d.message || '未知错误'), 'error');
+                            }
+                        } catch(e) {
+                            showStatus('响应解析失败: ' + e.message, 'error');
+                        }
+                    } else {
+                        showStatus('清除失败，HTTP错误: ' + xhr.status, 'error');
+                    }
+                }
+            };
+            xhr.open('DELETE', '/api/wifi/config', true);
+            xhr.send();
+        }
+        function resetDefault() {
+            if (!confirm('确定要恢复默认配置吗？\n\n将恢复为出厂默认WiFi：\n- SSID: XINGHUI\n- 密码: 88888888\n\n设备将立即尝试连接该WiFi。')) return;
+            showStatus('正在恢复默认配置...', 'info');
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            var d = JSON.parse(xhr.responseText);
+                            if (d.status === 'success') {
+                                showStatus('<strong>恢复默认配置成功！</strong><br>已恢复出厂默认WiFi<br>SSID: XINGHUI<br>密码: 88888888<br>设备正在尝试连接该WiFi...', 'success');
+                                document.getElementById('ssid').value = 'XINGHUI';
+                                document.getElementById('password').value = '88888888';
+                                document.getElementById('current').innerHTML = '<strong>当前配置:</strong> XINGHUI (默认)';
+                            } else {
+                                showStatus('<strong>恢复失败:</strong> ' + (d.message || '未知错误'), 'error');
+                            }
+                        } catch(e) {
+                            showStatus('响应解析失败: ' + e.message, 'error');
+                        }
+                    } else {
+                        showStatus('恢复失败，HTTP错误: ' + xhr.status, 'error');
+                    }
+                }
+            };
+            xhr.open('POST', '/api/wifi/config', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ssid: 'XINGHUI', password: '88888888', is_default: true}));
+        }
+        loadCurrent();
+    </script>
+</body>
+</html>)rawliteral";
+
+/**
+ * @brief WiFi配置页面处理程序
+ * @param req HTTP请求结构体
+ * @return esp_err_t ESP_OK成功
+ * @details 返回内联的HTML配置页面，支持GET请求
+ */
+static esp_err_t wifi_config_page_handler(httpd_req_t *req)
+{
+    if (req->method == HTTP_GET) {
+        httpd_resp_set_type(req, "text/html; charset=utf-8");
+        httpd_resp_send(req, wifi_config_page_html, strlen(wifi_config_page_html));
+        return ESP_OK;
+    }
+    return ESP_ERR_INVALID_STATE;
 }
 
 /**

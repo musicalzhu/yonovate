@@ -79,6 +79,10 @@ esp_err_t wifi_manager_init(const wifi_manager_config_t* config)
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     esp_netif_t *sta_netif = esp_netif_create_default_wifi_sta();
     assert(sta_netif);
+    
+    // 创建AP网络接口（用于配网模式）
+    esp_netif_t *ap_netif = esp_netif_create_default_wifi_ap();
+    assert(ap_netif);
 
     // 初始化WiFi
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
@@ -185,8 +189,49 @@ esp_err_t wifi_manager_update_credentials(const char* ssid, const char* password
         return ESP_ERR_INVALID_ARG;
     }
 
-    // 断开当前连接
+    // 获取当前WiFi模式
+    wifi_mode_t current_mode;
+    esp_err_t err = esp_wifi_get_mode(&current_mode);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "获取WiFi模式失败: %s", esp_err_to_name(err));
+        return err;
+    }
+
+    // 如果当前是AP模式，需要先切换到APSTA模式
+    if (current_mode == WIFI_MODE_AP) {
+        ESP_LOGI(TAG, "Current AP mode, switching to APSTA for STA connection");
+        err = esp_wifi_set_mode(WIFI_MODE_APSTA);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "Switch to APSTA failed: %s", esp_err_to_name(err));
+            return err;
+        }
+        ESP_LOGI(TAG, "Mode switch command sent, waiting for stabilization");
+    }
+
+    // Check if STA interface is ready (with retry)
+    wifi_mode_t new_mode;
+    int retry_count = 0;
+    const int max_retries = 10;  // 最多等待1秒
+    
+    do {
+        esp_wifi_get_mode(&new_mode);
+        if (new_mode == WIFI_MODE_STA || new_mode == WIFI_MODE_APSTA) {
+            ESP_LOGI(TAG, "STA interface ready, mode: %d", new_mode);
+            break;
+        }
+        vTaskDelay(pdMS_TO_TICKS(100));
+        retry_count++;
+        ESP_LOGI(TAG, "Waiting for STA ready... (%d/%d)", retry_count, max_retries);
+    } while (retry_count < max_retries);
+    
+    if (new_mode != WIFI_MODE_STA && new_mode != WIFI_MODE_APSTA) {
+        ESP_LOGE(TAG, "WiFi mode not suitable for STA after %d retries: %d", max_retries, new_mode);
+        return ESP_ERR_WIFI_STATE;
+    }
+
+    // Disconnect current STA if any
     esp_wifi_disconnect();
+    vTaskDelay(pdMS_TO_TICKS(50));
 
     // 配置新的WiFi凭证
     wifi_config_t wifi_config = {};
@@ -201,7 +246,7 @@ esp_err_t wifi_manager_update_credentials(const char* ssid, const char* password
         ESP_LOGI(TAG, "配置为开放网络（无密码）");
     }
 
-    esp_err_t err = esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
+    err = esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "设置WiFi配置失败: %s", esp_err_to_name(err));
         return err;
@@ -249,6 +294,99 @@ esp_err_t wifi_manager_deinit(void)
 
     ESP_LOGI(TAG, "WiFi已反初始化");
     return ESP_OK;
+}
+
+/**
+ * @brief 智能双模式启动：先尝试连接STA，30秒内成功则关闭AP省电，失败则保持AP配网模式
+ * 
+ * @param config WiFi配置
+ * @param ap_ssid AP模式的SSID
+ * @param ap_password AP模式的密码
+ * @param timeout_ms STA连接超时时间（毫秒）
+ * @return esp_err_t ESP_OK表示成功启动
+ */
+esp_err_t wifi_manager_start_smart_dual_mode(const wifi_manager_config_t* config,
+                                               const char* ap_ssid,
+                                               const char* ap_password,
+                                               uint32_t timeout_ms)
+{
+    if (!config || !config->ssid || strlen(config->ssid) == 0) {
+        ESP_LOGE(TAG, "Smart dual mode: Invalid config, SSID empty");
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    if (!ap_ssid || strlen(ap_ssid) == 0) {
+        ESP_LOGE(TAG, "Smart dual mode: AP SSID cannot be empty");
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    ESP_LOGI(TAG, "========== Smart Dual Mode Start ==========");
+    ESP_LOGI(TAG, "Trying to connect WiFi: %s", config->ssid);
+    ESP_LOGI(TAG, "AP provision: %s", ap_ssid);
+    ESP_LOGI(TAG, "Timeout: %lu ms", timeout_ms);
+
+    // 1. Init WiFi manager (STA mode)
+    esp_err_t err = wifi_manager_init(config);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Smart dual mode: WiFi manager init failed: %s", esp_err_to_name(err));
+        return err;
+    }
+
+    // 2. Start AP provisioning (keep APSTA mode)
+    err = wifi_manager_start_ap_provisioning(ap_ssid, ap_password);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Smart dual mode: AP provision start failed: %s", esp_err_to_name(err));
+        wifi_manager_deinit();
+        return err;
+    }
+
+    ESP_LOGI(TAG, "APSTA dual mode started, AP: %s", ap_ssid);
+
+    // 3. Wait STA connection or timeout
+    ESP_LOGI(TAG, "Waiting for STA connection result...");
+    
+    TickType_t start_tick = xTaskGetTickCount();
+    TickType_t timeout_ticks = pdMS_TO_TICKS(timeout_ms);
+    bool connected = false;
+
+    while ((xTaskGetTickCount() - start_tick) < timeout_ticks) {
+        if (wifi_manager_is_connected()) {
+            connected = true;
+            break;
+        }
+        vTaskDelay(pdMS_TO_TICKS(100)); // Check every 100ms
+    }
+
+    // 4. Adjust mode based on connection result
+    if (connected) {
+        ESP_LOGI(TAG, "OK STA connected! IP: %s", wifi_manager_get_ip());
+        ESP_LOGI(TAG, "Closing AP to save power...");
+        
+        err = wifi_manager_stop_ap_provisioning();
+        if (err == ESP_OK) {
+            ESP_LOGI(TAG, "OK AP closed, entering pure STA mode");
+        } else {
+            ESP_LOGW(TAG, "Close AP failed (non-fatal): %s", esp_err_to_name(err));
+        }
+        
+        ESP_LOGI(TAG, "========== Smart Dual Mode: STA Mode ==========");
+        return ESP_OK;
+    } else {
+        ESP_LOGW(TAG, "FAIL STA connection timeout (%lu ms), keep AP provision mode", timeout_ms);
+        
+        // Disconnect STA attempt, keep pure AP mode
+        esp_wifi_disconnect();
+        
+        // Switch to pure AP mode (optional, reduce interference)
+        err = esp_wifi_set_mode(WIFI_MODE_AP);
+        if (err == ESP_OK) {
+            ESP_LOGI(TAG, "Switched to pure AP mode");
+        }
+        
+        ESP_LOGI(TAG, "========== Smart Dual Mode: AP Provision Mode ==========");
+        ESP_LOGI(TAG, "Connect to AP: %s (192.168.4.1) to reconfig WiFi", ap_ssid);
+        return ESP_OK;
+    }
 }
 
 // AP配网模式静态变量
