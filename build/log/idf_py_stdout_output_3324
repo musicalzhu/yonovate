@@ -1,0 +1,1036 @@
+Command: C:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe C:\Espressif\frameworks\esp-idf-v5.5.3\tools/idf_monitor.py -p COM5 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 C:\Downloads\code-v2\v2\build\yonovate-v2.elf C:\Downloads\code-v2\v2\build\bootloader\bootloader.elf --force-color -m 'C:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe' 'C:\Espressif\frameworks\esp-idf-v5.5.3\tools\idf.py' '-p' 'COM5'
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:6280
+load:0x40078000,len:15864
+load:0x40080400,len:3920
+entry 0x40080644
+[0;32mI (27) boot: ESP-IDF v5.5.3 2nd stage bootloader[0m
+[0;32mI (27) boot: compile time Apr 11 2026 11:17:29[0m
+[0;32mI (28) boot: Multicore bootloader[0m
+[0;32mI (29) boot: chip revision: v3.0[0m
+[0;32mI (32) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (35) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32: SPI Flash Size : 2MB[0m
+[0;32mI (42) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (49) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (75) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=25ae4h (154340) map[0m
+[0;32mI (139) esp_image: segment 1: paddr=00035b0c vaddr=3ffb0000 size=04530h ( 17712) load[0m
+[0;32mI (146) esp_image: segment 2: paddr=0003a044 vaddr=40080000 size=05fd4h ( 24532) load[0m
+[0;32mI (156) esp_image: segment 3: paddr=00040020 vaddr=400d0020 size=9eb00h (649984) map[0m
+[0;32mI (378) esp_image: segment 4: paddr=000deb28 vaddr=40085fd4 size=1274ch ( 75596) load[0m
+[0;32mI (407) esp_image: segment 5: paddr=000f127c vaddr=50000000 size=00020h (    32) load[0m
+[0;32mI (420) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (420) boot: Disabling RNG early entropy source...[0m
+[0;32mI (430) cpu_start: Multicore app[0m
+[0;32mI (439) cpu_start: GPIO 3 and 1 are used as console UART I/O pins[0m
+[0;32mI (439) cpu_start: Pro cpu start user code[0m
+[0;32mI (439) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (441) app_init: Application information:[0m
+[0;32mI (444) app_init: Project name:     yonovate-v2[0m
+[0;32mI (449) app_init: App version:      9b1a40b-dirty[0m
+[0;32mI (453) app_init: Compile time:     Apr 12 2026 14:41:24[0m
+[0;32mI (458) app_init: ELF file SHA256:  a67f6e19d...[0m
+[0;32mI (463) app_init: ESP-IDF:          v5.5.3[0m
+[0;32mI (466) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (470) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (474) efuse_init: Chip rev:         v3.0[0m
+[0;32mI (478) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (484) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (489) heap_init: At 3FFBB0B0 len 00024F50 (147 KiB): DRAM[0m
+[0;32mI (495) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (500) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (506) heap_init: At 40098720 len 000078E0 (30 KiB): IRAM[0m
+[0;32mI (512) spi_flash: detected chip: generic[0m
+[0;32mI (514) spi_flash: flash io: dio[0m
+[0;33mW (517) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (531) main_task: Started on CPU0[0m
+[0;32mI (541) main_task: Calling app_main()[0m
+[0;32mI (541) main: 开始系统初始化...[0m
+[0;32mI (541) i2c_manager: 初始化I2C总线[0m
+[0;32mI (641) i2c_manager: I2C总线初始化成功，频率: 50kHz[0m
+[0;32mI (641) oled: 开始OLED初始化[0m
+[0;32mI (741) oled: 使用已知OLED设备地址: 0x3D[0m
+[0;32mI (741) oled: 总线重置已禁用，仅记录日志[0m
+[0;32mI (741) oled: 为OLED设置I2C频率: 50kHz (与AW9523相同以避免总线混乱)[0m
+[0;32mI (741) oled: 成功添加OLED设备到总线[0m
+[0;32mI (761) oled: 开始发送初始化命令序列 (尝试 1/5)[0m
+[0;32mI (801) oled: 初始化命令发送成功，开始清空显示缓冲区[0m
+[0;32mI (801) oled: 开始刷新显示[0m
+[0;32mI (1011) oled: OLED初始化成功[0m
+[0;32mI (1011) GPIO_MONITOR: OLED status updated: OK[0m
+[0;32mI (1011) GPIO_MONITOR: Current step updated: OLED初始化完成[0m
+[0;32mI (1011) gpio_manager: GPIO manager initialization started[0m
+[0;32mI (1011) gpio_manager: Initializing AW9523 module, I2C address: 0x58[0m
+[0;32mI (1021) aw9523: 未探测到AW9523设备(0x58)，第1/3次尝试[0m
+[0;32mI (1021) aw9523: 执行AW9523专用重置流程...[0m
+[0;32mI (1131) aw9523: 未探测到AW9523设备(0x58)，第2/3次尝试[0m
+[0;32mI (1181) aw9523: 未探测到AW9523设备(0x58)，第3/3次尝试[0m
+[1;31mE (1231) aw9523: 所有探测尝试均失败，无法初始化AW9523[0m
+[0;33mW (1231) gpio_manager: AW9523 initialization failed: ESP_ERR_NOT_FOUND[0m
+[1;31mE (1231) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)[0m
+[1;31mE (1231) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)[0m
+[1;31mE (1251) GPIO_MONITOR: Unknown component: gpio[0m
+[0;32mI (1251) GPIO_MONITOR: Current step updated: GPIO管理器初始化完成[0m
+[0;32mI (1251) GPIO_MONITOR: GPIO monitor task started[0m
+[0;32mI (1261) GPIO_MONITOR: GPIO monitor initialized successfully[0m
+[0;32mI (1261) GPIO_MONITOR: Current step updated: GPIO监控已启动[0m
+[0;32mI (1271) GPIO_MONITOR: Current step updated: 电机已初始化为停止[0m
+[0;32mI (1271) state_machine: 状态机初始化[0m
+[1;31mE (1281) GPIO_MONITOR: Unknown component: state_machine[0m
+[0;32mI (1281) GPIO_MONITOR: Current step updated: 状态机初始化完成[0m
+[0;32mI (1291) state_machine: 状态机已启动，初始状态: idle[0m
+[0;32mI (1301) state_machine: 状态机监控定时器已启动，周期100ms[0m
+[0;32mI (1301) main: State machine started successfully[0m
+[0;32mI (1311) GPIO_MONITOR: Current step updated: State machine started[0m
+[0;32mI (1311) main: ========================================[0m
+[0;32mI (1321) main: WiFi Smart Dual Mode Initializing[0m
+[0;32mI (1321) main: ========================================[0m
+[0;32mI (1331) main: [1/7] Initializing WiFi config storage (NVS)...[0m
+[0;32mI (1371) main: [1/7] OK NVS init done[0m
+[0;32mI (1371) main: [2/7] Loading WiFi config from NVS...[0m
+[0;32mI (1371) main: [2/7] OK Loaded WiFi config from NVS[0m
+[0;32mI (1371) main:        SSID: HUAWEI-GTJ-home[0m
+[0;32mI (1371) main:        Pass len: 9[0m
+[0;32mI (1381) main: [3/7] WiFi config params:[0m
+[0;32mI (1381) main:        Target SSID: HUAWEI-GTJ-home[0m
+[0;32mI (1381) main:        Config src: NVS saved[0m
+[0;32mI (1391) main:        AP SSID: Yonovate-Setup[0m
+[0;32mI (1391) main:        AP pass: 12345678[0m
+[0;32mI (1401) main:        AP IP: 192.168.4.1[0m
+[0;32mI (1401) main: [4/7] Starting smart dual mode WiFi...[0m
+[0;32mI (1401) main:        Flow: Start APSTA → Wait STA 30s → Close AP if OK, keep AP if fail[0m
+[0;32mI (1411) wifi_manager: ========== Smart Dual Mode Start ==========[0m
+[0;32mI (1421) wifi_manager: Trying to connect WiFi: HUAWEI-GTJ-home[0m
+[0;32mI (1421) wifi_manager: AP provision: Yonovate-Setup[0m
+[0;32mI (1431) wifi_manager: Timeout: 30000 ms[0m
+[0;32mI (1451) wifi:wifi driver task: 3ffd744c, prio:23, stack:6656, core=0[0m
+[0;32mI (1471) wifi:wifi firmware version: 4df78f2[0m
+[0;32mI (1471) wifi:wifi certification version: v7.0[0m
+[0;32mI (1471) wifi:config NVS flash: enabled[0m
+[0;32mI (1471) wifi:config nano formatting: disabled[0m
+[0;32mI (1471) wifi:Init data frame dynamic rx buffer num: 32[0m
+[0;32mI (1481) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (1481) wifi:Init management short buffer num: 32[0m
+[0;32mI (1481) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (1491) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (1491) wifi:Init static rx buffer num: 10[0m
+[0;32mI (1501) wifi:Init dynamic rx buffer num: 32[0m
+[0;32mI (1501) wifi_init: rx ba win: 6[0m
+[0;32mI (1501) wifi_init: accept mbox: 6[0m
+[0;32mI (1511) wifi_init: tcpip mbox: 32[0m
+[0;32mI (1511) wifi_init: udp mbox: 6[0m
+[0;32mI (1511) wifi_init: tcp mbox: 6[0m
+[0;32mI (1521) wifi_init: tcp tx win: 5760[0m
+[0;32mI (1521) wifi_init: tcp rx win: 5760[0m
+[0;32mI (1521) wifi_init: tcp mss: 1440[0m
+[0;32mI (1531) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (1531) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (1541) wifi:Set ps type: 0, coexist: 0[0m
+
+[0;32mI (1541) wifi_manager: WiFi电源管理已禁用[0m
+[0;32mI (1541) wifi_manager: WiFi初始化完成[0m
+[0;32mI (1541) wifi_manager: 启动AP配网模式，SSID: Yonovate-Setup[0m
+[0;32mI (1561) phy_init: phy_version 4863,a3a4459,Oct 28 2025,14:30:06[0m
+[0;32mI (1641) phy_init: Saving new calibration data due to checksum failure or outdated calibration data, mode(0)[0m
+[0;32mI (1661) wifi:mode : softAP (c0:49:ef:46:12:01)[0m
+[0;32mI (1661) wifi:Total power save buffer number: 16[0m
+[0;32mI (1661) wifi:Init max length of beacon: 752/752[0m
+[0;32mI (1671) wifi:Init max length of beacon: 752/752[0m
+[0;32mI (1671) wifi_manager: AP配网模式已启动[0m
+[0;32mI (1671) esp_netif_lwip: DHCP server started on interface WIFI_AP_DEF with IP: 192.168.4.1[0m
+[0;32mI (1681) wifi_manager: 请连接WiFi: Yonovate-Setup[0m
+[0;32mI (1681) wifi_manager: 然后访问 http://192.168.4.1 进行配置[0m
+[0;32mI (1691) wifi_manager: APSTA dual mode started, AP: Yonovate-Setup[0m
+[0;32mI (1701) wifi_manager: Waiting for STA connection result...[0m
+[0;33mW (31701) wifi_manager: FAIL STA connection timeout (30000 ms), keep AP provision mode[0m
+[0;32mI (31701) wifi_manager: Switched to pure AP mode[0m
+[0;32mI (31701) wifi_manager: ========== Smart Dual Mode: AP Provision Mode ==========[0m
+[0;32mI (31701) wifi_manager: Connect to AP: Yonovate-Setup (192.168.4.1) to reconfig WiFi[0m
+[0;32mI (31711) main: [5/7] Smart dual mode result: ESP_OK[0m
+[0;32mI (31721) main: [6/7] Checking WiFi connection status...[0m
+[0;33mW (31721) main: [6/7] FAIL STA connection timeout/failed[0m
+[0;32mI (31731) main: [7/7] WARN Current mode: AP provisioning (waiting for config)[0m
+[0;32mI (31731) main:        Connect to WiFi: Yonovate-Setup[0m
+[0;32mI (31741) main:        Visit http://192.168.4.1 to config[0m
+[0;32mI (31741) GPIO_MONITOR: WiFi status updated: Disconnected[0m
+[1;31mE (31751) GPIO_MONITOR: Unknown component: ap[0m
+[0;32mI (31751) main:        Starting web server (AP mode)...[0m
+[0;32mI (31761) WEB_SERVER: HTTP server started successfully, listening on port: 80[0m
+[0;32mI (31761) main:        OK Web server started (AP mode)[0m
+[1;31mE (31771) GPIO_MONITOR: Unknown component: webserver[0m
+[0;32mI (31771) main: ========================================[0m
+[0;32mI (31781) main: WiFi init flow complete[0m
+[0;32mI (31781) main: ========================================[0m
+[0;32mI (31791) main_task: Returned from app_main()[0m
+[0;32mI (35291) wifi:new:<1,0>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (35291) wifi:station: 08:38:e6:51:b8:9f join, AID=1, bgn, 20[0m
+[0;32mI (35701) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2[0m
+[0;32mI (36591) wifi:<ba-add>idx:2 (ifx:1, 08:38:e6:51:b8:9f), tid:0, ssn:51, winSize:64[0m
+[0;32mI (2853961) WEB_SERVER: 接收到清除WiFi配置请求[0m
+[0;32mI (2853981) WEB_SERVER: WiFi配置已清除[0m
+[0;32mI (2863681) WEB_SERVER: 接收到WiFi配置POST请求, content_len=58[0m
+[0;32mI (2863681) wifi_cfg: WiFi配置保存成功[0m
+[0;32mI (2863691) wifi_manager: 当前为AP模式，切换到APSTA模式以支持STA连接[0m
+[0;32mI (2863691) wifi:mode : sta (c0:49:ef:46:12:00) + softAP (c0:49:ef:46:12:01)[0m
+[0;32mI (2863701) wifi:enable tsf[0m
+[0;32mI (2863721) wifi_manager: WiFi凭证已更新，正在使用新配置连接...[0m
+[1;31mE (2863721) wifi:sta is connecting, return error[0m
+[0;32mI (2866571) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2869421) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2872271) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2875111) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2877971) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2880811) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2883661) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2886511) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2889361) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2892211) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2895061) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2897911) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2900761) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2903611) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2906461) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2909311) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2912151) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2915001) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2917851) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2920701) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2923551) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2926401) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2929251) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2932101) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2934941) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2937791) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2940641) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2943491) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2946341) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2949191) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2952031) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2954881) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2957731) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2960581) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2963431) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2966281) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2969131) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2971971) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2974821) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2977671) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2977821) WEB_SERVER: 接收到WiFi配置POST请求, content_len=49[0m
+[0;32mI (2977831) wifi_cfg: WiFi配置保存成功[0m
+[0;32mI (2977911) wifi_manager: WiFi凭证已更新，正在使用新配置连接...[0m
+[1;31mE (2977911) wifi:sta is connecting, return error[0m
+[0;32mI (2977911) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (2977921) wifi:new:<1,1>, old:<1,0>, ap:<1,1>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (2977921) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (2977941) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (2977951) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (2977971) wifi:connected with HUAWEI-GTJ-home, aid = 2, channel 1, BW20, bssid = 02:ea:6a:da:3f:37[0m
+[0;32mI (2977971) wifi:security: WPA2-PSK, phy: bgn, rssi: -69[0m
+[0;32mI (2977981) wifi:pm start, type: 0[0m
+
+[0;32mI (2977981) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us[0m
+[0;32mI (2978071) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (2979021) esp_netif_handlers: sta ip: 192.168.3.55, mask: 255.255.255.0, gw: 192.168.3.1[0m
+[0;32mI (2979021) wifi_manager: WiFi连接成功，IP地址: 192.168.3.55[0m
+[0;32mI (2979021) main: WiFi已连接, IP地址: 192.168.3.55[0m
+[0;32mI (2979021) GPIO_MONITOR: WiFi status updated: Connected[0m
+[0;32mI (2979031) GPIO_MONITOR: IP address updated: 192.168.3.55[0m
+[0;32mI (3017871) wifi:<ba-add>idx:0 (ifx:0, 02:ea:6a:da:3f:37), tid:0, ssn:1, winSize:64[0m
+[0;32mI (3635861) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2[0m
+[0;33mW (4154751) httpd_uri: httpd_uri: URI '/api/gpio_config' not found[0m
+[0;33mW (4154751) httpd_txrx: httpd_resp_send_err: 404 Not Found - Nothing matches the given URI[0m
+[0;32mI (4192661) WEB_SERVER: 接收到WiFi配置POST请求, content_len=40[0m
+[0;32mI (4192671) wifi_cfg: WiFi配置保存成功[0m
+[0;32mI (4192671) wifi:state: run -> init (0x0)[0m
+[0;32mI (4192671) wifi:pm stop, total sleep time: 0 us / 1214691161 us[0m
+
+[0;32mI (4192671) wifi:<ba-del>idx:0, tid:0[0m
+[0;32mI (4192671) wifi:new:<1,0>, old:<1,1>, ap:<1,1>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (4192681) wifi_manager: 配置为开放网络（无密码）[0m
+[0;32mI (4192691) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4192691) main: WiFi已断开连接[0m
+[0;32mI (4192701) GPIO_MONITOR: WiFi status updated: Disconnected[0m
+[1;31mE (4192701) GPIO_MONITOR: Unknown component: webserver[0m
+[1;31mE (4192691) wifi:sta is connecting, cannot set config[0m
+[1;31mE (4192711) wifi_manager: 设置WiFi配置失败: ESP_ERR_WIFI_STATE[0m
+[0;32mI (4192721) wifi:new:<1,1>, old:<1,0>, ap:<1,1>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (4192731) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (4192741) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (4192751) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (4192771) wifi:connected with HUAWEI-GTJ-home, aid = 2, channel 1, BW20, bssid = 02:ea:6a:da:3f:37[0m
+[0;32mI (4192771) wifi:security: WPA2-PSK, phy: bgn, rssi: -58[0m
+[0;32mI (4192771) wifi:pm start, type: 0[0m
+
+[0;32mI (4192811) WEB_SERVER: HTTP服务器已停止[0m
+[0;32mI (4192821) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (4193851) esp_netif_handlers: sta ip: 192.168.3.55, mask: 255.255.255.0, gw: 192.168.3.1[0m
+[0;32mI (4193851) wifi_manager: WiFi连接成功，IP地址: 192.168.3.55[0m
+[0;32mI (4193851) main: WiFi已连接, IP地址: 192.168.3.55[0m
+[0;32mI (4193851) GPIO_MONITOR: WiFi status updated: Connected[0m
+[0;32mI (4193861) GPIO_MONITOR: IP address updated: 192.168.3.55[0m
+[0;32mI (4193871) WEB_SERVER: HTTP server started successfully, listening on port: 80[0m
+[0;32mI (4193871) main: Web服务器启动成功[0m
+[1;31mE (4193881) GPIO_MONITOR: Unknown component: webserver[0m
+[0;32mI (4199401) WEB_SERVER: 接收到清除WiFi配置请求[0m
+[0;32mI (4199411) WEB_SERVER: WiFi配置已清除[0m
+[0;32mI (4206321) WEB_SERVER: 接收到WiFi配置POST请求, content_len=58[0m
+[0;32mI (4206331) wifi_cfg: WiFi配置保存成功[0m
+[0;32mI (4206331) wifi:state: run -> init (0x0)[0m
+[0;32mI (4206331) wifi:pm stop, total sleep time: 0 us / 13557820 us[0m
+
+[0;32mI (4206331) wifi:new:<1,0>, old:<1,1>, ap:<1,1>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[1;31mE (4206371) wifi:sta is connecting, return error[0m
+[1;31mE (4206371) wifi_manager: WiFi连接失败: ESP_ERR_WIFI_CONN[0m
+[0;32mI (4206371) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4206371) main: WiFi已断开连接[0m
+[0;32mI (4206381) GPIO_MONITOR: WiFi status updated: Disconnected[0m
+[1;31mE (4206381) GPIO_MONITOR: Unknown component: webserver[0m
+[0;32mI (4206491) WEB_SERVER: HTTP服务器已停止[0m
+[0;32mI (4209221) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4212071) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4214911) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4217761) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4220611) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4223461) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4226311) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4229161) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4232011) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4234851) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4237701) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4240551) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4243401) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4246251) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4249101) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4251951) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4254801) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4257651) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4260491) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4263341) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4266191) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4269041) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4271891) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4274741) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4277581) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4280431) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4283281) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4286131) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4288981) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4291821) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4294671) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4297521) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4300371) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4303221) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4306071) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4308921) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4311771) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4314621) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4317471) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4320311) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4323161) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4326011) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4328861) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4331711) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4334561) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4337401) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4340251) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4343101) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4345951) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4348791) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4351641) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4354491) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4357341) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4360191) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4363031) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4365881) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4368731) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4371581) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4374421) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4377271) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4380121) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4382971) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4385821) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4388661) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4391511) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4394361) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4397211) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4400061) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4402901) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4405751) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4408601) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4411451) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4414301) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4417151) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4419991) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4422841) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4425691) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4428541) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4431391) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4434241) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4437081) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4439931) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4442781) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4445631) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4448481) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4451321) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4454171) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4457021) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4459871) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4462721) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4465571) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4468411) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4471261) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4474111) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4476961) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4479811) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4482651) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4485501) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4488351) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4491201) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4494051) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4496891) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4499741) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4502591) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4505441) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4508281) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4511131) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4513981) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4516831) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4519671) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4522521) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4525371) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4528221) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4531061) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4533911) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4536761) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4539601) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4542451) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4545301) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4548151) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4551001) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4553841) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4556691) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4559541) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4562391) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4565241) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4568091) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4570941) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4573781) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4576631) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4579481) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4582331) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4585181) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4588021) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4590871) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4593721) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4596571) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4599421) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4602261) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4605111) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4607961) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4610811) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4613651) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4616501) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4619351) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4622201) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4625041) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4627891) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4630741) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4633591) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4636431) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4639281) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4642131) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4644981) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4647821) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4650671) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4653521) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4656371) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4659221) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4662071) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4664921) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4667761) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4670611) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4673461) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4676311) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4679161) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4682011) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4684851) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4687701) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4690551) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4693401) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4696251) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4699091) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4701941) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4704791) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4707641) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4710481) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4713331) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4716181) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4719031) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4721871) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4724721) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4727571) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4730421) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4733271) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4736111) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4738961) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4741811) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4744661) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4747501) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4750351) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4753201) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4756051) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4758901) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4761741) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4764591) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4767441) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4770281) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4773131) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4775981) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4778831) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4781681) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4784521) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4787371) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4790221) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4793071) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4795911) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4798761) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4801611) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4804461) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4807311) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4810161) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4813001) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4815851) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4818701) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4821551) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4824401) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4827241) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4830091) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4832941) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4835781) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4838631) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4841481) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4844331) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4847181) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4850021) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (4852871) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (801) oled: 初始化命令发送成功，开始清空显示缓冲区[0m
+[0;32mI (801) oled: 开始刷新显示[0m
+[0;32mI (1011) oled: OLED初始化成功[0m
+[0;32mI (1011) GPIO_MONITOR: OLED status updated: OK[0m
+[0;32mI (1011) GPIO_MONITOR: Current step updated: OLED初始化完成[0m
+[0;32mI (1011) gpio_manager: GPIO manager initialization started[0m
+[0;32mI (1011) gpio_manager: Initializing AW9523 module, I2C address: 0x58[0m
+[0;32mI (1021) aw9523: 未探测到AW9523设备(0x58)，第1/3次尝试[0m
+[0;32mI (1021) aw9523: 执行AW9523专用重置流程...[0m
+[0;32mI (1131) aw9523: 未探测到AW9523设备(0x58)，第2/3次尝试[0m
+[0;32mI (1181) aw9523: 未探测到AW9523设备(0x58)，第3/3次尝试[0m
+[1;31mE (1231) aw9523: 所有探测尝试均失败，无法初始化AW9523[0m
+[0;33mW (1231) gpio_manager: AW9523 initialization failed: ESP_ERR_NOT_FOUND[0m
+[1;31mE (1231) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)[0m
+[1;31mE (1231) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)[0m
+[1;31mE (1251) GPIO_MONITOR: Unknown component: gpio[0m
+[0;32mI (1251) GPIO_MONITOR: Current step updated: GPIO管理器初始化完成[0m
+[0;32mI (1251) GPIO_MONITOR: GPIO monitor task started[0m
+[0;32mI (1261) GPIO_MONITOR: GPIO monitor initialized successfully[0m
+[0;32mI (1261) GPIO_MONITOR: Current step updated: GPIO监控已启动[0m
+[0;32mI (1271) GPIO_MONITOR: Current step updated: 电机已初始化为停止[0m
+[0;32mI (1271) state_machine: 状态机初始化[0m
+[1;31mE (1281) GPIO_MONITOR: Unknown component: state_machine[0m
+[0;32mI (1281) GPIO_MONITOR: Current step updated: 状态机初始化完成[0m
+[0;32mI (1291) state_machine: 状态机已启动，初始状态: idle[0m
+[0;32mI (1301) state_machine: 状态机监控定时器已启动，周期100ms[0m
+[0;32mI (1301) main: State machine started successfully[0m
+[0;32mI (1311) GPIO_MONITOR: Current step updated: State machine started[0m
+[0;32mI (1311) main: ========================================[0m
+[0;32mI (1321) main: WiFi Smart Dual Mode Initializing[0m
+[0;32mI (1321) main: ========================================[0m
+[0;32mI (1331) main: [1/7] Initializing WiFi config storage (NVS)...[0m
+[0;32mI (1371) main: [1/7] OK NVS init done[0m
+[0;32mI (1371) main: [2/7] Loading WiFi config from NVS...[0m
+[0;32mI (1371) main: [2/7] OK Loaded WiFi config from NVS[0m
+[0;32mI (1371) main:        SSID: XINGHUI[0m
+[0;32mI (1371) main:        Pass len: 8[0m
+[0;32mI (1381) main: [3/7] WiFi config params:[0m
+[0;32mI (1381) main:        Target SSID: XINGHUI[0m
+[0;32mI (1381) main:        Config src: NVS saved[0m
+[0;32mI (1391) main:        AP SSID: Yonovate-Setup[0m
+[0;32mI (1391) main:        AP pass: 12345678[0m
+[0;32mI (1391) main:        AP IP: 192.168.4.1[0m
+[0;32mI (1401) main: [4/7] Starting smart dual mode WiFi...[0m
+[0;32mI (1401) main:        Flow: Start APSTA → Wait STA 30s → Close AP if OK, keep AP if fail[0m
+[0;32mI (1411) wifi_manager: ========== Smart Dual Mode Start ==========[0m
+[0;32mI (1421) wifi_manager: Trying to connect WiFi: XINGHUI[0m
+[0;32mI (1421) wifi_manager: AP provision: Yonovate-Setup[0m
+[0;32mI (1431) wifi_manager: Timeout: 30000 ms[0m
+[0;32mI (1441) wifi:wifi driver task: 3ffd7454, prio:23, stack:6656, core=0[0m
+[0;32mI (1461) wifi:wifi firmware version: 4df78f2[0m
+[0;32mI (1461) wifi:wifi certification version: v7.0[0m
+[0;32mI (1461) wifi:config NVS flash: enabled[0m
+[0;32mI (1461) wifi:config nano formatting: disabled[0m
+[0;32mI (1461) wifi:Init data frame dynamic rx buffer num: 32[0m
+[0;32mI (1471) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (1471) wifi:Init management short buffer num: 32[0m
+[0;32mI (1471) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (1481) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (1481) wifi:Init static rx buffer num: 10[0m
+[0;32mI (1491) wifi:Init dynamic rx buffer num: 32[0m
+[0;32mI (1491) wifi_init: rx ba win: 6[0m
+[0;32mI (1491) wifi_init: accept mbox: 6[0m
+[0;32mI (1501) wifi_init: tcpip mbox: 32[0m
+[0;32mI (1501) wifi_init: udp mbox: 6[0m
+[0;32mI (1501) wifi_init: tcp mbox: 6[0m
+[0;32mI (1511) wifi_init: tcp tx win: 5760[0m
+[0;32mI (1511) wifi_init: tcp rx win: 5760[0m
+[0;32mI (1511) wifi_init: tcp mss: 1440[0m
+[0;32mI (1511) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (1521) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (1531) wifi:Set ps type: 0, coexist: 0[0m
+
+[0;32mI (1531) wifi_manager: WiFi电源管理已禁用[0m
+[0;32mI (1531) wifi_manager: WiFi初始化完成[0m
+[0;32mI (1531) wifi_manager: 启动AP配网模式，SSID: Yonovate-Setup[0m
+[0;32mI (1551) phy_init: phy_version 4863,a3a4459,Oct 28 2025,14:30:06[0m
+[0;32mI (1621) phy_init: Saving new calibration data due to checksum failure or outdated calibration data, mode(0)[0m
+[0;32mI (1641) wifi:mode : softAP (c0:49:ef:46:12:01)[0m
+[0;32mI (1641) wifi:Total power save buffer number: 16[0m
+[0;32mI (1641) wifi:Init max length of beacon: 752/752[0m
+[0;32mI (1641) wifi:Init max length of beacon: 752/752[0m
+[0;32mI (1651) esp_netif_lwip: DHCP server started on interface WIFI_AP_DEF with IP: 192.168.4.1[0m
+[0;32mI (1651) wifi_manager: AP配网模式已启动[0m
+[0;32mI (1661) wifi_manager: 请连接WiFi: Yonovate-Setup[0m
+[0;32mI (1661) wifi_manager: 然后访问 http://192.168.4.1 进行配置[0m
+[0;32mI (1671) wifi_manager: APSTA dual mode started, AP: Yonovate-Setup[0m
+[0;32mI (1681) wifi_manager: Waiting for STA connection result...[0m
+[0;32mI (16631) wifi:new:<1,0>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (16641) wifi:station: 08:38:e6:51:b8:9f join, AID=1, bgn, 20[0m
+[0;32mI (16961) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2[0m
+[0;32mI (17871) wifi:<ba-add>idx:2 (ifx:1, 08:38:e6:51:b8:9f), tid:0, ssn:43, winSize:64[0m
+[0;33mW (31681) wifi_manager: FAIL STA connection timeout (30000 ms), keep AP provision mode[0m
+[0;32mI (31681) wifi_manager: Switched to pure AP mode[0m
+[0;32mI (31681) wifi_manager: ========== Smart Dual Mode: AP Provision Mode ==========[0m
+[0;32mI (31681) wifi_manager: Connect to AP: Yonovate-Setup (192.168.4.1) to reconfig WiFi[0m
+[0;32mI (31691) main: [5/7] Smart dual mode result: ESP_OK[0m
+[0;32mI (31701) main: [6/7] Checking WiFi connection status...[0m
+[0;33mW (31701) main: [6/7] FAIL STA connection timeout/failed[0m
+[0;32mI (31711) main: [7/7] WARN Current mode: AP provisioning (waiting for config)[0m
+[0;32mI (31711) main:        Connect to WiFi: Yonovate-Setup[0m
+[0;32mI (31721) main:        Visit http://192.168.4.1 to config[0m
+[0;32mI (31721) GPIO_MONITOR: WiFi status updated: Disconnected[0m
+[1;31mE (31731) GPIO_MONITOR: Unknown component: ap[0m
+[0;32mI (31731) main:        Starting web server (AP mode)...[0m
+[0;32mI (31741) WEB_SERVER: HTTP server started successfully, listening on port: 80[0m
+[0;32mI (31741) main:        OK Web server started (AP mode)[0m
+[1;31mE (31751) GPIO_MONITOR: Unknown component: webserver[0m
+[0;32mI (31751) main: ========================================[0m
+[0;32mI (31761) main: WiFi init flow complete[0m
+[0;32mI (31761) main: ========================================[0m
+[0;32mI (31771) main_task: Returned from app_main()[0m
+[0;32mI (638611) WEB_SERVER: 接收到WiFi配置POST请求, content_len=58[0m
+[0;32mI (638621) wifi_cfg: WiFi配置保存成功[0m
+[0;32mI (638621) wifi_manager: 当前为AP模式，切换到APSTA模式以支持STA连接[0m
+[0;32mI (638621) wifi:mode : sta (c0:49:ef:46:12:00) + softAP (c0:49:ef:46:12:01)[0m
+[0;32mI (638631) wifi:enable tsf[0m
+[0;32mI (638641) wifi_manager: WiFi凭证已更新，正在使用新配置连接...[0m
+[1;31mE (638641) wifi:sta is connecting, return error[0m
+[0;32mI (641491) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (644331) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (647181) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (650031) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (652881) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (655731) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (658581) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (661431) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (664281) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (665021) WEB_SERVER: 接收到清除WiFi配置请求[0m
+[0;32mI (665041) WEB_SERVER: WiFi配置已清除[0m
+[0;32mI (667121) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (669971) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (672821) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (675671) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (678521) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (681371) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (684221) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (687071) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (689911) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (692761) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (693311) WEB_SERVER: 接收到WiFi配置POST请求, content_len=58[0m
+[0;32mI (693321) wifi_cfg: WiFi配置保存成功[0m
+[0;32mI (693321) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[1;31mE (693321) wifi:sta is connecting, cannot set config[0m
+[1;31mE (693321) wifi_manager: 设置WiFi配置失败: ESP_ERR_WIFI_STATE[0m
+[0;32mI (696171) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (699021) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (701871) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (704721) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (707561) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (710411) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (713261) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (716111) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (718961) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (721801) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (724651) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (727501) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (730351) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (733201) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (736041) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (738891) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (741741) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (744591) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (747441) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (750291) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (753141) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (755981) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (758831) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (761681) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (764531) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (767381) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (770231) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (773071) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (775921) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (778771) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (781621) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (784471) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (787311) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (790161) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (793011) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (795861) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (798711) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (801561) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (804411) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (807251) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (810101) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (812951) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (815801) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (818651) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (821501) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (824341) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (827191) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (830041) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (832891) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (835741) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (838581) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (841431) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (844281) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (847131) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (849981) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (852831) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (855681) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (858521) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (861371) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (864221) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (867071) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (869921) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (872771) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (875621) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (878461) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (881311) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (884161) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (887011) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (889861) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (892711) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (895561) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (898411) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (901251) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (904101) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (906951) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (909801) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (912651) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (915491) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (918341) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (921191) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (924041) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (926891) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (929741) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (932591) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (935431) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (938281) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (941131) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (943981) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (946831) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (949671) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (952521) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (955371) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (958221) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (961071) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (963911) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (966761) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (969611) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (972461) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (975311) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (978151) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (981001) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (983851) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (986701) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (989551) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (992401) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (995241) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (998091) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1000941) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1003791) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1006641) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1009481) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1012331) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1015181) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1018031) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1020871) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1023721) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1026571) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1029421) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1032271) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1035111) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1037961) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1040811) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1043661) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1046511) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1049361) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1052201) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1055051) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1057901) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1060751) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1063591) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1066441) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1069291) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1072141) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1074981) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1077831) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1080681) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1083531) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1086371) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1089221) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1092071) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1094921) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1097771) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1100611) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1103461) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1106311) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1109161) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1112011) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1114851) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1117701) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1120551) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1123391) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1126241) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1129091) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1131941) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1134781) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1137631) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1140481) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1143321) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1146171) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1149021) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1151871) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1154711) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1157561) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1160411) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1163251) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1166101) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1168951) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1171801) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1174641) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1177491) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1180341) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1183191) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1186031) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1188881) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1191731) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1194571) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1197421) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1200271) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1203111) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1205961) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1208811) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1211661) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1214511) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1217351) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1220201) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1223051) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1225901) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1228741) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1231591) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1234441) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1237291) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1240131) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1242981) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1245831) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1248681) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1251521) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1254371) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1257221) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1260061) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1262911) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1265761) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1268611) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1271451) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1274301) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1277151) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1280001) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1282851) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1285691) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1288541) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1291391) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1294231) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1297081) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1299931) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1302771) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1305621) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1308471) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1311321) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1314161) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1317011) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1319861) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1322701) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1325551) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1328401) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1331251) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1334091) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1336941) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1339791) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1342641) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1345481) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1348331) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1351181) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1354021) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1356871) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1359721) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1362571) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1365421) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1368271) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1369311) WEB_SERVER: 接收到WiFi配置POST请求, content_len=58[0m
+[0;32mI (1369321) wifi_cfg: WiFi配置保存成功[0m
+[0;32mI (1369321) wifi_manager: WiFi凭证已更新，正在使用新配置连接...[0m
+[1;31mE (1369321) wifi:sta is connecting, return error[0m
+[0;32mI (1369331) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1372171) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1375021) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1377871) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1380721) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1383571) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1386421) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1389271) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1392121) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1393011) WEB_SERVER: 接收到清除WiFi配置请求[0m
+[0;32mI (1393021) WEB_SERVER: WiFi配置已清除[0m
+[0;32mI (1394971) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1397811) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1400661) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1403511) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1406361) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1409211) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1412061) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1414911) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1415811) WEB_SERVER: 接收到WiFi配置POST请求, content_len=58[0m
+[0;32mI (1415811) wifi_cfg: WiFi配置保存成功[0m
+[1;31mE (1415821) wifi:sta is connecting, cannot set config[0m
+[1;31mE (1415821) wifi_manager: 设置WiFi配置失败: ESP_ERR_WIFI_STATE[0m
+[0;32mI (1415821) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1418671) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1421521) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1424371) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1427211) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1430061) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1432911) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1435761) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1438611) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1441461) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1444301) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1447151) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1450001) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1452851) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1455701) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1458551) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1461391) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1464241) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1467091) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1469941) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1472781) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1475641) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1478481) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1481331) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1484181) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1487031) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1489881) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1492721) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1495571) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1498421) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1501271) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1504121) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1506971) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1509821) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1512671) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1515511) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1518361) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1521211) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1524061) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1526911) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1529761) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1532611) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1535451) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1538301) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1541151) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1544001) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1546851) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1549701) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1552541) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1555391) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1558241) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1561091) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1563941) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1566791) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1569631) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1572481) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1575331) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1578181) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1581021) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1583871) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1586721) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1589571) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1592421) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1595271) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1598121) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1600971) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1603821) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1606671) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1609511) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1612361) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1615211) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1618061) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1620911) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1623761) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1626611) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1629451) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1632301) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1635151) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1638001) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;33mW (1638581) httpd_txrx: httpd_sock_err: error in recv : 104[0m
+[0;32mI (1640851) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1643701) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1646551) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1649401) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1652251) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1655091) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1657941) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1660791) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1663641) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1666491) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1669341) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1672191) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1675041) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1677891) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1680741) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1683591) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1686441) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1689281) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1692131) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1694981) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1697831) wifi_manager: WiFi连接断开，正在重新连接...[0m
+[0;32mI (1700681) wifi_manager: WiFi连接断开，正在重新连接...[0m

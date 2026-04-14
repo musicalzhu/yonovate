@@ -1,0 +1,1380 @@
+Command: C:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe C:\Espressif\frameworks\esp-idf-v5.5.3\tools/idf_monitor.py -p COM5 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 C:\Downloads\code-v2\v2\build\yonovate-v2.elf C:\Downloads\code-v2\v2\build\bootloader\bootloader.elf --force-color -m 'C:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe' 'C:\Espressif\frameworks\esp-idf-v5.5.3\tools\idf.py' '-p' 'COM5'
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:6280
+load:0x40078000,len:15864
+load:0x40080400,len:3920
+entry 0x40080644
+[0;32mI (27) boot: ESP-IDF v5.5.3 2nd stage bootloader[0m
+[0;32mI (27) boot: compile time Apr 11 2026 11:17:29[0m
+[0;32mI (28) boot: Multicore bootloader[0m
+[0;32mI (29) boot: chip revision: v3.0[0m
+[0;32mI (32) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (35) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32: SPI Flash Size : 2MB[0m
+[0;32mI (42) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (49) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (75) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=26bf4h (158708) map[0m
+[0;32mI (140) esp_image: segment 1: paddr=00036c1c vaddr=3ffb0000 size=04530h ( 17712) load[0m
+[0;32mI (147) esp_image: segment 2: paddr=0003b154 vaddr=40080000 size=04ec4h ( 20164) load[0m
+[0;32mI (155) esp_image: segment 3: paddr=00040020 vaddr=400d0020 size=9f0f8h (651512) map[0m
+[0;32mI (378) esp_image: segment 4: paddr=000df120 vaddr=40084ec4 size=1385ch ( 79964) load[0m
+[0;32mI (409) esp_image: segment 5: paddr=000f2984 vaddr=50000000 size=00020h (    32) load[0m
+[0;32mI (422) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (422) boot: Disabling RNG early entropy source...[0m
+[0;32mI (432) cpu_start: Multicore app[0m
+[0;32mI (441) cpu_start: GPIO 3 and 1 are used as console UART I/O pins[0m
+[0;32mI (441) cpu_start: Pro cpu start user code[0m
+[0;32mI (441) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (443) app_init: Application information:[0m
+[0;32mI (447) app_init: Project name:     yonovate-v2[0m
+[0;32mI (451) app_init: App version:      e6bf796-dirty[0m
+[0;32mI (455) app_init: Compile time:     Apr 14 2026 09:45:18[0m
+[0;32mI (460) app_init: ELF file SHA256:  ee3f35518...[0m
+[0;32mI (465) app_init: ESP-IDF:          v5.5.3[0m
+[0;32mI (468) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (472) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (476) efuse_init: Chip rev:         v3.0[0m
+[0;32mI (480) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (487) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (491) heap_init: At 3FFBB0B0 len 00024F50 (147 KiB): DRAM[0m
+[0;32mI (497) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (502) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (508) heap_init: At 40098720 len 000078E0 (30 KiB): IRAM[0m
+[0;32mI (514) spi_flash: detected chip: generic[0m
+[0;32mI (517) spi_flash: flash io: dio[0m
+[0;33mW (519) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (533) main_task: Started on CPU0[0m
+[0;32mI (543) main_task: Calling app_main()[0m
+[0;32mI (543) main: 开始系统初始化...[0m
+[0;32mI (543) i2c_manager: 初始化I2C总线[0m
+[0;32mI (643) i2c_manager: I2C总线初始化成功，频率: 50kHz[0m
+[0;32mI (643) oled: 开始OLED初始化[0m
+[0;32mI (743) oled: 使用已知OLED设备地址: 0x3D[0m
+[0;32mI (743) oled: 总线重置已禁用，仅记录日志[0m
+[0;32mI (743) oled: 为OLED设置I2C频率: 50kHz (与AW9523相同以避免总线混乱)[0m
+[0;32mI (743) oled: 成功添加OLED设备到总线[0m
+[0;32mI (763) oled: 开始发送初始化命令序列 (尝试 1/5)[0m
+[0;32mI (803) oled: 初始化命令发送成功，开始清空显示缓冲区[0m
+[0;32mI (803) oled: 开始刷新显示[0m
+[0;32mI (1013) oled: OLED初始化成功[0m
+[0;32mI (1013) GPIO_MONITOR: OLED status updated: OK[0m
+[0;32mI (1013) GPIO_MONITOR: Current step updated: OLED初始化完成[0m
+[0;32mI (1013) gpio_manager: GPIO manager initialization started[0m
+[0;32mI (1013) gpio_manager: Initializing AW9523 module, I2C address: 0x58[0m
+[0;32mI (1023) aw9523: 未探测到AW9523设备(0x58)，第1/3次尝试[0m
+[0;32mI (1023) aw9523: 执行AW9523专用重置流程...[0m
+[0;32mI (1133) aw9523: 未探测到AW9523设备(0x58)，第2/3次尝试[0m
+[0;32mI (1183) aw9523: 未探测到AW9523设备(0x58)，第3/3次尝试[0m
+[1;31mE (1233) aw9523: 所有探测尝试均失败，无法初始化AW9523[0m
+[0;33mW (1233) gpio_manager: AW9523 initialization failed: ESP_ERR_NOT_FOUND[0m
+[1;31mE (1233) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)[0m
+[1;31mE (1233) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)[0m
+[1;31mE (1253) GPIO_MONITOR: Unknown component: gpio[0m
+[0;32mI (1253) GPIO_MONITOR: Current step updated: GPIO管理器初始化完成[0m
+[0;32mI (1253) GPIO_MONITOR: GPIO monitor task started[0m
+[0;32mI (1263) GPIO_MONITOR: GPIO monitor initialized successfully[0m
+[0;32mI (1263) GPIO_MONITOR: Current step updated: GPIO监控已启动[0m
+[0;32mI (1273) GPIO_MONITOR: Current step updated: 电机已初始化为停止[0m
+[0;32mI (1273) state_machine: 状态机初始化[0m
+[1;31mE (1283) GPIO_MONITOR: Unknown component: state_machine[0m
+[0;32mI (1283) GPIO_MONITOR: Current step updated: 状态机初始化完成[0m
+[0;32mI (1293) state_machine: 状态机已启动，初始状态: idle[0m
+[0;32mI (1303) state_machine: 状态机监控定时器已启动，周期100ms[0m
+[0;32mI (1303) main: State machine started successfully[0m
+[0;32mI (1313) GPIO_MONITOR: Current step updated: State machine started[0m
+[0;32mI (1313) main: ========================================[0m
+[0;32mI (1323) main: WiFi Smart Dual Mode Initializing[0m
+[0;32mI (1323) main: ========================================[0m
+[0;32mI (1333) main: [1/7] Initializing WiFi config storage (NVS)...[0m
+[0;32mI (1373) main: [1/7] OK NVS init done[0m
+[0;32mI (1373) main: [2/7] Loading WiFi config from NVS...[0m
+[0;32mI (1373) wifi_cfg: NVS loaded WiFi config: SSID=HUAWEI-GTJ-home, Pass=Gt****56 (len=9)[0m
+[0;32mI (1373) main: [2/7] OK Loaded WiFi config from NVS[0m
+[0;32mI (1383) main:        SSID: HUAWEI-GTJ-home[0m
+[0;32mI (1383) main:        Pass len: 9[0m
+[0;32mI (1383) main: [3/7] WiFi config params:[0m
+[0;32mI (1393) main:        Target SSID: HUAWEI-GTJ-home[0m
+[0;32mI (1393) main:        Config src: NVS saved[0m
+[0;32mI (1403) main:        AP SSID: Yonovate-Setup[0m
+[0;32mI (1403) main:        AP pass: 12345678[0m
+[0;32mI (1403) main:        AP IP: 192.168.4.1[0m
+[0;32mI (1413) main: [4/7] Starting smart dual mode WiFi...[0m
+[0;32mI (1413) main:        Flow: Start APSTA → Wait STA 30s → Close AP if OK, keep AP if fail[0m
+[0;32mI (1423) wifi_manager: ========== Smart Dual Mode Start ==========[0m
+[0;32mI (1433) wifi_manager: Trying to connect WiFi: HUAWEI-GTJ-home[0m
+[0;32mI (1433) wifi_manager: AP provision: Yonovate-Setup[0m
+[0;32mI (1443) wifi_manager: Timeout: 30000 ms[0m
+[0;32mI (1453) wifi:wifi driver task: 3ffd7454, prio:23, stack:6656, core=0[0m
+[0;32mI (1473) wifi:wifi firmware version: 4df78f2[0m
+[0;32mI (1473) wifi:wifi certification version: v7.0[0m
+[0;32mI (1473) wifi:config NVS flash: enabled[0m
+[0;32mI (1473) wifi:config nano formatting: disabled[0m
+[0;32mI (1473) wifi:Init data frame dynamic rx buffer num: 32[0m
+[0;32mI (1483) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (1483) wifi:Init management short buffer num: 32[0m
+[0;32mI (1483) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (1493) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (1493) wifi:Init static rx buffer num: 10[0m
+[0;32mI (1503) wifi:Init dynamic rx buffer num: 32[0m
+[0;32mI (1503) wifi_init: rx ba win: 6[0m
+[0;32mI (1503) wifi_init: accept mbox: 6[0m
+[0;32mI (1513) wifi_init: tcpip mbox: 32[0m
+[0;32mI (1513) wifi_init: udp mbox: 6[0m
+[0;32mI (1513) wifi_init: tcp mbox: 6[0m
+[0;32mI (1523) wifi_init: tcp tx win: 5760[0m
+[0;32mI (1523) wifi_init: tcp rx win: 5760[0m
+[0;32mI (1523) wifi_init: tcp mss: 1440[0m
+[0;32mI (1523) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (1533) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (1533) wifi:Set ps type: 0, coexist: 0[0m
+
+[0;32mI (1543) wifi_manager: WiFi电源管理已禁用[0m
+[0;32mI (1543) wifi_manager: WiFi初始化完成[0m
+[0;32mI (1543) wifi_manager: 启动AP配网模式，SSID: Yonovate-Setup[0m
+[0;32mI (1563) phy_init: phy_version 4863,a3a4459,Oct 28 2025,14:30:06[0m
+[0;32mI (1643) wifi:mode : sta (c0:49:ef:46:12:00) + softAP (c0:49:ef:46:12:01)[0m
+[0;32mI (1643) wifi:enable tsf[0m
+[0;32mI (1653) wifi:Total power save buffer number: 16[0m
+[0;32mI (1653) wifi:Init max length of beacon: 752/752[0m
+[0;32mI (1653) wifi:Init max length of beacon: 752/752[0m
+[0;32mI (1663) esp_netif_lwip: DHCP server started on interface WIFI_AP_DEF with IP: 192.168.4.1[0m
+[0;32mI (1663) wifi_manager: WiFi APSTA dual mode started[0m
+[0;32mI (1673) wifi:new:<1,1>, old:<1,1>, ap:<1,1>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (1673) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (1683) wifi_manager: AP配网模式已启动[0m
+[0;32mI (1683) wifi_manager: 请连接WiFi: Yonovate-Setup[0m
+[0;32mI (1683) wifi_manager: 然后访问 http://192.168.4.1 进行配置[0m
+[0;32mI (1683) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (1693) wifi_manager: APSTA dual mode started, AP: Yonovate-Setup[0m
+[0;32mI (1703) wifi_manager: Waiting for STA connection result...[0m
+[0;32mI (1703) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (1723) wifi:connected with HUAWEI-GTJ-home, aid = 4, channel 1, BW20, bssid = 02:ea:6a:da:3f:37[0m
+[0;32mI (1723) wifi:security: WPA2-PSK, phy: bgn, rssi: -60[0m
+[0;32mI (1733) wifi:pm start, type: 0[0m
+
+[0;32mI (1733) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us[0m
+[0;32mI (1803) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (2823) esp_netif_handlers: sta ip: 192.168.3.55, mask: 255.255.255.0, gw: 192.168.3.1[0m
+[0;32mI (2823) wifi_manager: WiFi连接成功，IP地址: 192.168.3.55[0m
+[0;32mI (2823) main: WiFi已连接, IP地址: 192.168.3.55[0m
+[0;32mI (2823) GPIO_MONITOR: WiFi status updated: Connected[0m
+[0;32mI (2833) GPIO_MONITOR: IP address updated: 192.168.3.55[0m
+[0;32mI (2843) WEB_SERVER: HTTP server started successfully, listening on port: 80[0m
+[0;32mI (2843) main: Web服务器启动成功[0m
+[1;31mE (2843) GPIO_MONITOR: Unknown component: webserver[0m
+[0;32mI (2913) wifi_manager: OK STA connected! IP: 192.168.3.55[0m
+[0;32mI (2913) wifi_manager: Closing AP to save power...[0m
+[0;32mI (2913) wifi_manager: 停止AP配网模式[0m
+[0;32mI (2913) wifi_manager: STA已连接，保持STA模式，关闭AP[0m
+[0;32mI (2923) wifi:mode : sta (c0:49:ef:46:12:00)[0m
+[0;32mI (2933) wifi_manager: AP配网模式已停止[0m
+[0;32mI (2933) wifi_manager: OK AP closed, entering pure STA mode[0m
+[0;32mI (2933) wifi_manager: ========== Smart Dual Mode: STA Mode ==========[0m
+[0;32mI (2933) main: [5/7] Smart dual mode result: ESP_OK[0m
+[0;32mI (2943) main: [6/7] Checking WiFi connection status...[0m
+[0;32mI (2943) main: [6/7] OK STA connected![0m
+[0;32mI (2953) main: [7/7] OK Current mode: STA mode (connected to router)[0m
+[0;32mI (2953) GPIO_MONITOR: WiFi status updated: Connected[0m
+[1;31mE (2963) GPIO_MONITOR: Unknown component: ap[0m
+[0;32mI (2963) main: ========================================[0m
+[0;32mI (2973) main: WiFi init flow complete[0m
+[0;32mI (2973) main: ========================================[0m
+[0;32mI (2973) main_task: Returned from app_main()[0m
+[0;32mI (60163) wifi:<ba-add>idx:0 (ifx:0, 02:ea:6a:da:3f:37), tid:0, ssn:1, winSize:64[0m
+[0;32mI (124343) wifi_cfg: NVS loaded WiFi config: SSID=HUAWEI-GTJ-home, Pass=Gt****56 (len=9)[0m
+[0;32mI (135223) WEB_SERVER: 接收到WiFi配置POST请求, content_len=40[0m
+[0;32mI (135233) wifi_cfg: WiFi配置保存成功[0m
+[0;32mI (135233) wifi:state: run -> init (0x0)[0m
+[0;32mI (135233) wifi:pm stop, total sleep time: 0 us / 133502374 us[0m
+
+[0;32mI (135233) wifi:<ba-del>idx:0, tid:0[0m
+[0;32mI (135233) wifi:new:<1,0>, old:<1,1>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;33mW (135253) wifi_manager: WiFi disconnected, reason: 8 (ASSOC_LEAVE)[0m
+[0;32mI (135253) main: WiFi已断开连接[0m
+[0;32mI (135253) GPIO_MONITOR: WiFi status updated: Disconnected[0m
+[1;31mE (135263) GPIO_MONITOR: Unknown component: webserver[0m
+[0;32mI (135263) wifi_manager: 配置为开放网络（无密码）[0m
+[0;32mI (135263) wifi:new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (135273) wifi:state: init -> auth (0xb0)[0m
+[1;31mE (135293) wifi:sta is connecting, cannot set config[0m
+[1;31mE (135293) wifi_manager: 设置WiFi配置失败: ESP_ERR_WIFI_STATE[0m
+[0;33mW (135293) WEB_SERVER: WiFi reconnect trigger failed: ESP_ERR_WIFI_STATE[0m
+[0;32mI (135293) wifi:state: auth -> assoc (0x0)I (135293) wifi_manager: Delayed AP shutdown: waiting 30000 ms for STA connection...[0m
+
+[0;32mI (135293) wifi_manager: Delayed AP shutdown scheduled in 30000 ms[0m
+[0;32mI (135313) WEB_SERVER: Delayed AP shutdown started (30s), will close AP after STA connects[0m
+[0;32mI (135313) wifi:state: assoc -> run (0x10)[0m
+[0;33mW (135323) httpd_txrx: httpd_sock_err: error in send : 113[0m
+[0;32mI (135343) wifi:connected with HUAWEI-GTJ-home, aid = 4, channel 1, BW20, bssid = 02:ea:6a:da:3f:37[0m
+[0;32mI (135343) wifi:security: WPA2-PSK, phy: bgn, rssi: -58[0m
+[0;32mI (135353) wifi:pm start, type: 0[0m
+
+[0;32mI (135383) WEB_SERVER: HTTP服务器已停止[0m
+[0;32mI (135433) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (135803) wifi:<ba-add>idx:0 (ifx:0, 02:ea:6a:da:3f:37), tid:0, ssn:1, winSize:64[0m
+[0;32mI (136423) esp_netif_handlers: sta ip: 192.168.3.55, mask: 255.255.255.0, gw: 192.168.3.1[0m
+[0;32mI (136423) wifi_manager: WiFi连接成功，IP地址: 192.168.3.55[0m
+[0;32mI (136423) main: WiFi已连接, IP地址: 192.168.3.55[0m
+[0;32mI (136433) GPIO_MONITOR: WiFi status updated: Connected[0m
+[0;32mI (136433) GPIO_MONITOR: IP address updated: 192.168.3.55[0m
+[0;32mI (136443) WEB_SERVER: HTTP server started successfully, listening on port: 80[0m
+[0;32mI (136443) main: Web服务器启动成功[0m
+[1;31mE (136453) GPIO_MONITOR: Unknown component: webserver[0m
+[0;32mI (136493) WEB_SERVER: 接收到WiFi配置POST请求, content_len=40[0m
+[0;32mI (136493) wifi_cfg: WiFi配置保存成功[0m
+[0;32mI (136503) wifi:state: run -> init (0x0)[0m
+[0;32mI (136513) wifi:pm stop, total sleep time: 0 us / 1158196 us[0m
+
+[0;32mI (136513) wifi:<ba-del>idx:0, tid:0[0m
+[0;32mI (136513) wifi:new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;33mW (136523) wifi_manager: WiFi disconnected, reason: 8 (ASSOC_LEAVE)[0m
+[0;32mI (136523) main: WiFi已断开连接[0m
+[0;32mI (136523) GPIO_MONITOR: WiFi status updated: Disconnected[0m
+[1;31mE (136533) GPIO_MONITOR: Unknown component: webserver[0m
+[0;32mI (136533) wifi_manager: 配置为开放网络（无密码）[0m
+[0;32mI (136533) wifi:new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (136553) wifi:state: init -> auth (0xb0)[0m
+[1;31mE (136563) wifi:sta is connecting, cannot set config[0m
+[1;31mE (136563) wifi_manager: 设置WiFi配置失败: ESP_ERR_WIFI_STATE[0m
+[0;33mW (136563) WEB_SERVER: WiFi reconnect trigger failed: ESP_ERR_WIFI_STATE[0m
+[0;32mI (136563) wifi:I (136573) wifi_manager: Delayed AP shutdown: waiting 30000 ms for STA connection...[0m
+state: auth -> assoc (0x0)I (136573) wifi_manager: Delayed AP shutdown scheduled in 30000 ms
+
+[0;32mI (136583) WEB_SERVER: Delayed AP shutdown started (30s), will close AP after STA connects[0m
+[0;33mW (136593) httpd_txrx: httpd_sock_err: error in send : 113[0m
+[0;32mI (136593) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (136623) wifi:connected with HUAWEI-GTJ-home, aid = 4, channel 1, BW20, bssid = 02:ea:6a:da:3f:37[0m
+[0;32mI (136623) wifi:security: WPA2-PSK, phy: bgn, rssi: -58[0m
+[0;32mI (136633) wifi:pm start, type: 0[0m
+
+[0;32mI (136653) WEB_SERVER: HTTP服务器已停止[0m
+[0;32mI (136673) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (137013) wifi:<ba-add>idx:0 (ifx:0, 02:ea:6a:da:3f:37), tid:0, ssn:1, winSize:64[0m
+[0;32mI (137703) esp_netif_handlers: sta ip: 192.168.3.55, mask: 255.255.255.0, gw: 192.168.3.1[0m
+[0;32mI (137703) wifi_manager: WiFi连接成功，IP地址: 192.168.3.55[0m
+[0;32mI (137703) main: WiFi已连接, IP地址: 192.168.3.55[0m
+[0;32mI (137703) GPIO_MONITOR: WiFi status updated: Connected[0m
+[0;32mI (137713) GPIO_MONITOR: IP address updated: 192.168.3.55[0m
+[0;32mI (137723) WEB_SERVER: HTTP server started successfully, listening on port: 80[0m
+[0;32mI (137723) main: Web服务器启动成功[0m
+[1;31mE (137723) GPIO_MONITOR: Unknown component: webserver[0m
+[0;32mI (165313) wifi_manager: STA connected, shutting down AP to save power[0m
+[0;33mW (165313) wifi_manager: 当前不在AP模式[0m
+[0;33mW (165313) wifi_manager: AP shutdown failed: ESP_ERR_INVALID_STATE[0m
+[0;32mI (166583) wifi_manager: STA connected, shutting down AP to save power[0m
+[0;33mW (166583) wifi_manager: 当前不在AP模式[0m
+[0;33mW (166583) wifi_manager: AP shutdown failed: ESP_ERR_INVALID_STATE[0m
+[0;33mW (240073) httpd_uri: httpd_uri: URI '/api/gpio_config' not found[0m
+[0;33mW (240073) httpd_txrx: httpd_resp_send_err: 404 Not Found - Nothing matches the given URI[0m
+[0;32mI (246933) wifi_cfg: NVS loaded WiFi config: SSID=HUAWEI-GTJ-home, Pass=**** (len=0)[0m
+[0;32mI (259953) WEB_SERVER: 接收到WiFi配置POST请求, content_len=58[0m
+[0;32mI (259963) wifi_cfg: WiFi配置保存成功[0m
+[0;32mI (259963) wifi:state: run -> init (0x0)[0m
+[0;32mI (259963) wifi:pm stop, total sleep time: 0 us / 123334475 us[0m
+
+[0;32mI (259963) wifi:<ba-del>idx:0, tid:0[0m
+[0;32mI (259963) wifi:new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;33mW (259983) wifi_manager: WiFi disconnected, reason: 8 (ASSOC_LEAVE)[0m
+[0;32mI (259983) main: WiFi已断开连接[0m
+[0;32mI (259983) GPIO_MONITOR: WiFi status updated: Disconnected[0m
+[1;31mE (259993) GPIO_MONITOR: Unknown component: webserver[0m
+[1;31mE (259993) wifi:sta is connecting, cannot set config[0m
+[1;31mE (260003) wifi_manager: 设置WiFi配置失败: ESP_ERR_WIFI_STATE[0m
+[0;32mI (260003) wifi:W (260003) WEB_SERVER: WiFi reconnect trigger failed: ESP_ERR_WIFI_STATE[0m
+new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0I (260013) wifi_manager: Delayed AP shutdown scheduled in 30000 ms
+
+[0;32mI (260013) wifi_manager: Delayed AP shutdown: waiting 30000 ms for STA connection...[0m
+[0;32mI (260023) wifi:I (260023) WEB_SERVER: Delayed AP shutdown started (30s), will close AP after STA connects[0m
+state: init -> auth (0xb0)
+[0;33mW (260043) httpd_txrx: httpd_sock_err: error in send : 113[0m
+[0;32mI (260053) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (260063) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (260083) wifi:connected with HUAWEI-GTJ-home, aid = 4, channel 1, BW20, bssid = 02:ea:6a:da:3f:37[0m
+[0;32mI (260083) wifi:security: WPA2-PSK, phy: bgn, rssi: -65[0m
+[0;32mI (260083) wifi:pm start, type: 0[0m
+
+[0;32mI (260103) WEB_SERVER: HTTP服务器已停止[0m
+[0;32mI (260153) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (261143) esp_netif_handlers: sta ip: 192.168.3.55, mask: 255.255.255.0, gw: 192.168.3.1[0m
+[0;32mI (261143) wifi_manager: WiFi连接成功，IP地址: 192.168.3.55[0m
+[0;32mI (261143) main: WiFi已连接, IP地址: 192.168.3.55[0m
+[0;32mI (261143) GPIO_MONITOR: WiFi status updated: Connected[0m
+[0;32mI (261153) GPIO_MONITOR: IP address updated: 192.168.3.55[0m
+[0;32mI (261163) WEB_SERVER: HTTP server started successfully, listening on port: 80[0m
+[0;32mI (261163) main: Web服务器启动成功[0m
+[1;31mE (261163) GPIO_MONITOR: Unknown component: webserver[0m
+[0;32mI (281203) wifi:<ba-add>idx:0 (ifx:0, 02:ea:6a:da:3f:37), tid:0, ssn:1, winSize:64[0m
+[0;32mI (281233) wifi_cfg: NVS loaded WiFi config: SSID=XINGHUI, Pass=88****88 (len=8)[0m
+[0;32mI (290033) wifi_manager: STA connected, shutting down AP to save power[0m
+[0;33mW (290033) wifi_manager: 当前不在AP模式[0m
+[0;33mW (290033) wifi_manager: AP shutdown failed: ESP_ERR_INVALID_STATE[0m
+[0;32mI (291843) WEB_SERVER: 接收到清除WiFi配置请求[0m
+[0;32mI (291863) WEB_SERVER: WiFi配置已清除，准备重启进入AP配网模式[0m
+[0;32mI (294863) wifi:state: run -> init (0x0)[0m
+[0;32mI (294873) wifi:pm stop, total sleep time: 0 us / 34782208 us[0m
+
+[0;32mI (294873) wifi:<ba-del>idx:0, tid:0[0m
+[0;32mI (294873) wifi:new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;33mW (294883) wifi_manager: WiFi disconnected, reason: 8 (ASSOC_LEAVE)[0m
+[0;32mI (294883) main: WiFi已断开连接[0m
+[0;32mI (294883) GPIO_MONITOR: WiFi status updated: Disconnected[0m
+[1;31mE (294893) GPIO_MONITOR: Unknown component: webserver[0m
+[0;32mI (294933) wifi:flush txq[0m
+[0;32mI (294933) wifi:stop sw txq[0m
+[0;32mI (294933) wifi:lmac stop hw txq[0m
+ets Jul 29 2019 12:21:46
+
+rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:6280
+load:0x40078000,len:15864
+load:0x40080400,len:3920
+entry 0x40080644
+[0;32mI (27) boot: ESP-IDF v5.5.3 2nd stage bootloader[0m
+[0;32mI (27) boot: compile time Apr 11 2026 11:17:29[0m
+[0;32mI (27) boot: Multicore bootloader[0m
+[0;32mI (29) boot: chip revision: v3.0[0m
+[0;32mI (31) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (35) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32: SPI Flash Size : 2MB[0m
+[0;32mI (42) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (49) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (75) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=26bf4h (158708) map[0m
+[0;32mI (140) esp_image: segment 1: paddr=00036c1c vaddr=3ffb0000 size=04530h ( 17712) load[0m
+[0;32mI (147) esp_image: segment 2: paddr=0003b154 vaddr=40080000 size=04ec4h ( 20164) load[0m
+[0;32mI (155) esp_image: segment 3: paddr=00040020 vaddr=400d0020 size=9f0f8h (651512) map[0m
+[0;32mI (378) esp_image: segment 4: paddr=000df120 vaddr=40084ec4 size=1385ch ( 79964) load[0m
+[0;32mI (409) esp_image: segment 5: paddr=000f2984 vaddr=50000000 size=00020h (    32) load[0m
+[0;32mI (422) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (422) boot: Disabling RNG early entropy source...[0m
+[0;32mI (432) cpu_start: Multicore app[0m
+[0;32mI (440) cpu_start: GPIO 3 and 1 are used as console UART I/O pins[0m
+[0;32mI (441) cpu_start: Pro cpu start user code[0m
+[0;32mI (441) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (443) app_init: Application information:[0m
+[0;32mI (446) app_init: Project name:     yonovate-v2[0m
+[0;32mI (451) app_init: App version:      e6bf796-dirty[0m
+[0;32mI (455) app_init: Compile time:     Apr 14 2026 09:45:18[0m
+[0;32mI (460) app_init: ELF file SHA256:  ee3f35518...[0m
+[0;32mI (464) app_init: ESP-IDF:          v5.5.3[0m
+[0;32mI (468) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (472) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (476) efuse_init: Chip rev:         v3.0[0m
+[0;32mI (480) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (486) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (491) heap_init: At 3FFBB0B0 len 00024F50 (147 KiB): DRAM[0m
+[0;32mI (496) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (502) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (507) heap_init: At 40098720 len 000078E0 (30 KiB): IRAM[0m
+[0;32mI (514) spi_flash: detected chip: generic[0m
+[0;32mI (516) spi_flash: flash io: dio[0m
+[0;33mW (519) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (533) main_task: Started on CPU0[0m
+[0;32mI (543) main_task: Calling app_main()[0m
+[0;32mI (543) main: 开始系统初始化...[0m
+[0;32mI (543) i2c_manager: 初始化I2C总线[0m
+[0;32mI (643) i2c_manager: I2C总线初始化成功，频率: 50kHz[0m
+[0;32mI (643) oled: 开始OLED初始化[0m
+[0;32mI (743) oled: 使用已知OLED设备地址: 0x3D[0m
+[0;32mI (743) oled: 总线重置已禁用，仅记录日志[0m
+[0;32mI (743) oled: 为OLED设置I2C频率: 50kHz (与AW9523相同以避免总线混乱)[0m
+[0;32mI (743) oled: 成功添加OLED设备到总线[0m
+[0;32mI (763) oled: 开始发送初始化命令序列 (尝试 1/5)[0m
+[0;32mI (803) oled: 初始化命令发送成功，开始清空显示缓冲区[0m
+[0;32mI (803) oled: 开始刷新显示[0m
+[0;32mI (1013) oled: OLED初始化成功[0m
+[0;32mI (1013) GPIO_MONITOR: OLED status updated: OK[0m
+[0;32mI (1013) GPIO_MONITOR: Current step updated: OLED初始化完成[0m
+[0;32mI (1013) gpio_manager: GPIO manager initialization started[0m
+[0;32mI (1013) gpio_manager: Initializing AW9523 module, I2C address: 0x58[0m
+[0;32mI (1023) aw9523: 未探测到AW9523设备(0x58)，第1/3次尝试[0m
+[0;32mI (1023) aw9523: 执行AW9523专用重置流程...[0m
+[0;32mI (1133) aw9523: 未探测到AW9523设备(0x58)，第2/3次尝试[0m
+[0;32mI (1183) aw9523: 未探测到AW9523设备(0x58)，第3/3次尝试[0m
+[1;31mE (1233) aw9523: 所有探测尝试均失败，无法初始化AW9523[0m
+[0;33mW (1233) gpio_manager: AW9523 initialization failed: ESP_ERR_NOT_FOUND[0m
+[1;31mE (1233) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)[0m
+[1;31mE (1233) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)[0m
+[1;31mE (1253) GPIO_MONITOR: Unknown component: gpio[0m
+[0;32mI (1253) GPIO_MONITOR: Current step updated: GPIO管理器初始化完成[0m
+[0;32mI (1253) GPIO_MONITOR: GPIO monitor task started[0m
+[0;32mI (1263) GPIO_MONITOR: GPIO monitor initialized successfully[0m
+[0;32mI (1263) GPIO_MONITOR: Current step updated: GPIO监控已启动[0m
+[0;32mI (1273) GPIO_MONITOR: Current step updated: 电机已初始化为停止[0m
+[0;32mI (1273) state_machine: 状态机初始化[0m
+[1;31mE (1283) GPIO_MONITOR: Unknown component: state_machine[0m
+[0;32mI (1283) GPIO_MONITOR: Current step updated: 状态机初始化完成[0m
+[0;32mI (1293) state_machine: 状态机已启动，初始状态: idle[0m
+[0;32mI (1303) state_machine: 状态机监控定时器已启动，周期100ms[0m
+[0;32mI (1303) main: State machine started successfully[0m
+[0;32mI (1313) GPIO_MONITOR: Current step updated: State machine started[0m
+[0;32mI (1313) main: ========================================[0m
+[0;32mI (1323) main: WiFi Smart Dual Mode Initializing[0m
+[0;32mI (1323) main: ========================================[0m
+[0;32mI (1333) main: [1/7] Initializing WiFi config storage (NVS)...[0m
+[0;32mI (1373) main: [1/7] OK NVS init done[0m
+[0;32mI (1373) main: [2/7] Loading WiFi config from NVS...[0m
+[0;32mI (1373) main: [2/7] WARN No WiFi config in NVS, using default[0m
+[0;32mI (1373) main: [3/7] WiFi config params:[0m
+[0;32mI (1373) main:        Target SSID: XINGHUI[0m
+[0;32mI (1383) main:        Config src: factory default[0m
+[0;32mI (1383) main:        AP SSID: Yonovate-Setup[0m
+[0;32mI (1393) main:        AP pass: 12345678[0m
+[0;32mI (1393) main:        AP IP: 192.168.4.1[0m
+[0;32mI (1393) main: [4/7] Starting smart dual mode WiFi...[0m
+[0;32mI (1403) main:        Flow: Start APSTA → Wait STA 30s → Close AP if OK, keep AP if fail[0m
+[0;32mI (1413) wifi_manager: ========== Smart Dual Mode Start ==========[0m
+[0;32mI (1413) wifi_manager: Trying to connect WiFi: XINGHUI[0m
+[0;32mI (1423) wifi_manager: AP provision: Yonovate-Setup[0m
+[0;32mI (1423) wifi_manager: Timeout: 30000 ms[0m
+[0;32mI (1443) wifi:wifi driver task: 3ffd7454, prio:23, stack:6656, core=0[0m
+[0;32mI (1453) wifi:wifi firmware version: 4df78f2[0m
+[0;32mI (1453) wifi:wifi certification version: v7.0[0m
+[0;32mI (1453) wifi:config NVS flash: enabled[0m
+[0;32mI (1463) wifi:config nano formatting: disabled[0m
+[0;32mI (1463) wifi:Init data frame dynamic rx buffer num: 32[0m
+[0;32mI (1463) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (1473) wifi:Init management short buffer num: 32[0m
+[0;32mI (1473) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (1483) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (1483) wifi:Init static rx buffer num: 10[0m
+[0;32mI (1493) wifi:Init dynamic rx buffer num: 32[0m
+[0;32mI (1493) wifi_init: rx ba win: 6[0m
+[0;32mI (1493) wifi_init: accept mbox: 6[0m
+[0;32mI (1503) wifi_init: tcpip mbox: 32[0m
+[0;32mI (1503) wifi_init: udp mbox: 6[0m
+[0;32mI (1503) wifi_init: tcp mbox: 6[0m
+[0;32mI (1503) wifi_init: tcp tx win: 5760[0m
+[0;32mI (1513) wifi_init: tcp rx win: 5760[0m
+[0;32mI (1513) wifi_init: tcp mss: 1440[0m
+[0;32mI (1513) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (1523) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (1543) wifi:Set ps type: 0, coexist: 0[0m
+
+[0;32mI (1543) wifi_manager: WiFi电源管理已禁用[0m
+[0;32mI (1543) wifi_manager: WiFi初始化完成[0m
+[0;32mI (1543) wifi_manager: 启动AP配网模式，SSID: Yonovate-Setup[0m
+[0;32mI (1563) phy_init: phy_version 4863,a3a4459,Oct 28 2025,14:30:06[0m
+[0;32mI (1643) phy_init: Saving new calibration data due to checksum failure or outdated calibration data, mode(0)[0m
+[0;32mI (1743) wifi:mode : sta (c0:49:ef:46:12:00) + softAP (c0:49:ef:46:12:01)[0m
+[0;32mI (1743) wifi:enable tsf[0m
+[0;32mI (1743) wifi:Total power save buffer number: 16[0m
+[0;32mI (1743) wifi:Init max length of beacon: 752/752[0m
+[0;32mI (1743) wifi:Init max length of beacon: 752/752[0m
+[0;32mI (1753) wifi_manager: WiFi APSTA dual mode started[0m
+[0;32mI (1753) wifi_manager: AP配网模式已启动[0m
+[0;32mI (1753) esp_netif_lwip: DHCP server started on interface WIFI_AP_DEF with IP: 192.168.4.1[0m
+[0;32mI (1763) wifi_manager: 请连接WiFi: Yonovate-Setup[0m
+[0;32mI (1773) wifi_manager: 然后访问 http://192.168.4.1 进行配置[0m
+[0;32mI (1783) wifi_manager: APSTA dual mode started, AP: Yonovate-Setup[0m
+[0;32mI (1783) wifi_manager: Waiting for STA connection result...[0m
+[0;33mW (4603) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (4603) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (7453) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (7463) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (10313) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (10313) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (13163) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (13163) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (16023) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (16023) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (18873) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (18873) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (21723) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (21733) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (24583) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (24583) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (27443) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (27443) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (30293) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (30293) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (31793) wifi_manager: FAIL STA connection timeout (30000 ms), keep AP provision mode[0m
+[0;33mW (31793) wifi_manager: WiFi disconnected, reason: 36 (OTHER)[0m
+[0;32mI (31793) wifi:mode : softAP (c0:49:ef:46:12:01)[0m
+[0;32mI (31803) wifi_manager: Switched to pure AP mode[0m
+[0;32mI (31803) wifi_manager: ========== Smart Dual Mode: AP Provision Mode ==========[0m
+[0;32mI (31803) wifi_manager: Connect to AP: Yonovate-Setup (192.168.4.1) to reconfig WiFi[0m
+[0;32mI (31813) main: [5/7] Smart dual mode result: ESP_OK[0m
+[0;32mI (31823) main: [6/7] Checking WiFi connection status...[0m
+[0;33mW (31823) main: [6/7] FAIL STA connection timeout/failed[0m
+[0;32mI (31833) main: [7/7] WARN Current mode: AP provisioning (waiting for config)[0m
+[0;32mI (31833) main:        Connect to WiFi: Yonovate-Setup[0m
+[0;32mI (31843) main:        Visit http://192.168.4.1 to config[0m
+[0;32mI (31843) GPIO_MONITOR: WiFi status updated: Disconnected[0m
+[1;31mE (31853) GPIO_MONITOR: Unknown component: ap[0m
+[0;32mI (31853) main:        Starting web server (AP mode)...[0m
+[0;32mI (31863) WEB_SERVER: HTTP server started successfully, listening on port: 80[0m
+[0;32mI (31863) main:        OK Web server started (AP mode)[0m
+[1;31mE (31873) GPIO_MONITOR: Unknown component: webserver[0m
+[0;32mI (31873) main: ========================================[0m
+[0;32mI (31883) main: WiFi init flow complete[0m
+[0;32mI (31883) main: ========================================[0m
+[0;32mI (31893) main_task: Returned from app_main()[0m
+[0;32mI (34763) wifi:new:<1,0>, old:<1,1>, ap:<1,1>, sta:<255,255>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (34773) wifi:station: 08:38:e6:51:b8:9f join, AID=1, bgn, 20[0m
+[0;32mI (35133) esp_netif_lwip: DHCP server assigned IP to a client, IP is: 192.168.4.2[0m
+[0;32mI (35793) wifi:<ba-add>idx:2 (ifx:1, 08:38:e6:51:b8:9f), tid:0, ssn:51, winSize:64[0m
+[0;32mI (50833) WEB_SERVER: 接收到WiFi配置POST请求, content_len=58[0m
+[0;32mI (50843) wifi_cfg: WiFi配置保存成功[0m
+[0;32mI (50843) wifi_manager: Current AP mode, switching to APSTA for STA connection[0m
+[0;32mI (50843) wifi:mode : sta (c0:49:ef:46:12:00) + softAP (c0:49:ef:46:12:01)[0m
+[0;32mI (50853) wifi:enable tsf[0m
+[0;32mI (50853) wifi_manager: Mode switch command sent[0m
+[0;33mW (50903) wifi_manager: WiFi disconnected, reason: 36 (OTHER)[0m
+[1;31mE (50923) wifi:sta is connecting, cannot set config[0m
+[1;31mE (50923) wifi_manager: 设置WiFi配置失败: ESP_ERR_WIFI_STATE[0m
+[0;33mW (50923) WEB_SERVER: WiFi reconnect trigger failed: ESP_ERR_WIFI_STATE[0m
+[0;32mI (50923) wifi_manager: Delayed AP shutdown: waiting 30000 ms for STA connection...[0m
+[0;32mI (50933) wifi_manager: Delayed AP shutdown scheduled in 30000 ms[0m
+[0;32mI (50933) WEB_SERVER: Delayed AP shutdown started (30s), will close AP after STA connects[0m
+[0;33mW (53753) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (53753) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (56603) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (56603) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (59453) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (59453) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (62303) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (62303) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;32mI (62443) wifi_cfg: NVS loaded WiFi config: SSID=XINGHUI, Pass=88****88 (len=8)[0m
+[0;33mW (65163) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (65163) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (68013) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (68013) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (70863) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (70863) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (73713) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (73713) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (76573) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (76573) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (79423) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (79423) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (80933) wifi_manager: STA not connected after 30000 ms, keeping AP mode for reconfiguration[0m
+[0;33mW (82273) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (82273) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (85123) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (85123) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (87973) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (87973) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (90833) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (90833) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (93683) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (93683) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;32mI (93823) WEB_SERVER: 接收到WiFi配置POST请求, content_len=49[0m
+[0;32mI (93833) wifi_cfg: WiFi配置保存成功[0m
+[0;33mW (93833) wifi_manager: WiFi disconnected, reason: 36 (OTHER)[0m
+[1;31mE (93853) wifi:sta is connecting, cannot set config[0m
+[1;31mE (93853) wifi_manager: 设置WiFi配置失败: ESP_ERR_WIFI_STATE[0m
+[0;33mW (93853) WEB_SERVER: WiFi reconnect trigger failed: ESP_ERR_WIFI_STATE[0m
+[0;32mI (93853) wifi_manager: Delayed AP shutdown: waiting 30000 ms for STA connection...[0m
+[0;32mI (93853) wifi_manager: Delayed AP shutdown scheduled in 30000 ms[0m
+[0;32mI (93873) WEB_SERVER: Delayed AP shutdown started (30s), will close AP after STA connects[0m
+[0;33mW (96683) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (96683) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (99533) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (99533) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (102393) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (102393) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (105243) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (105243) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (108093) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (108093) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (110943) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (110943) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (113803) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (113803) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (116653) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (116653) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (119503) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (119503) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (122353) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (122363) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (123863) wifi_manager: STA not connected after 30000 ms, keeping AP mode for reconfiguration[0m
+[0;33mW (125213) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (125213) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (128063) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (128063) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (130913) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (130913) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (133773) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (133773) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (136623) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (136623) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (139473) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (139473) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (142323) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (142323) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (145183) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (145183) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (148033) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (148033) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (150883) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (150883) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (153733) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (153733) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (156583) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (156583) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (159433) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (159443) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (162293) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (162293) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (165143) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (165143) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (167993) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (167993) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (170843) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (170843) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (173703) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (173703) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (176553) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (176553) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (179403) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (179403) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (182253) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (182253) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (185113) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (185113) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (187963) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (187963) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (190813) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (190813) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (193663) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (193663) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (196523) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (196523) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (199373) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (199373) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (202223) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (202223) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (205073) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (205073) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (207923) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (207933) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (210783) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (210783) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (213633) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (213633) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (216483) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (216483) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (219333) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (219343) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (222193) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (222193) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (225043) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (225043) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (227893) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (227893) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (230743) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (230753) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (233603) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (233603) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (236453) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (236453) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (239303) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (239303) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (242153) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (242153) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (245013) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (245013) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (247863) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (247863) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (250713) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (250713) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (253563) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (253563) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (256423) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (256423) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (259273) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (259273) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (262123) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (262123) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (264973) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (264973) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (267823) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (267833) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (270683) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (270683) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (273533) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (273533) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (276383) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (276383) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (279233) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (279233) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (282093) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (282093) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (284943) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (284943) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (287793) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (287793) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (290643) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (290643) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (293493) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (293493) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (296353) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (296353) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (299203) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (299203) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (302053) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (302053) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (304903) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (304903) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (307753) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (307753) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (310613) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (310613) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (313463) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (313463) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (316313) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (316313) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (319163) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (319163) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (322013) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (322013) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (324873) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (324873) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (327723) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (327723) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (330573) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (330573) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (333423) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (333433) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (336283) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (336283) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (339133) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (339133) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (341983) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (341983) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (344843) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (344843) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (347693) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (347693) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (350543) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (350543) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (353393) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (353403) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (356253) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (356253) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (359103) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (359103) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (361953) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (361953) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (364813) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (364813) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (367663) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (367663) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (370513) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (370513) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (373363) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (373363) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (376223) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (376223) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (379073) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (379073) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (381923) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (381923) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (384773) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (384773) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (387623) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (387623) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (390483) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (390483) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (393333) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (393333) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (396183) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (396183) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (399043) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (399043) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (401893) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (401893) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (404743) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (404743) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (407593) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (407593) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (410443) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (410443) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (413293) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (413303) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (416153) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (416153) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (419003) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (419003) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (421853) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (421853) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (424713) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (424713) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (427563) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (427563) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (430413) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (430413) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;32mI (431793) wifi_cfg: NVS loaded WiFi config: SSID=HUAWEI-GTJ-home, Pass=Gt****56 (len=9)[0m
+[0;33mW (433273) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (433273) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (436123) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (436123) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;32mI (437323) wifi_cfg: NVS loaded WiFi config: SSID=HUAWEI-GTJ-home, Pass=Gt****56 (len=9)[0m
+[0;33mW (438973) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (438973) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (441823) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (441823) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (444683) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (444683) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (447533) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (447533) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (450383) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (450383) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (453233) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (453243) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (456093) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (456093) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (458943) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (458943) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (461793) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (461793) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (464643) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (464653) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (467503) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (467503) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (470353) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (470353) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (473203) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (473203) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (476053) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (476053) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (478913) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (478913) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (481763) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (481763) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (484613) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (484613) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (487463) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (487463) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (490313) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (490323) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (493173) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (493173) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (496023) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (496023) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (498873) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (498873) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (501723) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (501723) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (504583) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (504583) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (507433) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (507433) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (510283) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (510283) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (513133) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (513133) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (515993) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (515993) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (518843) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (518843) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (521693) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (521693) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (524543) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (524543) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (527393) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (527393) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (530253) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (530253) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (533103) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (533103) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (535953) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (535953) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (538813) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (538813) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (541663) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (541663) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (544513) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (544513) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (547363) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (547363) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (550213) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (550223) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (553073) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (553073) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (555923) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (555923) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (558773) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (558773) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (561623) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (561623) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (564483) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (564483) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (567333) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (567333) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (570183) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (570183) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (573033) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (573033) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (575893) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (575893) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (578743) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (578743) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (581593) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (581593) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (584453) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (584453) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (587303) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (587303) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (590153) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (590153) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (593013) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (593013) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (595863) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (595863) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (598713) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (598713) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (601563) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (601563) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (604413) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (604423) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (607273) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (607273) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (610123) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (610123) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (612973) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (612973) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (615823) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (615833) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (618683) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (618683) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (621533) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (621533) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (624383) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (624383) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (627243) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (627243) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (630093) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (630093) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (632943) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (632943) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (635793) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (635793) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (638653) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (638653) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (641503) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (641503) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (644353) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (644353) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (647203) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (647203) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (650063) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (650063) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (652913) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (652913) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (655763) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (655763) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (658623) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (658623) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (661473) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (661473) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (664323) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (664323) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (667173) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (667173) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (670023) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (670033) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (672883) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (672883) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (675733) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (675733) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (678583) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (678583) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (681433) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (681433) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (684283) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (684283) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (687143) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (687143) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (689993) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (689993) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (692843) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (692843) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (695693) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (695693) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (698553) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (698553) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (701403) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (701403) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (704253) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (704253) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (707103) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (707103) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (709953) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (709963) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (712813) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (712813) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (715663) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (715663) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (718513) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (718513) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (721363) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (721363) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (724213) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (724213) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (727063) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (727063) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (729923) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (729923) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (732773) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (732773) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (735623) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (735623) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (738473) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (738473) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (741323) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (741323) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (744183) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (744183) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (747033) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (747033) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (749883) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (749883) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (752733) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (752733) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (755583) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (755583) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (758433) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (758433) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (761283) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (761283) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (764133) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (764143) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (766993) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (766993) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (769843) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (769843) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (772693) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (772693) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (775543) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (775543) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (778393) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (778403) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (781253) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (781253) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (784103) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (784103) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (786953) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (786953) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (789803) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (789803) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (792653) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (792653) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (795503) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (795513) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (798363) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (798363) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (801213) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (801213) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (804063) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (804063) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (806913) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (806913) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (809763) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (809763) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (812613) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (812613) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (815473) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (815473) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (818323) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (818323) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (821173) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (821173) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (824023) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (824023) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (826873) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (826873) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (829733) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (829733) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (832583) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (832583) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (835433) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (835433) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (838283) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (838283) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (841133) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (841133) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (843983) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (843983) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (846833) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (846833) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (849683) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (849693) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (852543) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (852543) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (855393) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (855393) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (858243) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (858243) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (861093) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (861093) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (863943) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (863943) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (866793) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (866793) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (869643) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (869643) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (872493) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (872503) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (875353) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (875353) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (878203) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (878203) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (881053) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (881053) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (883903) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (883903) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (886753) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (886753) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (889613) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (889613) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (892463) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (892463) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (895313) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (895313) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (898163) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (898163) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (901013) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (901013) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (903863) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (903863) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (906723) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (906723) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (909573) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (909573) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (912423) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (912423) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (915273) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (915273) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (918123) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (918123) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (920983) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (920983) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (923833) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (923833) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (926683) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (926683) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (929533) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (929533) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (932383) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (932383) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (935233) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (935233) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (938083) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (938083) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (940933) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (940933) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (943783) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (943793) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (946643) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (946643) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (949493) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (949493) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (952343) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (952343) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (955193) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (955193) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (958043) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (958043) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (960903) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (960903) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (963753) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (963753) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (966603) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (966603) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (969453) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (969453) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (972303) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (972303) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (975163) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (975163) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (978013) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (978013) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (980863) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (980863) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (983713) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (983713) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (986563) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (986573) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (989423) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (989423) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (992273) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (992273) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (995123) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (995123) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (997973) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (997973) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1000823) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1000823) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1003673) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1003683) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1006533) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1006533) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1009383) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1009383) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1012233) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1012233) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1015083) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1015083) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1017933) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1017933) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1020783) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1020783) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1023643) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1023643) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1026493) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1026493) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1029343) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1029343) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1032193) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1032193) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1035043) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1035043) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1037903) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1037903) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1040753) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1040753) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1043603) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1043603) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1046453) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1046453) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1049303) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1049303) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1052153) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1052153) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1055013) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1055013) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1057863) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1057863) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1060713) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1060713) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1063563) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1063563) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1066413) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1066413) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1069263) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1069263) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1072123) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1072123) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1074973) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1074973) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1077823) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1077823) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1080673) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1080673) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1083523) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1083523) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1086373) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1086373) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1089223) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1089233) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1092083) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1092083) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1094933) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1094933) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1097783) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1097783) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1100633) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1100633) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1103483) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1103483) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1106333) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1106343) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1109193) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1109193) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1112043) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1112043) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1114893) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1114893) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1117743) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1117743) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1120593) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1120593) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1123453) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1123453) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1126303) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1126303) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1129153) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1129153) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1132003) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1132003) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1134863) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1134863) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1137713) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1137713) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1140563) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1140563) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1143413) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1143413) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1146263) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1146263) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1149113) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1149113) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1151963) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1151963) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1154813) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1154813) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1157663) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1157673) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1160523) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1160523) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1163373) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1163373) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1166223) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1166223) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1169073) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1169073) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1171923) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1171933) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1174783) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1174783) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1177633) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1177633) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1180483) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1180483) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1183333) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1183343) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1186193) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1186193) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1189043) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1189043) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1191893) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1191893) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1194743) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1194743) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1197603) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1197603) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1200453) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1200453) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1203303) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1203303) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1206153) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1206153) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1209013) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1209013) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1211863) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1211863) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1214713) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1214713) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1217573) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0;33mW (1217573) wifi_manager: ==> AP NOT FOUND: Check SSID and signal strength![0m
+[0;33mW (1220423) wifi_manager: WiFi disconnected, reason: 201 (NO_AP_FOUND (SSID NOT FOUND))[0m
+[0

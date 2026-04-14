@@ -1,0 +1,126 @@
+Command: C:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe C:\Espressif\frameworks\esp-idf-v5.5.3\tools/idf_monitor.py -p COM5 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 C:\Downloads\code-v2\v2\build\yonovate-v2.elf C:\Downloads\code-v2\v2\build\bootloader\bootloader.elf --force-color -m 'C:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe' 'C:\Espressif\frameworks\esp-idf-v5.5.3\tools\idf.py' '-p' 'COM5'
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:6280
+load:0x40078000,len:15864
+load:0x40080400,len:3920
+entry 0x40080644
+[0;32mI (27) boot: ESP-IDF v5.5.3 2nd stage bootloader[0m
+[0;32mI (27) boot: compile time Apr 11 2026 11:17:29[0m
+[0;32mI (28) boot: Multicore bootloader[0m
+[0;32mI (29) boot: chip revision: v3.0[0m
+[0;32mI (32) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (35) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32: SPI Flash Size : 2MB[0m
+[0;32mI (42) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (49) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (75) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=21dcch (138700) map[0m
+[0;32mI (134) esp_image: segment 1: paddr=00031df4 vaddr=3ffb0000 size=04530h ( 17712) load[0m
+[0;32mI (140) esp_image: segment 2: paddr=0003632c vaddr=40080000 size=09cech ( 40172) load[0m
+[0;32mI (156) esp_image: segment 3: paddr=00040020 vaddr=400d0020 size=9ddbch (646588) map[0m
+[0;32mI (377) esp_image: segment 4: paddr=000ddde4 vaddr=40089cec size=0ea34h ( 59956) load[0m
+[0;32mI (401) esp_image: segment 5: paddr=000ec820 vaddr=50000000 size=00020h (    32) load[0m
+[0;32mI (413) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (413) boot: Disabling RNG early entropy source...[0m
+[0;32mI (424) cpu_start: Multicore app[0m
+[0;32mI (432) cpu_start: GPIO 3 and 1 are used as console UART I/O pins[0m
+[0;32mI (432) cpu_start: Pro cpu start user code[0m
+[0;32mI (432) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (434) app_init: Application information:[0m
+[0;32mI (438) app_init: Project name:     yonovate-v2[0m
+[0;32mI (442) app_init: App version:      d04e3a8-dirty[0m
+[0;32mI (447) app_init: Compile time:     Apr 11 2026 16:37:30[0m
+[0;32mI (452) app_init: ELF file SHA256:  50ad8c959...[0m
+[0;32mI (456) app_init: ESP-IDF:          v5.5.3[0m
+[0;32mI (460) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (464) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (468) efuse_init: Chip rev:         v3.0[0m
+[0;32mI (472) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (478) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (483) heap_init: At 3FFBB0A8 len 00024F58 (147 KiB): DRAM[0m
+[0;32mI (488) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (494) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (499) heap_init: At 40098720 len 000078E0 (30 KiB): IRAM[0m
+[0;32mI (506) spi_flash: detected chip: generic[0m
+[0;32mI (508) spi_flash: flash io: dio[0m
+[0;33mW (511) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (524) main_task: Started on CPU0[0m
+[0;32mI (534) main_task: Calling app_main()[0m
+[0;32mI (534) main: 开始系统初始化...[0m
+[0;32mI (534) i2c_manager: 初始化I2C总线[0m
+[0;32mI (634) i2c_manager: I2C总线初始化成功，频率: 50kHz[0m
+[0;32mI (634) oled: 开始OLED初始化[0m
+[0;32mI (734) oled: 使用已知OLED设备地址: 0x3D[0m
+[0;32mI (734) oled: 总线重置已禁用，仅记录日志[0m
+[0;32mI (734) oled: 为OLED设置I2C频率: 50kHz (与AW9523相同以避免总线混乱)[0m
+[0;32mI (734) oled: 成功添加OLED设备到总线[0m
+[0;32mI (754) oled: 开始发送初始化命令序列 (尝试 1/5)[0m
+[0;32mI (794) oled: 初始化命令发送成功，开始清空显示缓冲区[0m
+[0;32mI (794) oled: 开始刷新显示[0m
+[0;32mI (1004) oled: OLED初始化成功[0m
+[0;32mI (1004) GPIO_MONITOR: OLED status updated: OK[0m
+[0;32mI (1004) GPIO_MONITOR: Current step updated: OLED初始化完成[0m
+[0;32mI (1004) gpio_manager: GPIO manager initialization started[0m
+[0;32mI (1004) gpio_manager: Initializing AW9523 module, I2C address: 0x58[0m
+[0;32mI (1014) aw9523: 未探测到AW9523设备(0x58)，第1/3次尝试[0m
+[0;32mI (1024) aw9523: 执行AW9523专用重置流程...[0m
+[0;32mI (1124) aw9523: 未探测到AW9523设备(0x58)，第2/3次尝试[0m
+[0;32mI (1174) aw9523: 未探测到AW9523设备(0x58)，第3/3次尝试[0m
+[1;31mE (1224) aw9523: 所有探测尝试均失败，无法初始化AW9523[0m
+[0;33mW (1224) gpio_manager: AW9523 initialization failed: ESP_ERR_NOT_FOUND[0m
+[1;31mE (1224) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)[0m
+[1;31mE (1224) gpio: gpio_pullup_en(78): GPIO number error (input-only pad has no internal PU)[0m
+[1;31mE (1244) GPIO_MONITOR: Unknown component: gpio[0m
+[0;32mI (1244) GPIO_MONITOR: Current step updated: GPIO管理器初始化完成[0m
+[0;32mI (1244) GPIO_MONITOR: GPIO monitor task started[0m
+[0;32mI (1254) GPIO_MONITOR: GPIO monitor initialized successfully[0m
+[0;32mI (1254) GPIO_MONITOR: Current step updated: GPIO监控已启动[0m
+[0;32mI (1264) GPIO_MONITOR: Current step updated: 电机已初始化为停止[0m
+[0;32mI (1264) state_machine: 状态机初始化[0m
+[1;31mE (1274) GPIO_MONITOR: Unknown component: state_machine[0m
+[0;32mI (1274) GPIO_MONITOR: Current step updated: 状态机初始化完成[0m
+[0;32mI (1284) state_machine: 状态机已启动，初始状态: idle[0m
+[0;32mI (1294) state_machine: 状态机监控定时器已启动，周期100ms[0m
+[0;32mI (1294) main: 状态机启动成功[0m
+[0;32mI (1294) GPIO_MONITOR: Current step updated: 状态机已启动[0m
+[0;32mI (1324) main: 使用默认WiFi配置[0m
+[0;32mI (1344) wifi:wifi driver task: 3ffd71e8, prio:23, stack:6656, core=0[0m
+[0;32mI (1354) wifi:wifi firmware version: 4df78f2[0m
+[0;32mI (1354) wifi:wifi certification version: v7.0[0m
+[0;32mI (1354) wifi:config NVS flash: enabled[0m
+[0;32mI (1354) wifi:config nano formatting: disabled[0m
+[0;32mI (1364) wifi:Init data frame dynamic rx buffer num: 32[0m
+[0;32mI (1364) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (1364) wifi:Init management short buffer num: 32[0m
+[0;32mI (1374) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (1374) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (1384) wifi:Init static rx buffer num: 10[0m
+[0;32mI (1384) wifi:Init dynamic rx buffer num: 32[0m
+[0;32mI (1394) wifi_init: rx ba win: 6[0m
+[0;32mI (1394) wifi_init: accept mbox: 6[0m
+[0;32mI (1394) wifi_init: tcpip mbox: 32[0m
+[0;32mI (1394) wifi_init: udp mbox: 6[0m
+[0;32mI (1404) wifi_init: tcp mbox: 6[0m
+[0;32mI (1404) wifi_init: tcp tx win: 5760[0m
+[0;32mI (1404) wifi_init: tcp rx win: 5760[0m
+[0;32mI (1414) wifi_init: tcp mss: 1440[0m
+[0;32mI (1414) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (1414) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (1424) wifi:Set ps type: 0, coexist: 0[0m
+
+[0;32mI (1424) wifi_manager: WiFi电源管理已禁用[0m
+[0;32mI (1434) wifi_manager: WiFi初始化完成[0m
+[0;32mI (1434) phy_init: phy_version 4863,a3a4459,Oct 28 2025,14:30:06[0m
+[0;32mI (1514) wifi:mode : sta (c0:49:ef:46:12:00)[0m
+[0;32mI (1514) wifi:enable tsf[0m
+[0;32mI (1524) wifi_manager: WiFi已启动[0m
+[0;32mI (
