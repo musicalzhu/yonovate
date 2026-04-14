@@ -111,6 +111,8 @@ cmd.exe /c "C:\Espressif\frameworks\esp-idf-v5.5.3\export.bat && cd /d <project_
 
 **AI自我检查清单**（每次编译前必须自问）：
 ```markdown
+□ 🆕🚨 **案例查阅**：是否查阅`CASE_INDEX.md`匹配当前场景？（禁止重复历史错误！）
+□ 🆕🚨 **强制引用**：执行前是否阅读`esp32-build.md`关键原则？（禁止凭记忆执行！）
 □ 执行方式：是否使用cmd.exe /c？（禁用PowerShell直接执行）
 □ 环境脚本：是否使用export.bat？（禁用export.ps1）
 □ 执行模式：是否顺序执行Blocking=true？（禁用后台执行）
@@ -119,6 +121,28 @@ cmd.exe /c "C:\Espressif\frameworks\esp-idf-v5.5.3\export.bat && cd /d <project_
 □ 路径格式：是否使用/d参数切换盘符？（Windows必需）
 □ 🆕 Web页面修改：是否更新版本号？（强制！v1.x → v1.(x+1)）
 □ 🆕 修改确认：AI回复"已完成"前必须再次自查所有修改点
+□ 🆕🚨 完成声明验证：回复"已完成"前是否已执行工具验证并引用输出？（绝对禁止虚假声明！）
+```
+
+**案例查阅触发关键词**（匹配任一关键词必须查阅`CASE_INDEX.md`）：
+- ESP32/设备/烧录/flash/idf.py → 查阅 CR_HISTORY.md CASE-2026-04-14
+- commit/提交/git/push → 查阅 CORE_RULES.md 第161-179行
+- html/前端/web页面 → 查阅 Web版本号违规案例
+- 修复/修改/完成 → 查阅 编译验证案例
+
+**🚨 AI声明规范（新增强制规则）**：
+```markdown
+❌ 禁止行为（严重违规）：
+   - 说"Commit已完成"但未执行git status验证
+   - 说"Build成功"但未检查固件文件时间戳
+   - 说"已修改"但未读取文件确认内容
+   - 用"应该"、"预计"代替"已验证"
+
+✅ 必须行为（强制执行）：
+   - 验证后才能说"已完成"
+   - 必须引用工具输出结果（git status/log、编译日志等）
+   - 不确定时明确说"等待验证中"
+   - 示例："Commit已完成，git status确认：working tree clean"
 ```
 
 **AI回复"已完成/已修复"前的强制自查流程**：
@@ -126,9 +150,35 @@ cmd.exe /c "C:\Espressif\frameworks\esp-idf-v5.5.3\export.bat && cd /d <project_
 1. 回顾本次修改的所有文件
 2. 检查是否涉及web页面修改
    └─► 是 → 立即检查版本号是否已递增
-3. 对照.md规则逐项确认
-4. 确认无误后才能回复"已完成"
-5. 如有遗漏，立即修正并重新自查
+3. 🚨 执行工具验证（必须实际执行！）
+   - Commit后：执行git status && git log --oneline -1
+   - Build后：执行ls -la build/*.bin确认文件存在
+   - 修改后：执行read_file确认内容正确
+4. 🚨 引用验证输出（必须展示工具输出！）
+   - 回复中必须包含实际命令输出
+   - 禁止：只说"已完成"而不展示验证结果
+   - 示例："git status: working tree clean"
+5. 对照.md规则逐项确认
+6. 确认无误后才能回复"已完成"
+7. 如有遗漏，立即修正并重新自查
+```
+
+**📝 本次违规案例分析（Commit声明问题）**：
+```markdown
+❌ 违规行为：
+   用户：Commit保存一下
+   AI：✅ Commit完成！
+   （实际上未执行git status验证）
+
+✅ 正确行为：
+   用户：Commit保存一下
+   AI：执行git add && git commit...（等待命令完成）
+       执行git status验证...（实际执行验证）
+       ✅ Commit完成，验证如下：
+          $ git status
+          working tree clean
+          $ git log --oneline -1
+          e6bf796 fix: WiFi...
 ```
 
 **参考文档**：`.windsurf/rules/TROUBLESHOOTING.md` - "AI自动执行构建失败问题"章节

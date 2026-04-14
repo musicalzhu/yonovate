@@ -111,6 +111,15 @@ esp_err_t wifi_manager_start_ap_provisioning(const char* ap_ssid, const char* ap
 esp_err_t wifi_manager_stop_ap_provisioning(void);
 
 /**
+ * @brief 启动延迟关闭AP配网模式
+ * @details 在指定延迟时间后，如果STA已连接则自动关闭AP以省电
+ * @param delay_ms 延迟时间（毫秒），建议30000（30秒）
+ * @return esp_err_t ESP_OK成功启动延迟关闭任务，其他错误码失败
+ * @note 此函数用于保存WiFi配置后，给设备时间连接WiFi，成功后自动关闭AP
+ */
+esp_err_t wifi_manager_start_delayed_ap_shutdown(uint32_t delay_ms);
+
+/**
  * @brief 检查当前是否处于AP配网模式
  * @return true 当前处于AP模式
  * @return false 当前不是AP模式（STA或未启动）

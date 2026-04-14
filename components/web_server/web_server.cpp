@@ -12,6 +12,8 @@
 #include "esp_err.h"
 #include "cJSON.h"
 #include "esp_private/esp_clk.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 // 自定义组件头文件
 #include "web_server.h"
@@ -737,6 +739,7 @@ esp_err_t wifi_config_handler(httpd_req_t *req)
         bool is_restore_default = (is_default_item && cJSON_IsBool(is_default_item) &&
                                    cJSON_IsTrue(is_default_item));
 
+        // 保存到NVS
         esp_err_t saverr = wifi_config_store_save(ssid_str, pass_str);
         if (saverr != ESP_OK) {
             cJSON_Delete(json);
@@ -749,45 +752,14 @@ esp_err_t wifi_config_handler(httpd_req_t *req)
             httpd_resp_send(req, msg, strlen(msg));
             return ESP_FAIL;
         }
-
-        // For restore default, just save config and try to connect (don't require success)
-        // For normal save, require connection to succeed
-        esp_err_t werr = wifi_manager_update_credentials(ssid_str, pass_str);
-
-        if (is_restore_default) {
-            // Restore default: config saved is success, connection is optional
-            if (werr == ESP_OK) {
-                const char *ok = "{\"status\":\"success\",\"message\":\"Default config restored, connected successfully\"}";
-                httpd_resp_set_type(req, "application/json");
-                httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-                httpd_resp_send(req, ok, strlen(ok));
-            } else {
-                // Connection failed but config is saved - this is OK for default restore
-                const char *ok = "{\"status\":\"success\",\"message\":\"Default config restored, will try connect on next boot\"}";
-                httpd_resp_set_type(req, "application/json");
-                httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-                httpd_resp_send(req, ok, strlen(ok));
-            }
-            cJSON_Delete(json);
-            return ESP_OK;
-        }
-
-        // Normal save: require connection success
-        if (werr != ESP_OK) {
-            char msg[128];
-            snprintf(msg, sizeof(msg), "{\"status\":\"warn\",\"message\":\"Saved but reconnect failed: %s\"}",
-                     esp_err_to_name(werr));
-            httpd_resp_set_type(req, "application/json");
-            httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-            httpd_resp_send(req, msg, strlen(msg));
-            cJSON_Delete(json);
-            return ESP_OK;
-        }
-
-        const char *ok = "{\"status\":\"success\",\"message\":\"WiFi config saved, reconnecting...\"}";
+        
+        // 立即返回成功响应，提示需要重启
+        const char *ok_msg = is_restore_default 
+            ? "{\"status\":\"success\",\"message\":\"默认配置已恢复，请重启设备以应用新的WiFi设置\"}"
+            : "{\"status\":\"success\",\"message\":\"WiFi配置已保存，请重启设备以应用新的WiFi设置\"}";
         httpd_resp_set_type(req, "application/json");
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-        httpd_resp_send(req, ok, strlen(ok));
+        httpd_resp_send(req, ok_msg, strlen(ok_msg));
         cJSON_Delete(json);
         return ESP_OK;
     }
@@ -808,11 +780,11 @@ esp_err_t wifi_config_handler(httpd_req_t *req)
             return ESP_FAIL;
         }
 
-        const char *ok = "{\"status\":\"success\",\"message\":\"WiFi配置已清除，请重新配网\"}";
+        const char *ok = "{\"status\":\"success\",\"message\":\"WiFi配置已清除，请重启设备以应用更改\"}";
         httpd_resp_set_type(req, "application/json");
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
         httpd_resp_send(req, ok, strlen(ok));
-        ESP_LOGI(TAG, "WiFi配置已清除");
+        ESP_LOGI(TAG, "WiFi配置已清除，需重启生效");
         return ESP_OK;
     }
 
@@ -851,7 +823,7 @@ static const char* wifi_config_page_html = R"rawliteral(<!DOCTYPE html>
 </head>
 <body>
     <h1>ESP32 WiFi配置</h1>
-    <div class="subtitle">配网模式 (AP: Yonovate-Setup) <span style="color:#999;font-size:12px;">v1.5</span></div>
+    <div class="subtitle">配网模式 (AP: Yonovate-Setup) <span style="color:#999;font-size:12px;">v1.6</span></div>
     <div class="box">
         <div class="current" id="current">正在连接设备...</div>
         <div class="form-group">
@@ -962,8 +934,8 @@ static const char* wifi_config_page_html = R"rawliteral(<!DOCTYPE html>
                             var d = JSON.parse(xhr.responseText);
                             if (d.status === 'success') {
                                 statusEl.className = 'success';
-                                statusEl.innerHTML = '<strong>保存成功！</strong><br>WiFi配置已写入ESP32<br>SSID: ' + ssid + '<br>设备正在尝试连接该WiFi...';
-                                document.getElementById('current').innerHTML = '<strong>当前配置:</strong> ' + ssid + ' <small>(连接中...)</small>';
+                                statusEl.innerHTML = '<strong>保存成功！</strong><br>WiFi配置已写入ESP32<br>SSID: ' + ssid + '<br><small>' + (d.message || '请重启设备以应用新的WiFi设置') + '</small>';
+                                document.getElementById('current').innerHTML = '<strong>当前配置:</strong> ' + ssid + ' <small>(待重启生效)</small>';
                             } else if (d.status === 'warn') {
                                 // 配置已保存但连接失败（警告而非错误）
                                 statusEl.className = 'warn';
@@ -992,7 +964,7 @@ static const char* wifi_config_page_html = R"rawliteral(<!DOCTYPE html>
             xhr.send(JSON.stringify({ssid: ssid, password: password}));
         }
         function clearConfig() {
-            if (!confirm('确定要清除WiFi配置吗？\n清除后ESP32将重启进入AP配网模式。')) return;
+            if (!confirm('确定要清除WiFi配置吗？\n\n注意：需要重启设备才能应用更改。')) return;
             showStatus('正在清除配置...', 'info');
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
@@ -1001,7 +973,7 @@ static const char* wifi_config_page_html = R"rawliteral(<!DOCTYPE html>
                         try {
                             var d = JSON.parse(xhr.responseText);
                             if (d.status === 'success') {
-                                showStatus('<strong>清除成功！</strong><br>WiFi配置已删除，设备已进入AP配网模式', 'success');
+                                showStatus('<strong>清除成功！</strong><br>WiFi配置已删除。<br><small>⚠️ ' + (d.message || '请重启设备以应用更改') + '</small>', 'success');
                                 document.getElementById('ssid').value = '';
                                 document.getElementById('password').value = '';
                                 document.getElementById('current').innerHTML = '<strong>当前状态:</strong> 未配置（等待配网）';
@@ -1020,7 +992,7 @@ static const char* wifi_config_page_html = R"rawliteral(<!DOCTYPE html>
             xhr.send();
         }
         function resetDefault() {
-            if (!confirm('确定要恢复默认配置吗？\n\n将恢复为出厂默认WiFi：\n- SSID: XINGHUI\n- 密码: 88888888\n\n设备将立即尝试连接该WiFi。')) return;
+            if (!confirm('确定要恢复默认配置吗？\n\n将恢复为出厂默认WiFi：\n- SSID: XINGHUI\n- 密码: 88888888\n\n注意：需要重启设备才能应用新的WiFi设置。')) return;
             showStatus('正在恢复默认配置...', 'info');
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
@@ -1029,10 +1001,10 @@ static const char* wifi_config_page_html = R"rawliteral(<!DOCTYPE html>
                         try {
                             var d = JSON.parse(xhr.responseText);
                             if (d.status === 'success') {
-                                showStatus('<strong>恢复默认配置成功！</strong><br>已恢复出厂默认WiFi<br>SSID: XINGHUI<br>密码: 88888888<br>设备正在尝试连接该WiFi...', 'success');
+                                showStatus('<strong>恢复默认配置成功！</strong><br>已恢复出厂默认WiFi<br>SSID: XINGHUI<br>密码: 88888888<br><small>⚠️ ' + (d.message || '请重启设备以应用新的WiFi设置') + '</small>', 'success');
                                 document.getElementById('ssid').value = 'XINGHUI';
                                 document.getElementById('password').value = '88888888';
-                                document.getElementById('current').innerHTML = '<strong>当前配置:</strong> XINGHUI (默认)';
+                                document.getElementById('current').innerHTML = '<strong>当前配置:</strong> XINGHUI (默认，待重启生效)';
                             } else {
                                 showStatus('<strong>恢复失败:</strong> ' + (d.message || '未知错误'), 'error');
                             }

@@ -14,9 +14,12 @@
 ```
 .windsurf/
 ├── README.md              # 本文件 - 规则总索引入口
+├── CASE_INDEX.md          # 🆕 AI案例检索索引（违规案例触发器）
 ├── rules/                 # 通用规则目录（Windsurf自动加载）
 │   ├── CORE_RULES.md      # 核心安全规则、禁止行为、沟通规范
 │   ├── ESP32_STANDARDS.md # ESP-IDF最佳实践、技术规范、AI自动执行规范
+│   ├── CODE_REVIEW.md     # C/C++代码审查检查清单、内存安全、并发安全
+│   ├── TESTING.md         # 单元测试策略、CI/CD集成、测试覆盖率
 │   ├── WORKFLOW_GUIDE.md  # 工作流程、检查清单、问题排查
 │   ├── RULE_MAINTENANCE.md# 规则维护指南、归档流程
 │   ├── TROUBLESHOOTING.md # 编码问题、日志监控、AI执行失败排查
@@ -33,8 +36,11 @@
 
 | 文件 | 路径 | 内容 | 适用场景 |
 |------|------|------|----------|
+| **案例检索索引** | `CASE_INDEX.md` | AI违规案例触发器、场景关键词匹配、查阅强制约束 | **执行前必查** |
 | **核心安全规则** | `rules/CORE_RULES.md` | 安全原则、禁止行为、沟通规范、自动编译规则 | 所有项目必看 |
 | **ESP32技术规范** | `rules/ESP32_STANDARDS.md` | ESP-IDF最佳实践、代码注释、OCP原则、AI自动执行技术规范 | ESP32项目专用 |
+| **代码审查指南** | `rules/CODE_REVIEW.md` | C/C++代码审查检查清单、内存安全、并发安全、静态分析 | 代码审查参考 |
+| **测试与CI/CD** | `rules/TESTING.md` | 单元测试策略、CI/CD集成、测试覆盖率、GitHub Actions | 测试流程参考 |
 | **操作手册** | `rules/WORKFLOW_GUIDE.md` | 工作流程、检查清单、Git提交指南、问题排查、AI自我检查清单 | 执行参考 |
 | **规则维护指南** | `rules/RULE_MAINTENANCE.md` | 如何维护规则文件、新问题归档流程、通用化原则 | AI自动维护参考 |
 | **问题排查** | `rules/TROUBLESHOOTING.md` | 编码问题、日志监控、AI自动执行构建失败问题、成功案例 | 故障诊断 |
@@ -50,8 +56,18 @@
 2. 查看 `rules/WORKFLOW_GUIDE.md` 的标准工作流程
 
 ### ESP32开发时
-1. 查阅 `rules/ESP32_STANDARDS.md` 获取技术规范
-2. 参考 `workflows/esp32-build.md` 了解编译步骤
+1. **执行前查阅** `CASE_INDEX.md` 匹配场景（强制！防止重复犯错）
+2. 查阅 `rules/ESP32_STANDARDS.md` 获取技术规范
+3. 参考 `workflows/esp32-build.md` 了解编译步骤
+
+### 代码审查时
+1. **执行前查阅** `CASE_INDEX.md` 代码审查相关案例
+2. 遵循 `rules/CODE_REVIEW.md` 的检查清单逐项审查
+3. 重点关注内存安全、并发安全、错误处理
+
+### 测试与CI/CD
+1. 查看 `rules/TESTING.md` 的单元测试策略
+2. 集成GitHub Actions工作流
 
 ### 执行具体操作时
 1. 按 `rules/WORKFLOW_GUIDE.md` 的检查清单执行

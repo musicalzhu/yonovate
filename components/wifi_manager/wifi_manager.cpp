@@ -28,10 +28,57 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         esp_wifi_connect();
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
+        wifi_event_sta_disconnected_t* event = (wifi_event_sta_disconnected_t*) event_data;
+        uint8_t reason = event->reason;
         bool was_connected = s_wifi_connected;
         s_wifi_connected = false;
+        
+        // 记录断开原因码，便于诊断连接问题
+        const char* reason_str = "UNKNOWN";
+        switch (reason) {
+            case WIFI_REASON_AUTH_EXPIRE:       reason_str = "AUTH_EXPIRE"; break;
+            case WIFI_REASON_AUTH_LEAVE:        reason_str = "AUTH_LEAVE"; break;
+            case WIFI_REASON_ASSOC_EXPIRE:      reason_str = "ASSOC_EXPIRE"; break;
+            case WIFI_REASON_ASSOC_TOOMANY:     reason_str = "ASSOC_TOOMANY"; break;
+            case WIFI_REASON_NOT_AUTHED:        reason_str = "NOT_AUTHED (WRONG PASSWORD)"; break;
+            case WIFI_REASON_NOT_ASSOCED:       reason_str = "NOT_ASSOCED"; break;
+            case WIFI_REASON_ASSOC_LEAVE:     reason_str = "ASSOC_LEAVE"; break;
+            case WIFI_REASON_ASSOC_NOT_AUTHED:  reason_str = "ASSOC_NOT_AUTHED"; break;
+            case WIFI_REASON_DISASSOC_PWRCAP_BAD: reason_str = "DISASSOC_PWRCAP_BAD"; break;
+            case WIFI_REASON_DISASSOC_SUPCHAN_BAD: reason_str = "DISASSOC_SUPCHAN_BAD"; break;
+            case WIFI_REASON_IE_INVALID:        reason_str = "IE_INVALID"; break;
+            case WIFI_REASON_MIC_FAILURE:       reason_str = "MIC_FAILURE"; break;
+            case WIFI_REASON_4WAY_HANDSHAKE_TIMEOUT: reason_str = "4WAY_HANDSHAKE_TIMEOUT (AUTH FAIL)"; break;
+            case WIFI_REASON_GROUP_KEY_UPDATE_TIMEOUT: reason_str = "GROUP_KEY_UPDATE_TIMEOUT"; break;
+            case WIFI_REASON_IE_IN_4WAY_DIFFERS: reason_str = "IE_IN_4WAY_DIFFERS"; break;
+            case WIFI_REASON_GROUP_CIPHER_INVALID: reason_str = "GROUP_CIPHER_INVALID"; break;
+            case WIFI_REASON_PAIRWISE_CIPHER_INVALID: reason_str = "PAIRWISE_CIPHER_INVALID"; break;
+            case WIFI_REASON_AKMP_INVALID:      reason_str = "AKMP_INVALID"; break;
+            case WIFI_REASON_UNSUPP_RSN_IE_VERSION: reason_str = "UNSUPP_RSN_IE_VERSION"; break;
+            case WIFI_REASON_INVALID_RSN_IE_CAP: reason_str = "INVALID_RSN_IE_CAP"; break;
+            case WIFI_REASON_802_1X_AUTH_FAILED: reason_str = "802_1X_AUTH_FAILED"; break;
+            case WIFI_REASON_CIPHER_SUITE_REJECTED: reason_str = "CIPHER_SUITE_REJECTED"; break;
+            case WIFI_REASON_NO_AP_FOUND:       reason_str = "NO_AP_FOUND (SSID NOT FOUND)"; break;
+            case WIFI_REASON_BEACON_TIMEOUT:    reason_str = "BEACON_TIMEOUT"; break;
+            case WIFI_REASON_AUTH_FAIL:         reason_str = "AUTH_FAIL (PASSWORD WRONG)"; break;
+            case WIFI_REASON_ASSOC_FAIL:        reason_str = "ASSOC_FAIL"; break;
+            case WIFI_REASON_HANDSHAKE_TIMEOUT: reason_str = "HANDSHAKE_TIMEOUT"; break;
+            case WIFI_REASON_CONNECTION_FAIL:   reason_str = "CONNECTION_FAIL"; break;
+            default:                            reason_str = "OTHER"; break;
+        }
+        
+        ESP_LOGW(TAG, "WiFi disconnected, reason: %d (%s)", reason, reason_str);
+        
+        // 特殊提示常见错误
+        if (reason == WIFI_REASON_NOT_AUTHED || reason == WIFI_REASON_AUTH_FAIL) {
+            ESP_LOGW(TAG, "==> PASSWORD ERROR: Check WiFi password correctness!");
+        } else if (reason == WIFI_REASON_NO_AP_FOUND) {
+            ESP_LOGW(TAG, "==> AP NOT FOUND: Check SSID and signal strength!");
+        } else if (reason == WIFI_REASON_4WAY_HANDSHAKE_TIMEOUT) {
+            ESP_LOGW(TAG, "==> AUTH TIMEOUT: Check router auth mode (WPA2)");
+        }
+        
         esp_wifi_connect();
-        ESP_LOGI(TAG, "WiFi连接断开，正在重新连接...");
         
         // 仅在状态变化时调用回调
         if (was_connected && s_connection_callback) {
@@ -189,51 +236,7 @@ esp_err_t wifi_manager_update_credentials(const char* ssid, const char* password
         return ESP_ERR_INVALID_ARG;
     }
 
-    // 获取当前WiFi模式
-    wifi_mode_t current_mode;
-    esp_err_t err = esp_wifi_get_mode(&current_mode);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "获取WiFi模式失败: %s", esp_err_to_name(err));
-        return err;
-    }
-
-    // 如果当前是AP模式，需要先切换到APSTA模式
-    if (current_mode == WIFI_MODE_AP) {
-        ESP_LOGI(TAG, "Current AP mode, switching to APSTA for STA connection");
-        err = esp_wifi_set_mode(WIFI_MODE_APSTA);
-        if (err != ESP_OK) {
-            ESP_LOGE(TAG, "Switch to APSTA failed: %s", esp_err_to_name(err));
-            return err;
-        }
-        ESP_LOGI(TAG, "Mode switch command sent, waiting for stabilization");
-    }
-
-    // Check if STA interface is ready (with retry)
-    wifi_mode_t new_mode;
-    int retry_count = 0;
-    const int max_retries = 10;  // 最多等待1秒
-    
-    do {
-        esp_wifi_get_mode(&new_mode);
-        if (new_mode == WIFI_MODE_STA || new_mode == WIFI_MODE_APSTA) {
-            ESP_LOGI(TAG, "STA interface ready, mode: %d", new_mode);
-            break;
-        }
-        vTaskDelay(pdMS_TO_TICKS(100));
-        retry_count++;
-        ESP_LOGI(TAG, "Waiting for STA ready... (%d/%d)", retry_count, max_retries);
-    } while (retry_count < max_retries);
-    
-    if (new_mode != WIFI_MODE_STA && new_mode != WIFI_MODE_APSTA) {
-        ESP_LOGE(TAG, "WiFi mode not suitable for STA after %d retries: %d", max_retries, new_mode);
-        return ESP_ERR_WIFI_STATE;
-    }
-
-    // Disconnect current STA if any
-    esp_wifi_disconnect();
-    vTaskDelay(pdMS_TO_TICKS(50));
-
-    // 配置新的WiFi凭证
+    // 配置新的WiFi凭证（只保存到驱动，不触发连接）
     wifi_config_t wifi_config = {};
     strncpy((char*)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid) - 1);
     // 密码可为空字符串表示开放网络
@@ -246,20 +249,13 @@ esp_err_t wifi_manager_update_credentials(const char* ssid, const char* password
         ESP_LOGI(TAG, "配置为开放网络（无密码）");
     }
 
-    err = esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
+    esp_err_t err = esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "设置WiFi配置失败: %s", esp_err_to_name(err));
         return err;
     }
 
-    // 使用新凭证重新连接
-    err = esp_wifi_connect();
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "WiFi连接失败: %s", esp_err_to_name(err));
-        return err;
-    }
-
-    ESP_LOGI(TAG, "WiFi凭证已更新，正在使用新配置连接...");
+    ESP_LOGI(TAG, "WiFi凭证已更新（保存到驱动），需重启后生效");
     return ESP_OK;
 }
 
@@ -425,10 +421,15 @@ esp_err_t wifi_manager_start_ap_provisioning(const char* ap_ssid, const char* ap
         ESP_LOGW(TAG, "AP使用开放网络（无密码），建议设置8位以上密码");
     }
 
-    // 设置AP模式
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
+    // 设置APSTA双模式（允许STA同时尝试连接路由器）
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &wifi_config));
+    
+    // 确保STA配置仍然存在（在init中已设置）
+    // 启动WiFi后STA会自动开始连接
     ESP_ERROR_CHECK(esp_wifi_start());
+    
+    ESP_LOGI(TAG, "WiFi APSTA dual mode started");
 
     s_ap_mode_active = true;
 
@@ -448,18 +449,99 @@ esp_err_t wifi_manager_stop_ap_provisioning(void)
 
     ESP_LOGI(TAG, "停止AP配网模式");
 
-    // 停止AP
-    esp_wifi_stop();
+    // 如果STA已连接，保持STA，只关闭AP
+    if (wifi_manager_is_connected()) {
+        ESP_LOGI(TAG, "STA已连接，保持STA模式，关闭AP");
+        ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+    } else {
+        ESP_LOGW(TAG, "STA未连接，保持APSTA模式继续尝试连接");
+        // 不切换模式，保持APSTA让STA继续尝试连接
+    }
+    
     s_ap_mode_active = false;
 
-    // 切换回STA模式
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-
-    ESP_LOGI(TAG, "AP模式已停止，切换回STA模式");
+    ESP_LOGI(TAG, "AP配网模式已停止");
     return ESP_OK;
 }
 
 bool wifi_manager_is_ap_mode(void)
 {
     return s_ap_mode_active;
+}
+
+// 延迟关闭AP任务参数结构体
+typedef struct {
+    uint32_t delay_ms;
+} delayed_ap_shutdown_params_t;
+
+// 延迟关闭AP的后台任务
+static void delayed_ap_shutdown_task(void *pvParameters)
+{
+    delayed_ap_shutdown_params_t *params = (delayed_ap_shutdown_params_t *)pvParameters;
+    uint32_t delay_ms = params->delay_ms;
+    
+    ESP_LOGI(TAG, "Delayed AP shutdown: waiting %lu ms for STA connection...", delay_ms);
+    
+    // 延迟等待
+    vTaskDelay(pdMS_TO_TICKS(delay_ms));
+    
+    // 检查是否已连接
+    if (wifi_manager_is_connected()) {
+        ESP_LOGI(TAG, "STA connected, shutting down AP to save power");
+        esp_err_t err = wifi_manager_stop_ap_provisioning();
+        if (err == ESP_OK) {
+            ESP_LOGI(TAG, "AP shutdown successful, now in pure STA mode");
+        } else {
+            ESP_LOGW(TAG, "AP shutdown failed: %s", esp_err_to_name(err));
+        }
+    } else {
+        ESP_LOGW(TAG, "STA not connected after %lu ms, keeping AP mode for reconfiguration", delay_ms);
+    }
+    
+    // 释放参数内存
+    free(params);
+    
+    // 删除任务
+    vTaskDelete(NULL);
+}
+
+esp_err_t wifi_manager_start_delayed_ap_shutdown(uint32_t delay_ms)
+{
+    if (!s_wifi_initialized) {
+        ESP_LOGE(TAG, "WiFi管理器未初始化");
+        return ESP_ERR_INVALID_STATE;
+    }
+    
+    if (delay_ms == 0) {
+        ESP_LOGE(TAG, "延迟时间不能为0");
+        return ESP_ERR_INVALID_ARG;
+    }
+    
+    // 分配参数内存
+    delayed_ap_shutdown_params_t *params = (delayed_ap_shutdown_params_t *)malloc(sizeof(delayed_ap_shutdown_params_t));
+    if (params == NULL) {
+        ESP_LOGE(TAG, "分配延迟关闭AP任务参数内存失败");
+        return ESP_ERR_NO_MEM;
+    }
+    
+    params->delay_ms = delay_ms;
+    
+    // 创建后台任务
+    BaseType_t result = xTaskCreate(
+        delayed_ap_shutdown_task,
+        "ap_shutdown",
+        2048,  // 堆栈大小
+        params,
+        5,     // 优先级（较低）
+        NULL
+    );
+    
+    if (result != pdPASS) {
+        ESP_LOGE(TAG, "创建延迟关闭AP任务失败");
+        free(params);
+        return ESP_ERR_NO_MEM;
+    }
+    
+    ESP_LOGI(TAG, "Delayed AP shutdown scheduled in %lu ms", delay_ms);
+    return ESP_OK;
 }

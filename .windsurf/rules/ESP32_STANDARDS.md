@@ -88,21 +88,12 @@ ESP_LOGI(TAG, "WiFi password: %s", password);  // 禁止
 - 导致`UnicodeEncodeError`，无法监控日志
 - 影响调试和问题排查
 
-**✅ 正确示例**：
 ```cpp
-ESP_LOGI(TAG, "WiFi smart dual mode initializing");
-ESP_LOGI(TAG, "[OK] STA connected, IP: %s", ip);
-ESP_LOGI(TAG, "[FAIL] Connection timeout, AP mode active");
-ESP_LOGW(TAG, "[WARN] No config found, using default");
+ESP_LOGI(TAG, "WiFi init complete");  // ✅ 正确
+ESP_LOGI(TAG, "WiFi初始化完成");  // ❌ 错误：ESP32固件日志必须使用英文
 ```
 
-**❌ 错误示例**：
-```cpp
-ESP_LOGI(TAG, "WiFi智能双模式初始化");           // 禁止：中文
-ESP_LOGI(TAG, "✓ STA连接成功");                 // 禁止：UTF-8符号
-ESP_LOGI(TAG, "✗ 连接超时，AP模式激活");        // 禁止：中文+符号
-ESP_LOGW(TAG, "⚠ 未找到配置，使用默认值");       // 禁止：中文+符号
-```
+> **原因**: 避免Windows中文环境下的编码问题（见TROUBLESHOOTING.md第45-78行）
 
 **替代方案**：使用ASCII符号
 ```cpp

@@ -67,6 +67,22 @@ esp_err_t wifi_config_store_load(char *ssid, size_t ssid_len, char *pass, size_t
     len = pass_len;
     err = nvs_get_str(h, KEY_PASS, pass, &len);
     
+    // 调试日志：显示加载的配置（密码部分隐藏）
+    if (err == ESP_OK) {
+        // 隐藏密码中间部分，只显示前2和后2字符
+        char pass_masked[64] = {0};
+        size_t pass_real_len = strlen(pass);
+        if (pass_real_len <= 4) {
+            strncpy(pass_masked, "****", sizeof(pass_masked) - 1);
+        } else {
+            snprintf(pass_masked, sizeof(pass_masked), "%.2s****%.2s", pass, pass + pass_real_len - 2);
+        }
+        ESP_LOGI(TAG, "NVS loaded WiFi config: SSID=%s, Pass=%s (len=%d)", 
+                 ssid, pass_masked, (int)pass_real_len);
+    } else {
+        ESP_LOGW(TAG, "NVS load password failed: %s", esp_err_to_name(err));
+    }
+    
     nvs_close(h);
     return err;
 }

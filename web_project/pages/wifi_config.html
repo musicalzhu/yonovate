@@ -53,6 +53,19 @@
         .btn-clear:hover {
             background: #da190b;
         }
+        .btn-default {
+            background: #FF9800;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .btn-default:hover {
+            background: #e68900;
+        }
         .status-box {
             margin-top: 20px;
             padding: 15px;
@@ -97,9 +110,10 @@
 
         <div class="ip-config">
             <label for="esp32-ip">ESP32 IP地址: </label>
-            <input type="text" id="esp32-ip" placeholder="例如: 192.168.4.1" value="192.168.4.1">
+            <input type="text" id="esp32-ip" placeholder="例如: 192.168.3.55">
             <button class="test-btn" onclick="loadCurrentConfig()">加载当前配置</button>
             <div id="connection-status" class="status"></div>
+            <p style="color: #666; font-style: italic; margin-top: 10px;">提示：可输入IP地址或通过config.js配置，与GPIO控制等页面保持一致。</p>
         </div>
 
         <div class="current-config" id="currentConfig" style="display: none;">
@@ -127,19 +141,54 @@
                 <button class="btn-submit" onclick="saveWiFiConfig()">保存配置</button>
                 <button class="btn-clear" onclick="clearWiFiConfig()">清除配置</button>
             </div>
+            <div style="margin-top: 10px;">
+                <button class="btn-default" onclick="resetDefaultConfig()">恢复默认配置</button>
+            </div>
             
             <div id="statusBox" class="status-box"></div>
         </div>
     </div>
 
+    <script src="../js/config.js"></script>
     <script>
         /**
          * @brief 获取ESP32 IP地址
          * @returns {string} IP地址
          */
         function getEsp32Ip() {
-            return document.getElementById('esp32-ip').value.trim() || '192.168.4.1';
+            // 1. 优先使用输入框中的IP
+            const ipInput = document.getElementById('esp32-ip');
+            if (ipInput && ipInput.value.trim()) {
+                return ipInput.value.trim();
+            }
+            
+            // 2. 使用 config.js 中的配置
+            if (window.ESP32_CONFIG) {
+                return window.ESP32_CONFIG.IP;
+            }
+            
+            // 3. 使用默认值
+            return '192.168.3.55';
         }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 从 localStorage 加载保存的 IP 地址
+            const savedIP = localStorage.getItem('esp32_ip');
+            const ipInput = document.getElementById('esp32-ip');
+            if (savedIP && ipInput) {
+                ipInput.value = savedIP;
+            } else if (window.ESP32_CONFIG && ipInput) {
+                ipInput.value = window.ESP32_CONFIG.IP;
+            }
+            
+            // 监听 IP 输入框变化，保存到 localStorage
+            if (ipInput) {
+                ipInput.addEventListener('change', function() {
+                    localStorage.setItem('esp32_ip', this.value);
+                });
+            }
+        });
 
         /**
          * @brief 显示状态信息
@@ -232,6 +281,9 @@
             showStatus('正在保存配置...', 'info');
             
             try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
+                
                 const response = await fetch(`http://${ip}/api/wifi/config`, {
                     method: 'POST',
                     headers: {
@@ -241,8 +293,12 @@
                     body: JSON.stringify({
                         ssid: ssid,
                         password: password
-                    })
+                    }),
+                    mode: 'cors',
+                    signal: controller.signal
                 });
+                
+                clearTimeout(timeoutId);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -254,7 +310,7 @@
                     showStatus(`
                         <strong>✓ 保存成功!</strong><br>
                         WiFi配置已保存到ESP32。<br>
-                        <small>重启后将尝试连接: ${ssid}</small>
+                        <small style="color: #d35400;">⚠️ ${data.message || '请重启设备以应用新的WiFi设置'}</small>
                     `, 'success');
                     
                     // 刷新当前配置显示
@@ -265,7 +321,13 @@
                 
             } catch (error) {
                 console.error('保存配置失败:', error);
-                showStatus(`<strong>保存失败:</strong> ${error.message}<br><small>请确认IP地址正确且设备在线</small>`, 'error');
+                if (error.name === 'AbortError') {
+                    showStatus(`<strong>保存失败:</strong> 请求超时<br><small>设备响应超过10秒，请检查IP地址和设备状态</small>`, 'error');
+                } else if (error.message.includes('Failed to fetch')) {
+                    showStatus(`<strong>保存失败:</strong> 网络错误 (CORS/连接)<br><small>1. 确认IP地址正确: ${ip}<br>2. 确认设备在线<br>3. 尝试直接通过设备AP访问: http://192.168.4.1/</small>`, 'error');
+                } else {
+                    showStatus(`<strong>保存失败:</strong> ${error.message}<br><small>请确认IP地址正确且设备在线</small>`, 'error');
+                }
             }
         }
 
@@ -276,19 +338,26 @@
         async function clearWiFiConfig() {
             const ip = getEsp32Ip();
             
-            if (!confirm('确定要清除WiFi配置吗？ESP32将回到AP配网模式。')) {
+            if (!confirm('确定要清除WiFi配置吗？\n\n注意：需要重启设备才能应用更改。')) {
                 return;
             }
             
             showStatus('正在清除配置...', 'info');
             
             try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
                 const response = await fetch(`http://${ip}/api/wifi/config`, {
                     method: 'DELETE',
                     headers: {
                         'Accept': 'application/json'
-                    }
+                    },
+                    mode: 'cors',
+                    signal: controller.signal
                 });
+                
+                clearTimeout(timeoutId);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -300,7 +369,7 @@
                     showStatus(`
                         <strong>✓ 清除成功!</strong><br>
                         WiFi配置已清除。<br>
-                        <small>重启后将进入AP配网模式</small>
+                        <small style="color: #d35400;">⚠️ ${data.message || '请重启设备以应用更改'}</small>
                     `, 'success');
                     
                     // 清空输入框
@@ -315,7 +384,84 @@
                 
             } catch (error) {
                 console.error('清除配置失败:', error);
-                showStatus(`<strong>清除失败:</strong> ${error.message}`, 'error');
+                if (error.name === 'AbortError') {
+                    showStatus(`<strong>清除失败:</strong> 请求超时`, 'error');
+                } else if (error.message.includes('Failed to fetch')) {
+                    showStatus(`<strong>清除失败:</strong> 网络错误<br><small>请确认IP地址: ${ip}</small>`, 'error');
+                } else {
+                    showStatus(`<strong>清除失败:</strong> ${error.message}`, 'error');
+                }
+            }
+        }
+
+        /**
+         * @brief 恢复默认WiFi配置
+         * @details 恢复为出厂默认WiFi配置（SSID: XINGHUI, 密码: 88888888）
+         */
+        async function resetDefaultConfig() {
+            const ip = getEsp32Ip();
+            
+            if (!confirm('确定要恢复默认配置吗？\n\n将恢复为出厂默认WiFi：\n- SSID: XINGHUI\n- 密码: 88888888\n\n注意：需要重启设备才能应用新的WiFi设置。')) {
+                return;
+            }
+            
+            showStatus('正在恢复默认配置...', 'info');
+            
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
+                const response = await fetch(`http://${ip}/api/wifi/config`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ssid: 'XINGHUI',
+                        password: '88888888',
+                        is_default: true
+                    }),
+                    mode: 'cors',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showStatus(`
+                        <strong>✓ 恢复默认成功!</strong><br>
+                        已恢复为默认WiFi配置。<br>
+                        <strong>SSID:</strong> XINGHUI<br>
+                        <strong>密码:</strong> 88888888<br>
+                        <small style="color: #d35400;">⚠️ ${data.message || '请重启设备以应用新的WiFi设置'}</small>
+                    `, 'success');
+                    
+                    // 更新输入框显示
+                    document.getElementById('wifi-ssid').value = 'XINGHUI';
+                    document.getElementById('wifi-password').value = '88888888';
+                    
+                    // 刷新当前配置显示
+                    loadCurrentConfig();
+                } else {
+                    showStatus(`<strong>恢复失败:</strong> ${data.message || '未知错误'}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('恢复默认配置失败:', error);
+                if (error.name === 'AbortError') {
+                    showStatus(`<strong>恢复失败:</strong> 请求超时`, 'error');
+                } else if (error.message.includes('Failed to fetch')) {
+                    showStatus(`<strong>恢复失败:</strong> 网络错误<br><small>请确认IP地址: ${ip}</small>`, 'error');
+                } else {
+                    showStatus(`<strong>恢复失败:</strong> ${error.message}`, 'error');
+                }
             }
         }
 
