@@ -308,6 +308,7 @@ esp_err_t state_machine_init(void)
     // 清理可能存在的定时器
     cleanup_all_timers();
     
+    ESP_LOGI(TAG, "状态机初始化完成");
     return ESP_OK;
 }
 

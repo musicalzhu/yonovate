@@ -1,6 +1,6 @@
 # Yonovate V2 - ESP32 IoT Control System
 
-基于 ESP32 的物联网控制系统，支持 GPIO 控制、电机控制、状态监控等功能。
+基于 ESP32 的STEM教学系统，支持 GPIO 控制、电机控制、状态监控等功能。
 
 ## 项目概述
 
@@ -17,6 +17,7 @@
 yonovate-v2/
 ├── main/                  # 主程序入口
 │   ├── main.cpp          # 主程序代码
+│   ├── test_app_main.cpp # 测试应用
 │   └── CMakeLists.txt    # 主程序构建配置
 ├── components/           # 功能组件
 │   ├── wifi_manager/     # WiFi 连接管理
@@ -28,15 +29,21 @@ yonovate-v2/
 │   ├── motor_control/    # 电机控制
 │   ├── ssd1306/          # OLED 显示驱动
 │   ├── aw9523/           # AW9523 GPIO 扩展芯片驱动
-│   ├── state_machine/    # 状态机实现
+│   ├── state_machine/    # V2状态机实现（兼容性）
+│   ├── state_machine_v3/ # V3状态机实现（推荐）
+│   ├── nvs_manager/      # NVS存储管理
 │   ├── logic_circuit/    # 逻辑电路功能
 │   ├── system_status/    # 系统状态管理
-│   └── web_common/       # Web 公共模块
+│   └── wifi_config_store/ # WiFi配置存储
 ├── web_project/          # 前端 Web 项目（前后端分离）
 │   ├── index.html        # 主页
 │   ├── css/              # 样式文件
 │   ├── js/               # JavaScript 文件
 │   └── pages/            # 功能页面
+├── openspec/             # 项目规范文档
+│   ├── specs/            # 功能规范
+│   └── changes/          # 变更记录
+├── docs/                 # 项目文档
 ├── CMakeLists.txt        # 项目构建配置
 └── README.md             # 项目说明文档
 ```
@@ -56,14 +63,70 @@ yonovate-v2/
 - 控制模式：正转、反转、停止
 
 ### 网络功能
-- WiFi 客户端模式
-- 内置 Web 服务器（端口 80）
-- RESTful API 接口
-- CORS 跨域支持
+- **Smart Dual Mode WiFi**: 同时启动AP配网和STA连接，30秒超时自动切换
+- **AP配网模式**: SSID: `Yonovate-Setup`，密码: `12345678`，IP: `192.168.4.1`
+- **WiFi客户端模式**: 自动连接保存的WiFi网络
+- **内置Web服务器**: 端口80，支持配置页面和RESTful API
+- **NVS配置存储**: 非易失性存储WiFi配置，重启后自动恢复
+- **RESTful API接口**: 完整的GPIO、电机、状态机、WiFi配置API
+- **CORS跨域支持**: 支持前端页面直接访问API
 
 ### 显示功能
 - SSD1306 OLED 显示屏支持
 - 实时显示系统状态、IP 地址等信息
+
+### 状态机系统
+
+#### V3状态机 (推荐)
+
+**核心特性**：
+- **多触发器组合**: 支持最多3个触发器的AND/OR逻辑
+- **状态绑定效果**: 进入状态时自动执行绑定效果
+- **完整JSON配置**: 表驱动设计，无需修改代码
+- **前端可视化**: 支持Web界面配置和实时预览
+
+**触发器类型**：
+- **GPIO边沿触发** (`SM_TRIGGER_EDGE`): 检测电平变化，支持上升沿/下降沿/任意边沿
+- **GPIO电平触发** (`SM_TRIGGER_LEVEL`): 基于电平值比较，支持6种运算符(==, <, >, <=, >=, !=)
+- **定时器触发** (`SM_TRIGGER_TIMER`): 延时到期触发，支持毫秒级精度
+- **手动触发** (`SM_TRIGGER_MANUAL`): 通过API或HTTP接口手动触发
+
+**效果类型**：
+- **GPIO输出控制**: 设置指定GPIO引脚的高低电平
+- **电机控制**: 控制电机正转、反转、停止
+- **定时器启动**: 启动延时定时器，支持"进入状态后延时转换"场景
+
+**配置格式**：
+```json
+{
+  "transitions": [
+    {
+      "current_state": "IDLE",
+      "next_state": "ACTIVE",
+      "triggers": [
+        {"type": 1, "source": "P1", "op": 0, "value": 1}
+      ],
+      "trigger_count": 1,
+      "trigger_logic": 0,
+      "stateEffects": [
+        {"type": 0, "target": "P2", "value": 1}
+      ]
+    }
+  ]
+}
+```
+
+#### V2状态机 (兼容性)
+
+**核心特性**：
+- **简单GPIO触发**: 基础的GPIO输入检测
+- **代码配置**: 通过代码定义状态转换
+- **基础状态转换**: 适合简单的控制逻辑
+
+**适用场景**：
+- 学习状态机基本概念
+- 简单的自动化控制
+- 向后兼容性保证
 
 ## 快速开始
 
@@ -93,16 +156,14 @@ idf.py -p /dev/ttyUSB0 flash
 idf.py -p /dev/ttyUSB0 monitor
 ```
 
-### 配置 WiFi
-
-项目内置WiFi配网功能，支持通过内嵌Web页面动态配置：
+### 配置WiFi
 
 1. **首次启动或恢复出厂设置**
-   - ESP32自动启动AP模式，SSID: `Yonovate-Setup`
+   - ESP32自动启动AP模式，SSID: `Yonovate-Setup`，密码: `12345678`
    - 连接到该WiFi网络
 
 2. **打开配置页面**
-   - 浏览器访问: `http://192.168.4.1` 或 `http://192.168.4.1/wifi`
+   - 浏览器访问: `http://192.168.4.1/`
    - 输入目标WiFi的SSID和密码
    - 点击"保存配置"
 
@@ -111,129 +172,6 @@ idf.py -p /dev/ttyUSB0 monitor
    - **需重启设备**才能应用新的WiFi设置
    - 重启后自动尝试连接指定WiFi
    - 连接成功后自动关闭AP模式
-
-4. **版本号确认**
-   - 配置页面右下角显示版本号（如v1.5）
-   - 确保固件已更新到最新版本
-
-5. **清除配置**
-   - 在配置页面点击"清除配置"按钮
-   - 或长按设备复位按钮3秒恢复出厂设置
-
-## Web 后端测试页面（开发调试用）
-
-> ⚠️ **注意**：此页面仅用于后端API开发调试，不是教学课件页面。
-> 
-> `web_project/` 目录包含独立前端页面，用于开发和测试后端API接口。
-
-### 开发调试步骤
-
-1. **启动 ESP32** 并获取 IP 地址（通过串口监视器）
-
-2. **配置前端 IP** - 编辑 `web_project/js/config.js` 设置 ESP32 IP 地址
-
-3. **打开测试页面**:
-   ```
-   file:///path/to/web_project/index.html
-   ```
-
-4. **测试后端接口** - 点击 "Ping设备" 按钮测试连通性
-
-详细说明请参考 [web_project/README.md](web_project/README.md)
-
-## API 接口
-
-### GPIO 控制
-
-| 方法 | 端点 | 描述 |
-|------|------|------|
-| POST | `/gpio` | 同步 GPIO 配置 |
-| GET | `/gpio/state` | 获取 GPIO 状态 |
-
-### 电机控制
-
-| 方法 | 端点 | 描述 |
-|------|------|------|
-| POST | `/motor` | 控制电机 |
-
-请求示例：
-```json
-{
-  "motor_id": 0,
-  "direction": 1
-}
-```
-- `motor_id`: 0 或 1
-- `direction`: 0=停止，1=正转，2=反转
-
-### 系统状态
-
-| 方法 | 端点 | 描述 |
-|------|------|------|
-| GET | `/status` | 获取系统状态 |
-
-### WiFi 配置管理
-
-| 方法 | 端点 | 描述 |
-|------|------|------|
-| GET | `/api/wifi/config` | 获取当前WiFi配置 |
-| POST | `/api/wifi/config` | 保存WiFi配置（需重启生效） |
-| DELETE | `/api/wifi/config` | 清除WiFi配置 |
-
-**请求示例 - 保存WiFi配置**：
-```json
-{
-  "ssid": "你的WiFi名称",
-  "password": "你的WiFi密码"
-}
-```
-
-**响应示例 - 成功**：
-```json
-{
-  "status": "success",
-  "message": "WiFi配置已保存，请重启设备以应用新的WiFi设置"
-}
-```
-
-**响应示例 - 清除配置成功**：
-```json
-{
-  "status": "success",
-  "message": "WiFi配置已清除，请重启设备以应用更改"
-}
-```
-
-> ⚠️ **注意**：保存/恢复/清除配置后，**必须重启设备**才能使新配置生效。
-
-### Ping 健康检查
-
-| 方法 | 端点 | 描述 |
-|------|------|------|
-| GET | `/ping` | 测试设备在线状态 |
-
-**响应示例**：
-```json
-{
-  "status": "ok"
-}
-```
-
-## 组件说明
-
-| 组件 | 功能描述 |
-|------|----------|
-| `wifi_manager` | WiFi 连接管理，支持自动重连 |
-| `web_server` | HTTP 服务器，提供 REST API |
-| `gpio_manager` | GPIO 输出控制管理 |
-| `gpio_monitor` | GPIO 输入状态监控 |
-| `i2c_manager` | I2C 总线主机管理 |
-| `ssd1306` | SSD1306 OLED 显示驱动 |
-| `aw9523` | AW9523 I2C GPIO 扩展芯片驱动 |
-| `motor_control` | 直流电机控制 |
-| `state_machine` | 系统状态机实现 |
-| `logic_circuit` | 逻辑电路功能模拟 |
-| `system_status` | 系统状态信息收集和管理 |
 
 ## 故障排查
 
@@ -254,20 +192,6 @@ idf.py -p /dev/ttyUSB0 monitor
 4. **CORS 错误**
    - 确认后端已设置正确的 CORS 头
    - 重新编译并烧录固件
-
-## 开发指南
-
-### 添加新组件
-
-1. 在 `components/` 目录下创建新组件文件夹
-2. 创建组件的 `Kconfig` 和 `CMakeLists.txt`
-3. 在根目录 `CMakeLists.txt` 中添加组件路径
-
-### 修改前端代码
-
-1. 编辑 `web_project/` 目录下的文件
-2. 直接在浏览器中刷新页面查看效果
-3. 无需重新编译 ESP32 固件
 
 ## 注意事项
 

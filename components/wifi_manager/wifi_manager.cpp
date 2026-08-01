@@ -1,36 +1,141 @@
+/**
+ * @file wifi_manager.cpp
+ * @brief ESP32 WiFi 管理器实现
+ * 
+ * 【ESP-IDF WiFi 系统函数说明】
+ * 
+ * 1. esp_wifi_init() - 初始化 WiFi 驱动
+ *    - 分配 WiFi 驱动内部资源
+ *    - 必须在其他 WiFi 函数之前调用
+ *    - 参数: wifi_init_config_t* cfg (通常使用 WIFI_INIT_CONFIG_DEFAULT())
+ * 
+ * 2. esp_wifi_set_mode() - 设置 WiFi 工作模式
+ *    - WIFI_MODE_NULL: 禁用 WiFi
+ *    - WIFI_MODE_STA: 仅 Station 模式（连接路由器）
+ *    - WIFI_MODE_AP: 仅 AP 模式（作为热点）
+ *    - WIFI_MODE_APSTA: 同时启用 STA + AP（配网模式）
+ * 
+ * 3. esp_wifi_set_config() - 设置 WiFi 配置参数
+ *    - 接口: WIFI_IF_STA (Station) 或 WIFI_IF_AP (Access Point)
+ *    - 参数: wifi_config_t* 包含 SSID/密码/加密方式等
+ * 
+ * 4. esp_wifi_connect() - 启动 WiFi 连接
+ *    - 触发 STA 尝试连接已配置的 AP
+ *    - 异步执行，连接结果通过事件回调通知
+ *    - 必须在 STA 配置设置完成后调用
+ * 
+ * 5. esp_wifi_start() / esp_wifi_stop() - 启动/停止 WiFi 硬件
+ *    - 根据当前模式启动 STA 和/或 AP 硬件
+ *    - 启动后会触发 WIFI_EVENT_STA_START 事件
+ * 
+ * 6. esp_wifi_disconnect() - 断开当前连接
+ *    - 停止 STA 连接并保持停止状态（不自动重连）
+ *    - 触发 WIFI_EVENT_STA_DISCONNECTED 事件
+ * 
+ * 【事件系统说明】
+ * ESP-IDF 使用事件循环机制通知 WiFi 状态变化：
+ * - WIFI_EVENT_STA_START: WiFi 启动完成，可以开始连接
+ * - WIFI_EVENT_STA_CONNECTED: 成功连接到 AP
+ * - WIFI_EVENT_STA_DISCONNECTED: 与 AP 断开连接
+ * - IP_EVENT_STA_GOT_IP: 成功获取 IP 地址
+ * - WIFI_EVENT_AP_START: AP 模式启动
+ * - WIFI_EVENT_AP_STACONNECTED: 有客户端连接到 AP
+ * 
+ * 事件处理通过 esp_event_handler_instance_register() 注册回调函数
+ */
+
 #include "wifi_manager.h"
 #include <stdio.h>
 #include <cstdio>
 #include <string.h>
 #include <cstring>
 #include <assert.h>
-#include "esp_wifi.h"
-#include "esp_mac.h"
-#include "esp_log.h"
-#include "nvs_flash.h"
-#include "esp_netif.h"
-#include "esp_event.h"
+#include "esp_wifi.h"        /* ESP-IDF WiFi 核心 API */
+#include "esp_mac.h"         /* MAC 地址相关功能 */
+#include "esp_log.h"         /* ESP-IDF 日志系统 */
+#include "esp_netif.h"       /* 网络接口抽象层 */
+#include "esp_event.h"       /* ESP-IDF 事件循环 */
+#include "web_server.h"
+#include "wifi_config_store.h"  /* WiFi配置存储组件 */
 
 static const char *TAG = "wifi_manager";
 
 // 静态变量
 static bool s_wifi_initialized = false;
 static bool s_wifi_connected = false;
+static bool s_ap_mode_active = false;
 static char s_ip_address[16] = "0.0.0.0";
-static wifi_connection_callback_t s_connection_callback = NULL;
 static esp_event_handler_instance_t instance_any_id = NULL;
 static esp_event_handler_instance_t instance_got_ip = NULL;
 
-// WiFi事件处理函数
+// 状态管理（新）
+static wifi_status_t s_current_status = WIFI_STATUS_DISCONNECTED;
+
+// 回调数组（新）- 最多3个订阅者
+#define MAX_STATUS_CALLBACKS 3
+static struct {
+    wifi_status_cb_t cb;
+    void* arg;
+    bool active;
+} s_status_callbacks[MAX_STATUS_CALLBACKS];
+
+// 前向声明（新）
+static void notify_status_change(wifi_status_t status);
+
+// 状态通知函数（新）- 自动获取对应模式的 IP
+static void notify_status_change(wifi_status_t status)
+{
+    s_current_status = status;
+
+    // 根据状态自动获取对应接口的 IP
+    const char* ifkey = (status == WIFI_STATUS_AP_MODE) ? "WIFI_AP_DEF" : "WIFI_STA_DEF";
+    esp_netif_t* netif = esp_netif_get_handle_from_ifkey(ifkey);
+
+    if (netif && (status == WIFI_STATUS_CONNECTED || status == WIFI_STATUS_AP_MODE)) {
+        esp_netif_ip_info_t ip_info;
+        if (esp_netif_get_ip_info(netif, &ip_info) == ESP_OK) {
+            snprintf(s_ip_address, sizeof(s_ip_address), IPSTR, IP2STR(&ip_info.ip));
+        }
+    } else if (status == WIFI_STATUS_DISCONNECTED) {
+        s_ip_address[0] = '\0';
+    }
+
+    ESP_LOGD(TAG, "WiFi 状态变化: %d, IP: %s", status, s_ip_address);
+
+    // 通知所有订阅者
+    for (int i = 0; i < MAX_STATUS_CALLBACKS; i++) {
+        if (s_status_callbacks[i].active && s_status_callbacks[i].cb) {
+            s_status_callbacks[i].cb(status, s_ip_address, s_status_callbacks[i].arg);
+        }
+    }
+}
+
+/**
+ * @brief WiFi 事件处理回调函数
+ * @param arg 用户参数（未使用）
+ * @param event_base 事件基类（WIFI_EVENT / IP_EVENT）
+ * @param event_id 具体事件 ID
+ * @param event_data 事件数据（含断开原因等）
+ * 
+ * 【事件处理说明】
+ * - WIFI_EVENT_STA_START: WiFi 硬件启动完成，自动调用 esp_wifi_connect() 开始连接
+ * - WIFI_EVENT_STA_DISCONNECTED: 连接断开，根据原因码判断问题类型
+ * - esp_wifi_connect() 会在断开时自动重连（代码第 124 行）
+ */
 static void wifi_event_handler(void* arg, esp_event_base_t event_base,
                              int32_t event_id, void* event_data)
 {
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
+        /* 
+         * 当 WiFi 硬件启动完成后，自动开始连接已配置的 AP
+         * 此事件由 esp_wifi_start() 触发
+         * esp_wifi_connect() 使用之前通过 esp_wifi_set_config() 设置的配置
+         */
         esp_wifi_connect();
+        notify_status_change(WIFI_STATUS_CONNECTING);
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
         wifi_event_sta_disconnected_t* event = (wifi_event_sta_disconnected_t*) event_data;
         uint8_t reason = event->reason;
-        bool was_connected = s_wifi_connected;
         s_wifi_connected = false;
         
         // 记录断开原因码，便于诊断连接问题
@@ -80,46 +185,46 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
         
         esp_wifi_connect();
         
-        // 仅在状态变化时调用回调
-        if (was_connected && s_connection_callback) {
-            s_connection_callback(false, s_ip_address);
-        }
+        // 通知状态变化（新）
+        notify_status_change(WIFI_STATUS_DISCONNECTED);
+        
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
         snprintf(s_ip_address, sizeof(s_ip_address), IPSTR, IP2STR(&event->ip_info.ip));
-        bool was_connected = s_wifi_connected;
         s_wifi_connected = true;
         ESP_LOGI(TAG, "WiFi连接成功，IP地址: %s", s_ip_address);
         
-        // 仅在状态变化时调用回调
-        if (!was_connected && s_connection_callback) {
-            s_connection_callback(true, s_ip_address);
-        }
+        // 通知状态变化（新）
+        notify_status_change(WIFI_STATUS_CONNECTED);
+        
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_START) {
+        /*
+         * AP模式启动完成，由事件驱动状态更新
+         * 此事件由 esp_wifi_start() 在AP模式触发
+         */
+        s_ap_mode_active = true;
+        ESP_LOGI(TAG, "AP模式已启动（事件驱动）");
+        notify_status_change(WIFI_STATUS_AP_MODE);
+        
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STOP) {
+        /*
+         * AP模式已停止，由事件驱动状态更新
+         * 状态通知由 stop_ap_provisioning() 根据STA连接状态决定
+         */
+        s_ap_mode_active = false;
+        ESP_LOGI(TAG, "AP模式已停止（事件驱动）");
+        // 注意：状态变化通知由调用方（stop_ap_provisioning）根据上下文决定
     }
 }
 
-esp_err_t wifi_manager_init(const wifi_manager_config_t* config)
+esp_err_t wifi_manager_init(void)
 {
-    // SSID必须非空，密码可为空字符串（表示开放网络）
-    if (!config || !config->ssid || strlen(config->ssid) == 0) {
-        ESP_LOGE(TAG, "WiFi初始化失败: SSID不能为空");
-        return ESP_ERR_INVALID_ARG;
-    }
-
     if (s_wifi_initialized) {
         return ESP_ERR_INVALID_STATE;
     }
 
-    // 保存回调函数
-    s_connection_callback = config->callback;
-
-    // 初始化NVS
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ret = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK(ret);
+    // 注：NVS初始化由 nvs_manager 在 main.cpp 中完成
+    // 此处不再重复调用 nvs_flash_init()
 
     // 初始化网络接口
     ESP_ERROR_CHECK(esp_netif_init());
@@ -132,6 +237,11 @@ esp_err_t wifi_manager_init(const wifi_manager_config_t* config)
     assert(ap_netif);
 
     // 初始化WiFi
+    /* 
+     * WIFI_INIT_CONFIG_DEFAULT() 提供默认初始化配置
+     * 包括: nvs_enable=1(从NVS恢复配置), 任务优先级, 堆栈大小等
+     * esp_wifi_init() 必须在所有其他 WiFi 函数之前调用
+     */
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
 
@@ -147,22 +257,13 @@ esp_err_t wifi_manager_init(const wifi_manager_config_t* config)
                                                       NULL,
                                                       &instance_got_ip));
 
-    // 配置WiFi
-    wifi_config_t wifi_config = {};
-    strncpy((char*)wifi_config.sta.ssid, config->ssid, sizeof(wifi_config.sta.ssid) - 1);
-    // 密码可为空字符串表示开放网络（无密码）
-    if (config->password && strlen(config->password) > 0) {
-        strncpy((char*)wifi_config.sta.password, config->password, sizeof(wifi_config.sta.password) - 1);
-        wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
-        wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
-    } else {
-        // 空密码时使用开放认证模式
-        wifi_config.sta.threshold.authmode = WIFI_AUTH_OPEN;
-        ESP_LOGI(TAG, "WiFi配置为开放网络（无密码）");
-    }
-
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
+    // WiFi 配置将在连接时设置（通过 wifi_manager_update_credentials 设置）
+    /* 
+     * 设置 WiFi 为 APSTA 模式（Smart Dual Mode）
+     * 这会同时启用 AP 配网和 STA 连接尝试
+     * ⚠️ 注意：必须在事件注册之后设置模式，否则事件可能丢失
+     */
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
     
     // 禁用WiFi电源管理，防止在接收配置时WiFi状态变化导致崩溃
     ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
@@ -176,17 +277,100 @@ esp_err_t wifi_manager_init(const wifi_manager_config_t* config)
 
 esp_err_t wifi_manager_start(void)
 {
-    if (!s_wifi_initialized) {
-        return ESP_ERR_INVALID_STATE;
+    // 1. 从 NVS 加载配置（使用 wifi_config_store 组件）
+    char nvs_ssid[33] = {0};
+    char nvs_pass[65] = {0};
+    bool has_nvs_config = false;
+
+    esp_err_t err = wifi_config_store_load(nvs_ssid, sizeof(nvs_ssid), nvs_pass, sizeof(nvs_pass));
+    if (err == ESP_OK) {
+        has_nvs_config = true;
+        ESP_LOGI(TAG, "WiFi config loaded from NVS: SSID=%s", nvs_ssid);
+    } else {
+        ESP_LOGI(TAG, "No WiFi config in NVS, will use default");
     }
 
-    esp_err_t ret = esp_wifi_start();
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "WiFi启动失败: %s", esp_err_to_name(ret));
-    } else {
-        ESP_LOGI(TAG, "WiFi已启动");
+    // 2. 准备配置
+    const char* target_ssid = has_nvs_config ? nvs_ssid : CONFIG_WIFI_DEFAULT_SSID;
+    const char* target_pass = has_nvs_config ? nvs_pass : CONFIG_WIFI_DEFAULT_PASSWORD;
+
+    // 使用 Kconfig 默认值作为 AP 配置
+    const char* ap_ssid = CONFIG_WIFI_AP_SSID;
+    const char* ap_pass = CONFIG_WIFI_AP_PASSWORD;
+    const uint32_t timeout_ms = 30000;  // 30秒超时
+
+    ESP_LOGI(TAG, "========== Smart Dual Mode Start ==========");
+    ESP_LOGI(TAG, "AP=%s, STA target=%s (source=%s)",
+             ap_ssid, target_ssid, has_nvs_config ? "NVS" : "default");
+
+    // 2. 设置 STA 配置（注：WiFi初始化由调用方通过 wifi_manager_init() 完成）
+    ESP_LOGI(TAG, "[DEBUG] Step 1: update_credentials('%s')", target_ssid);
+    err = wifi_manager_update_credentials(target_ssid, target_pass);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "WiFi start: STA config failed: %s", esp_err_to_name(err));
+        wifi_manager_deinit();
+        return err;
     }
-    return ret;
+    ESP_LOGI(TAG, "[DEBUG] Step 2: STA config set OK");
+
+    // 3. 启动 AP 配网模式
+    err = wifi_manager_start_ap_provisioning(ap_ssid, ap_pass);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "WiFi start: AP provision failed: %s", esp_err_to_name(err));
+        wifi_manager_deinit();
+        return err;
+    }
+
+    ESP_LOGI(TAG, "APSTA dual mode started, AP: %s", ap_ssid);
+
+    // 4. 等待 STA 连接或超时
+    ESP_LOGI(TAG, "Waiting for STA connection result...");
+    
+    TickType_t start_tick = xTaskGetTickCount();
+    TickType_t timeout_ticks = pdMS_TO_TICKS(timeout_ms);
+    bool connected = false;
+
+    while ((xTaskGetTickCount() - start_tick) < timeout_ticks) {
+        if (wifi_manager_is_connected()) {
+            connected = true;
+            break;
+        }
+        vTaskDelay(pdMS_TO_TICKS(100));  // Check every 100ms
+    }
+
+    // 5. 根据结果调整模式
+    if (connected) {
+        ESP_LOGI(TAG, "OK STA connected! IP: %s", wifi_manager_get_ip());
+        ESP_LOGI(TAG, "Closing AP to save power...");
+        
+        err = wifi_manager_stop_ap_provisioning();
+        if (err == ESP_OK) {
+            ESP_LOGI(TAG, "OK AP closed, entering pure STA mode");
+        } else {
+            ESP_LOGW(TAG, "Close AP failed (non-fatal): %s", esp_err_to_name(err));
+        }
+        
+        ESP_LOGI(TAG, "WiFi STA connected: IP=%s", wifi_manager_get_ip());
+        ESP_LOGI(TAG, "========== Smart Dual Mode: STA Mode ==========");
+    } else {
+        ESP_LOGW(TAG, "FAIL STA connection timeout (%lu ms), keep AP provision mode", timeout_ms);
+        
+        // Disconnect STA attempt, keep pure AP mode
+        esp_wifi_disconnect();
+        
+        // Switch to pure AP mode
+        err = esp_wifi_set_mode(WIFI_MODE_AP);
+        if (err == ESP_OK) {
+            ESP_LOGI(TAG, "Switched to pure AP mode");
+            notify_status_change(WIFI_STATUS_AP_MODE);
+        }
+
+        ESP_LOGI(TAG, "WiFi AP mode active (provisioning)");
+        ESP_LOGI(TAG, "========== Smart Dual Mode: AP Provision Mode ==========");
+        ESP_LOGI(TAG, "Connect to AP: %s (192.168.4.1) to reconfig WiFi", ap_ssid);
+    }
+
+    return ESP_OK;
 }
 
 esp_err_t wifi_manager_stop(void)
@@ -202,9 +386,8 @@ esp_err_t wifi_manager_stop(void)
         s_wifi_connected = false;
         strcpy(s_ip_address, "0.0.0.0");
         ESP_LOGI(TAG, "WiFi已停止");
-        if (s_connection_callback) {
-            s_connection_callback(false, s_ip_address);
-        }
+        // 通知状态变化（新机制）
+        notify_status_change(WIFI_STATUS_DISCONNECTED);
     }
     return ret;
 }
@@ -219,13 +402,9 @@ bool wifi_manager_is_connected(void)
     return s_wifi_connected;
 }
 
-esp_err_t wifi_manager_reconnect(void)
+bool wifi_manager_is_ap_mode(void)
 {
-    if (!s_wifi_initialized) {
-        return ESP_ERR_INVALID_STATE;
-    }
-
-    return esp_wifi_connect();
+    return s_ap_mode_active;
 }
 
 esp_err_t wifi_manager_update_credentials(const char* ssid, const char* password)
@@ -237,18 +416,33 @@ esp_err_t wifi_manager_update_credentials(const char* ssid, const char* password
     }
 
     // 配置新的WiFi凭证（只保存到驱动，不触发连接）
+    /* 
+     * wifi_config_t 结构体定义 STA 连接参数
+     * .sta.ssid: 目标 WiFi 名称（必须，最多32字节）
+     * .sta.password: WiFi 密码（开放网络可留空）
+     * .sta.threshold.authmode: 最低安全等级要求
+     * .sta.sae_pwe_h2e: WPA3 SAE 配置
+     */
     wifi_config_t wifi_config = {};
     strncpy((char*)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid) - 1);
     // 密码可为空字符串表示开放网络
     if (password && strlen(password) > 0) {
         strncpy((char*)wifi_config.sta.password, password, sizeof(wifi_config.sta.password) - 1);
-        wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
-        wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
+        wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;  // 要求 WPA2 安全
+        wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;           // 支持 WPA3
     } else {
-        wifi_config.sta.threshold.authmode = WIFI_AUTH_OPEN;
+        wifi_config.sta.threshold.authmode = WIFI_AUTH_OPEN;        // 开放网络
         ESP_LOGI(TAG, "配置为开放网络（无密码）");
     }
 
+    /* 
+     * esp_wifi_set_config() 将配置写入 WiFi 驱动
+     * 参数1: WIFI_IF_STA (Station 接口) 或 WIFI_IF_AP (AP 接口)
+     * 参数2: wifi_config_t 结构体
+     * 
+     * 注意：此函数不触发连接，仅保存配置。
+     * 连接需要通过 esp_wifi_connect() 或等待事件触发。
+     */
     esp_err_t err = esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "设置WiFi配置失败: %s", esp_err_to_name(err));
@@ -286,107 +480,10 @@ esp_err_t wifi_manager_deinit(void)
     s_wifi_initialized = false;
     s_wifi_connected = false;
     strcpy(s_ip_address, "0.0.0.0");
-    s_connection_callback = NULL;
 
     ESP_LOGI(TAG, "WiFi已反初始化");
     return ESP_OK;
 }
-
-/**
- * @brief 智能双模式启动：先尝试连接STA，30秒内成功则关闭AP省电，失败则保持AP配网模式
- * 
- * @param config WiFi配置
- * @param ap_ssid AP模式的SSID
- * @param ap_password AP模式的密码
- * @param timeout_ms STA连接超时时间（毫秒）
- * @return esp_err_t ESP_OK表示成功启动
- */
-esp_err_t wifi_manager_start_smart_dual_mode(const wifi_manager_config_t* config,
-                                               const char* ap_ssid,
-                                               const char* ap_password,
-                                               uint32_t timeout_ms)
-{
-    if (!config || !config->ssid || strlen(config->ssid) == 0) {
-        ESP_LOGE(TAG, "Smart dual mode: Invalid config, SSID empty");
-        return ESP_ERR_INVALID_ARG;
-    }
-
-    if (!ap_ssid || strlen(ap_ssid) == 0) {
-        ESP_LOGE(TAG, "Smart dual mode: AP SSID cannot be empty");
-        return ESP_ERR_INVALID_ARG;
-    }
-
-    ESP_LOGI(TAG, "========== Smart Dual Mode Start ==========");
-    ESP_LOGI(TAG, "Trying to connect WiFi: %s", config->ssid);
-    ESP_LOGI(TAG, "AP provision: %s", ap_ssid);
-    ESP_LOGI(TAG, "Timeout: %lu ms", timeout_ms);
-
-    // 1. Init WiFi manager (STA mode)
-    esp_err_t err = wifi_manager_init(config);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Smart dual mode: WiFi manager init failed: %s", esp_err_to_name(err));
-        return err;
-    }
-
-    // 2. Start AP provisioning (keep APSTA mode)
-    err = wifi_manager_start_ap_provisioning(ap_ssid, ap_password);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Smart dual mode: AP provision start failed: %s", esp_err_to_name(err));
-        wifi_manager_deinit();
-        return err;
-    }
-
-    ESP_LOGI(TAG, "APSTA dual mode started, AP: %s", ap_ssid);
-
-    // 3. Wait STA connection or timeout
-    ESP_LOGI(TAG, "Waiting for STA connection result...");
-    
-    TickType_t start_tick = xTaskGetTickCount();
-    TickType_t timeout_ticks = pdMS_TO_TICKS(timeout_ms);
-    bool connected = false;
-
-    while ((xTaskGetTickCount() - start_tick) < timeout_ticks) {
-        if (wifi_manager_is_connected()) {
-            connected = true;
-            break;
-        }
-        vTaskDelay(pdMS_TO_TICKS(100)); // Check every 100ms
-    }
-
-    // 4. Adjust mode based on connection result
-    if (connected) {
-        ESP_LOGI(TAG, "OK STA connected! IP: %s", wifi_manager_get_ip());
-        ESP_LOGI(TAG, "Closing AP to save power...");
-        
-        err = wifi_manager_stop_ap_provisioning();
-        if (err == ESP_OK) {
-            ESP_LOGI(TAG, "OK AP closed, entering pure STA mode");
-        } else {
-            ESP_LOGW(TAG, "Close AP failed (non-fatal): %s", esp_err_to_name(err));
-        }
-        
-        ESP_LOGI(TAG, "========== Smart Dual Mode: STA Mode ==========");
-        return ESP_OK;
-    } else {
-        ESP_LOGW(TAG, "FAIL STA connection timeout (%lu ms), keep AP provision mode", timeout_ms);
-        
-        // Disconnect STA attempt, keep pure AP mode
-        esp_wifi_disconnect();
-        
-        // Switch to pure AP mode (optional, reduce interference)
-        err = esp_wifi_set_mode(WIFI_MODE_AP);
-        if (err == ESP_OK) {
-            ESP_LOGI(TAG, "Switched to pure AP mode");
-        }
-        
-        ESP_LOGI(TAG, "========== Smart Dual Mode: AP Provision Mode ==========");
-        ESP_LOGI(TAG, "Connect to AP: %s (192.168.4.1) to reconfig WiFi", ap_ssid);
-        return ESP_OK;
-    }
-}
-
-// AP配网模式静态变量
-static bool s_ap_mode_active = false;
 
 esp_err_t wifi_manager_start_ap_provisioning(const char* ap_ssid, const char* ap_password)
 {
@@ -422,20 +519,31 @@ esp_err_t wifi_manager_start_ap_provisioning(const char* ap_ssid, const char* ap
     }
 
     // 设置APSTA双模式（允许STA同时尝试连接路由器）
+    /* 
+     * WIFI_MODE_APSTA: 同时启用 Station 和 Access Point
+     * - STA 部分：尝试连接已配置的路由器
+     * - AP 部分：创建热点供其他设备连接
+     * 
+     * 配网模式使用此配置，设备既作为客户端又作为服务端
+     */
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
-    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &wifi_config));
+    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &wifi_config));  // 设置 AP 参数
     
-    // 确保STA配置仍然存在（在init中已设置）
-    // 启动WiFi后STA会自动开始连接
+    // 确保STA配置仍然存在（通过 wifi_manager_update_credentials 设置）
+    // esp_wifi_start() 会触发 WIFI_EVENT_STA_START 事件
+    // 进而自动调用 esp_wifi_connect() 开始 STA 连接
     ESP_ERROR_CHECK(esp_wifi_start());
     
     ESP_LOGI(TAG, "WiFi APSTA dual mode started");
 
-    s_ap_mode_active = true;
+    // 注：s_ap_mode_active 由 WIFI_EVENT_AP_START 事件处理设置
+    // 状态变更由事件驱动，此处不再直接赋值
 
     ESP_LOGI(TAG, "AP配网模式已启动");
     ESP_LOGI(TAG, "请连接WiFi: %s", ap_ssid);
     ESP_LOGI(TAG, "然后访问 http://192.168.4.1 进行配置");
+    
+    // 注：状态变化通知由 WIFI_EVENT_AP_START 事件处理触发
 
     return ESP_OK;
 }
@@ -458,90 +566,100 @@ esp_err_t wifi_manager_stop_ap_provisioning(void)
         // 不切换模式，保持APSTA让STA继续尝试连接
     }
     
-    s_ap_mode_active = false;
+    // 注：s_ap_mode_active 由 WIFI_EVENT_AP_STOP 事件处理设置
+    // 状态变更由事件驱动，此处不再直接赋值
 
     ESP_LOGI(TAG, "AP配网模式已停止");
+    
+    // AP 停止后，如果 STA 已连接则保持 CONNECTED，否则通知 DISCONNECTED
+    // 注意：此通知在事件处理前执行，确保状态及时更新
+    if (wifi_manager_is_connected()) {
+        notify_status_change(WIFI_STATUS_CONNECTED);
+    } else {
+        notify_status_change(WIFI_STATUS_DISCONNECTED);
+    }
+    
     return ESP_OK;
 }
 
-bool wifi_manager_is_ap_mode(void)
-{
-    return s_ap_mode_active;
-}
+// ============================================================================
+// 状态管理 API 实现（新）
+// ============================================================================
 
-// 延迟关闭AP任务参数结构体
-typedef struct {
-    uint32_t delay_ms;
-} delayed_ap_shutdown_params_t;
-
-// 延迟关闭AP的后台任务
-static void delayed_ap_shutdown_task(void *pvParameters)
+int wifi_manager_register_status_callback(wifi_status_cb_t cb, void* user_arg)
 {
-    delayed_ap_shutdown_params_t *params = (delayed_ap_shutdown_params_t *)pvParameters;
-    uint32_t delay_ms = params->delay_ms;
+    if (!cb) {
+        ESP_LOGE(TAG, "回调函数不能为空");
+        return -1;
+    }
     
-    ESP_LOGI(TAG, "Delayed AP shutdown: waiting %lu ms for STA connection...", delay_ms);
-    
-    // 延迟等待
-    vTaskDelay(pdMS_TO_TICKS(delay_ms));
-    
-    // 检查是否已连接
-    if (wifi_manager_is_connected()) {
-        ESP_LOGI(TAG, "STA connected, shutting down AP to save power");
-        esp_err_t err = wifi_manager_stop_ap_provisioning();
-        if (err == ESP_OK) {
-            ESP_LOGI(TAG, "AP shutdown successful, now in pure STA mode");
-        } else {
-            ESP_LOGW(TAG, "AP shutdown failed: %s", esp_err_to_name(err));
+    for (int i = 0; i < MAX_STATUS_CALLBACKS; i++) {
+        if (!s_status_callbacks[i].active) {
+            s_status_callbacks[i].cb = cb;
+            s_status_callbacks[i].arg = user_arg;
+            s_status_callbacks[i].active = true;
+            ESP_LOGD(TAG, "注册状态回调 ID=%d", i + 1);
+            return i + 1;  // 返回 1-based ID
         }
-    } else {
-        ESP_LOGW(TAG, "STA not connected after %lu ms, keeping AP mode for reconfiguration", delay_ms);
     }
     
-    // 释放参数内存
-    free(params);
-    
-    // 删除任务
-    vTaskDelete(NULL);
+    ESP_LOGW(TAG, "回调数组已满（最大 %d 个）", MAX_STATUS_CALLBACKS);
+    return -1;
 }
 
-esp_err_t wifi_manager_start_delayed_ap_shutdown(uint32_t delay_ms)
+void wifi_manager_unregister_status_callback(int cb_id)
 {
-    if (!s_wifi_initialized) {
-        ESP_LOGE(TAG, "WiFi管理器未初始化");
-        return ESP_ERR_INVALID_STATE;
+    if (cb_id < 1 || cb_id > MAX_STATUS_CALLBACKS) {
+        ESP_LOGW(TAG, "无效的回调 ID: %d", cb_id);
+        return;
     }
     
-    if (delay_ms == 0) {
-        ESP_LOGE(TAG, "延迟时间不能为0");
-        return ESP_ERR_INVALID_ARG;
+    int idx = cb_id - 1;  // 转换为 0-based
+    if (s_status_callbacks[idx].active) {
+        s_status_callbacks[idx].active = false;
+        s_status_callbacks[idx].cb = NULL;
+        s_status_callbacks[idx].arg = NULL;
+        ESP_LOGD(TAG, "注销状态回调 ID=%d", cb_id);
     }
-    
-    // 分配参数内存
-    delayed_ap_shutdown_params_t *params = (delayed_ap_shutdown_params_t *)malloc(sizeof(delayed_ap_shutdown_params_t));
-    if (params == NULL) {
-        ESP_LOGE(TAG, "分配延迟关闭AP任务参数内存失败");
-        return ESP_ERR_NO_MEM;
+}
+
+wifi_status_t wifi_manager_get_status(void)
+{
+    return s_current_status;
+}
+
+const char* wifi_manager_get_ip_address(void)
+{
+    if (s_current_status == WIFI_STATUS_CONNECTED && s_ip_address[0]) {
+        return s_ip_address;
     }
-    
-    params->delay_ms = delay_ms;
-    
-    // 创建后台任务
-    BaseType_t result = xTaskCreate(
-        delayed_ap_shutdown_task,
-        "ap_shutdown",
-        2048,  // 堆栈大小
-        params,
-        5,     // 优先级（较低）
-        NULL
-    );
-    
-    if (result != pdPASS) {
-        ESP_LOGE(TAG, "创建延迟关闭AP任务失败");
-        free(params);
-        return ESP_ERR_NO_MEM;
+    return NULL;
+}
+
+
+esp_err_t net_init(void)
+{
+    ESP_LOGI(TAG, "初始化网络服务...");
+
+    // 注册 Web Server 回调，在 WiFi 就绪时自动启动
+    web_server_init();
+
+    // 分离设计：先初始化 WiFi，再启动连接
+    // 初始化 WiFi 硬件和事件处理
+    if (wifi_manager_init() != ESP_OK) {
+        ESP_LOGE(TAG, "WiFi初始化失败");
+        return ESP_FAIL;
     }
-    
-    ESP_LOGI(TAG, "Delayed AP shutdown scheduled in %lu ms", delay_ms);
+    ESP_LOGI(TAG, "WiFi硬件初始化完成");
+
+    // 启动 WiFi 连接（智能双模式）
+    // 启动结果可通过 wifi_manager_is_connected(), wifi_manager_is_ap_mode() 等查询
+    if (wifi_manager_start() != ESP_OK) {
+        ESP_LOGE(TAG, "WiFi启动失败");
+        return ESP_FAIL;
+    }
+    ESP_LOGI(TAG, "WiFi连接启动完成");
+
+    ESP_LOGI(TAG, "网络服务初始化完成");
     return ESP_OK;
 }

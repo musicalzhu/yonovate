@@ -1,0 +1,29 @@
+menu "State Machine V3 Configuration"
+
+    config STATE_MACHINE_V3_ENABLE
+        bool "Enable State Machine V3"
+        default y
+        help
+            Enable the V3 state machine implementation with condition-based
+            triggers and enhanced JSON configuration.
+
+    config STATE_MACHINE_V3_TEST
+        bool "Enable V3 State Machine Tests (STEM)"
+        default n
+        depends on STATE_MACHINE_V3_ENABLE
+        help
+            Enable simplified test suite for STEM education:
+            - 基础测试: 初始化、配置加载、触发器、定时器
+            - 电梯场景: 升降机逻辑、安全互锁
+            - 模块类型: 按钮、LED、电机
+            
+            使用 Unity 测试框架，专注 ESP32 平台。
+
+    config STATE_MACHINE_V3_LOG_LEVEL
+        int "V3 State Machine Log Level"
+        default 3
+        range 0 5
+        help
+            Log level for V3 state machine (0=NONE, 5=VERBOSE)
+
+endmenu

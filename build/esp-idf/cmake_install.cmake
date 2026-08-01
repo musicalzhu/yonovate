@@ -579,7 +579,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Downloads/code-v2/v2/build/esp-idf/wifi_manager/cmake_install.cmake")
+  include("C:/Downloads/code-v2/v2/build/esp-idf/nvs_manager/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
@@ -614,7 +614,17 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("C:/Downloads/code-v2/v2/build/esp-idf/state_machine_v3/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("C:/Downloads/code-v2/v2/build/esp-idf/wifi_config_store/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Downloads/code-v2/v2/build/esp-idf/gpio_monitor/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
@@ -624,7 +634,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Downloads/code-v2/v2/build/esp-idf/gpio_monitor/cmake_install.cmake")
+  include("C:/Downloads/code-v2/v2/build/esp-idf/wifi_manager/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)

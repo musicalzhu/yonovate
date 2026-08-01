@@ -1,0 +1,72 @@
+{
+  "name": "state-machine-v3",
+  "version": "3.0.0",
+  "type": "module",
+  "description": "状态机 V3 配置平台 - 完整格式配置",
+  "main": "dist/src/main.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf dist",
+    "dev": "vite",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "lint": "eslint . --ext .vue,.js,.ts,.jsx,.tsx --max-warnings 0",
+    "lint:fix": "eslint . --ext .vue,.js,.ts,.jsx,.tsx --fix",
+    "format": "prettier --write \"src/**/*.{vue,js,ts,jsx,tsx,json,css,scss,md}\"",
+    "format:check": "prettier --check \"src/**/*.{vue,js,ts,jsx,tsx,json,css,scss,md}\""
+  },
+  "keywords": [
+    "state-machine",
+    "esp32",
+    "configuration",
+    "iot"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@element-plus/icons-vue": "^2.3.0",
+    "@playwright/test": "^1.61.1",
+    "@testing-library/jest-dom": "^6.1.0",
+    "@testing-library/user-event": "^14.5.0",
+    "@testing-library/vue": "^8.0.0",
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.63.0",
+    "@typescript-eslint/parser": "^8.63.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vue/test-utils": "^2.4.0",
+    "element-plus": "^2.5.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-vue": "^9.33.0",
+    "jsdom": "^29.1.1",
+    "msw": "^2.15.0",
+    "nodemon": "^3.0.0",
+    "orval": "^7.13.2",
+    "pinia": "^2.1.0",
+    "playwright": "^1.40.0",
+    "prettier": "^3.9.5",
+    "rimraf": "^5.0.0",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0",
+    "vitest": "^1.1.0",
+    "vue": "^3.5.0",
+    "vue-router": "^4.2.0",
+    "vue-tsc": "^2.0.0"
+  },
+  "dependencies": {
+    "@tanstack/vue-query": "^5.101.1",
+    "ajv": "^8.20.0",
+    "axios": "^1.16.1"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
+}

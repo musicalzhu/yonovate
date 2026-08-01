@@ -31,7 +31,7 @@ typedef enum {
 
 /**
  * @brief 初始化I2C总线
- * 
+ *
  * @return esp_err_t ESP_OK表示成功，其他表示失败
  */
 esp_err_t i2c_manager_init(void);

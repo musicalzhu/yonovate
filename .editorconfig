@@ -1,0 +1,67 @@
+# EditorConfig 文件
+# 统一项目代码风格，确保 UTF-8 编码
+# 详细规范: https://editorconfig.org
+
+# 根配置文件
+root = true
+
+# 所有文件通用设置
+[*]
+# 编码: UTF-8 无 BOM
+charset = utf-8
+
+# 换行符: LF (Unix 风格)
+end_of_line = lf
+
+# 文件末尾插入空行
+insert_final_newline = true
+
+# 去除行尾空白
+trim_trailing_whitespace = true
+
+# 缩进: 4 空格
+indent_style = space
+indent_size = 4
+
+# C/C++ 源文件
+[*.{c,cpp,h,hpp}]
+charset = utf-8
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+# CMake 文件
+[{CMakeLists.txt,*.cmake}]
+charset = utf-8
+indent_style = space
+indent_size = 4
+
+# Markdown 文档
+[*.md]
+charset = utf-8
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
+max_line_length = 80
+
+# Python 脚本
+[*.py]
+charset = utf-8
+indent_style = space
+indent_size = 4
+max_line_length = 100
+
+# Batch 脚本
+[*.{bat,cmd}]
+charset = utf-8
+end_of_line = crlf
+
+# JSON/YAML 配置文件
+[*.{json,yaml,yml}]
+charset = utf-8
+indent_style = space
+indent_size = 2
+
+# Makefile
+[{Makefile,makefile}]
+indent_style = tab

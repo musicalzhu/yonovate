@@ -1,0 +1,625 @@
+openapi: 3.0.0
+info:
+  title: ESP32 State Machine API
+  description: API for ESP32 State Machine Configuration Platform
+  version: 3.0.0
+
+servers:
+  - url: http://192.168.3.55
+    description: Default ESP32 device
+
+paths:
+  # State Machine endpoints
+  /api/v3/state-machine/config:
+    get:
+      summary: Get state machine configuration
+      operationId: getStateMachineConfig
+      tags:
+        - State Machine
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StateMachineConfig'
+    post:
+      summary: Save state machine configuration
+      operationId: saveStateMachineConfig
+      tags:
+        - State Machine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StateMachineConfig'
+      responses:
+        '200':
+          description: Configuration saved successfully
+
+  /api/v3/state-machine/status:
+    get:
+      summary: Get state machine status
+      operationId: getStateMachineStatus
+      tags:
+        - State Machine
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StateMachineStatus'
+
+  /api/v3/state-machine/reset:
+    post:
+      summary: Reset state machine
+      operationId: resetStateMachine
+      tags:
+        - State Machine
+      responses:
+        '200':
+          description: State machine reset successfully
+
+  # Device endpoints
+  /api/v3/device/info:
+    get:
+      summary: Get device information
+      operationId: getDeviceInfo
+      tags:
+        - Device
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceInfo'
+
+  /api/v3/device/status:
+    get:
+      summary: Get device status
+      operationId: getDeviceStatus
+      tags:
+        - Device
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceStatus'
+
+  /api/v3/device/reboot:
+    post:
+      summary: Reboot device
+      operationId: rebootDevice
+      tags:
+        - Device
+      responses:
+        '200':
+          description: Device rebooted successfully
+
+  /api/v3/device/factory-reset:
+    post:
+      summary: Factory reset device
+      operationId: factoryResetDevice
+      tags:
+        - Device
+      responses:
+        '200':
+          description: Device factory reset successfully
+
+  # GPIO endpoints
+  /api/v3/device/gpio:
+    get:
+      summary: Get all GPIO status
+      operationId: getAllGPIOStatus
+      tags:
+        - GPIO
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GPIOStatus'
+    post:
+      summary: Set GPIO value
+      operationId: setGPIOValue
+      tags:
+        - GPIO
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GPIOSetRequest'
+      responses:
+        '200':
+          description: GPIO value set successfully
+
+  /api/v3/device/gpio/{pin}:
+    get:
+      summary: Get GPIO status by pin
+      operationId: getGPIOStatus
+      tags:
+        - GPIO
+      parameters:
+        - name: pin
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GPIOStatus'
+    put:
+      summary: Update GPIO configuration
+      operationId: updateGPIOConfig
+      tags:
+        - GPIO
+      parameters:
+        - name: pin
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GPIOConfigRequest'
+      responses:
+        '200':
+          description: GPIO configuration updated successfully
+
+  # WiFi endpoints
+  /api/v3/device/wifi/config:
+    get:
+      summary: Get WiFi configuration
+      operationId: getWiFiConfig
+      tags:
+        - WiFi
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WiFiConfig'
+    post:
+      summary: Save WiFi configuration
+      operationId: saveWiFiConfig
+      tags:
+        - WiFi
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WiFiConfig'
+      responses:
+        '200':
+          description: WiFi configuration saved successfully
+
+  /api/v3/device/wifi/status:
+    get:
+      summary: Get WiFi status
+      operationId: getWiFiStatus
+      tags:
+        - WiFi
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WiFiStatus'
+
+  /api/v3/device/wifi/scan:
+    get:
+      summary: Scan available WiFi networks
+      operationId: scanWiFiNetworks
+      tags:
+        - WiFi
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WiFiNetwork'
+
+  # Command endpoints
+  /api/v3/device/commands:
+    get:
+      summary: Get device commands
+      operationId: getDeviceCommands
+      tags:
+        - Commands
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceCommand'
+    post:
+      summary: Send device command
+      operationId: sendDeviceCommand
+      tags:
+        - Commands
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceCommandRequest'
+      responses:
+        '200':
+          description: Command sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceCommand'
+
+  /api/v3/device/commands/{id}:
+    get:
+      summary: Get command by ID
+      operationId: getCommand
+      tags:
+        - Commands
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceCommand'
+    delete:
+      summary: Delete command
+      operationId: deleteCommand
+      tags:
+        - Commands
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Command deleted successfully
+
+  # Metrics endpoints
+  /api/v3/device/metrics:
+    get:
+      summary: Get device metrics
+      operationId: getDeviceMetrics
+      tags:
+        - Metrics
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceMetrics'
+
+components:
+  schemas:
+    # State Machine schemas
+    Trigger:
+      type: object
+      required:
+        - triggerType
+        - triggerSource
+        - operator
+        - triggerValue
+      properties:
+        triggerType:
+          type: integer
+          description: Trigger type (0=None, 1=Edge, 2=Level, 3=Timer, 4=Manual)
+        triggerSource:
+          type: string
+          description: Trigger source (P0-P11, T0-T2, MANUAL)
+        operator:
+          type: integer
+          description: Comparison operator (0-5)
+        triggerValue:
+          type: integer
+          description: Trigger threshold value
+
+    Transition:
+      type: object
+      required:
+        - currentState
+        - nextState
+        - triggers
+        - triggerCount
+        - triggerLogic
+      properties:
+        currentState:
+          type: string
+        nextState:
+          type: string
+        triggers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trigger'
+        triggerCount:
+          type: integer
+          minimum: 1
+          maximum: 3
+        triggerLogic:
+          type: integer
+          description: Logic type (0=AND, 1=OR)
+
+    StateEffect:
+      type: object
+      required:
+        - stateName
+        - effectType
+        - target
+        - value
+      properties:
+        stateName:
+          type: string
+        effectType:
+          type: integer
+        target:
+          type: string
+        value:
+          type: integer
+        duration:
+          type: integer
+
+    StateMachineConfig:
+      type: object
+      required:
+        - initialState
+        - transitions
+        - stateEffects
+      properties:
+        initialState:
+          type: string
+        transitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transition'
+        stateEffects:
+          type: array
+          items:
+            $ref: '#/components/schemas/StateEffect'
+        groupModes:
+          type: array
+          items:
+            type: integer
+        inputModuleTypes:
+          type: array
+          items:
+            type: integer
+        edgeTypes:
+          type: array
+          items:
+            type: integer
+        outputModuleTypes:
+          type: array
+          items:
+            type: integer
+
+    StateMachineStatus:
+      type: object
+      properties:
+        currentState:
+          type: string
+        lastTriggerTime:
+          type: integer
+        triggerCount:
+          type: integer
+        errorCount:
+          type: integer
+        uptime:
+          type: integer
+
+    # Device schemas
+    DeviceInfo:
+      type: object
+      properties:
+        deviceId:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+        lastSeen:
+          type: string
+        firmware:
+          type: string
+        ipAddress:
+          type: string
+        macAddress:
+          type: string
+        version:
+          type: string
+        capabilities:
+          type: array
+          items:
+            type: string
+
+    DeviceStatus:
+      type: object
+      properties:
+        status:
+          type: string
+        uptime:
+          type: integer
+
+    # GPIO schemas
+    GPIOStatus:
+      type: object
+      required:
+        - pin
+        - mode
+        - value
+        - lastUpdated
+      properties:
+        pin:
+          type: integer
+        mode:
+          type: string
+          enum: [input, output, input_pullup, input_pulldown]
+        value:
+          type: integer
+        label:
+          type: string
+        description:
+          type: string
+        lastUpdated:
+          type: string
+
+    GPIOSetRequest:
+      type: object
+      required:
+        - pin
+        - value
+      properties:
+        pin:
+          type: integer
+        value:
+          type: integer
+
+    GPIOConfigRequest:
+      type: object
+      required:
+        - mode
+      properties:
+        mode:
+          type: integer
+        value:
+          type: integer
+
+    # WiFi schemas
+    WiFiConfig:
+      type: object
+      required:
+        - ssid
+      properties:
+        ssid:
+          type: string
+        password:
+          type: string
+        ip:
+          type: string
+        gateway:
+          type: string
+        subnet:
+          type: string
+        dns:
+          type: string
+        dhcp:
+          type: boolean
+
+    WiFiStatus:
+      type: object
+      properties:
+        connected:
+          type: boolean
+        ssid:
+          type: string
+        ip:
+          type: string
+        gateway:
+          type: string
+        subnet:
+          type: string
+        signalStrength:
+          type: integer
+        lastConnected:
+          type: string
+
+    WiFiNetwork:
+      type: object
+      properties:
+        ssid:
+          type: string
+        rssi:
+          type: integer
+        encryption:
+          type: string
+
+    # Command schemas
+    DeviceCommand:
+      type: object
+      properties:
+        id:
+          type: string
+        deviceId:
+          type: string
+        type:
+          type: string
+        parameters:
+          type: object
+        status:
+          type: string
+          enum: [pending, executing, completed, failed, timeout]
+        createdAt:
+          type: string
+        executedAt:
+          type: string
+        result:
+          type: object
+        error:
+          type: string
+
+    DeviceCommandRequest:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+        parameters:
+          type: object
+
+    # Metrics schemas
+    DeviceMetrics:
+      type: object
+      properties:
+        deviceId:
+          type: string
+        timestamp:
+          type: string
+        cpuUsage:
+          type: number
+        memoryUsage:
+          type: number
+        temperature:
+          type: number
+        uptime:
+          type: integer
+        errorCount:
+          type: integer
+        lastReset:
+          type: string

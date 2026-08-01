@@ -108,6 +108,48 @@ aw9523_handle_t *g_aw9523_handle = NULL;
 // 初始化标志
 static bool s_initialized = false;
 
+/**
+ * @brief 检测按键 GPIO 是否有外部上拉电阻
+ * 
+ * 配置 GPIO 为输入模式（禁用内部上下拉），读取电平状态来判断
+ * - 高电平(1)：有外部上拉电阻
+ * - 低电平(0)：无外部上拉（浮空）
+ * 
+ * 注意：此函数用于硬件诊断，默认不调用
+ */
+#if 0
+static void diagnose_button_pullup(void)
+{
+    ESP_LOGI(TAG, "=== 检测按键 GPIO 外部上拉 ===");
+    for (int button_id = 0; button_id < BUTTON_COUNT; button_id++) {
+        gpio_num_t gpio_num = s_buttons[button_id].pin;
+
+        // 配置为输入，禁用所有上下拉
+        gpio_config_t diag_conf = {};
+        diag_conf.pin_bit_mask = (1ULL << gpio_num);
+        diag_conf.mode = GPIO_MODE_INPUT;
+        diag_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+        diag_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+        gpio_config(&diag_conf);
+
+        // 延迟等待电平稳定
+        vTaskDelay(pdMS_TO_TICKS(10));
+
+        // 读取电平
+        int level = gpio_get_level(gpio_num);
+
+        if (level == 1) {
+            ESP_LOGI(TAG, "Button %d (GPIO %d): 检测为高电平 ✓ 有外部上拉",
+                     button_id, gpio_num);
+        } else {
+            ESP_LOGW(TAG, "Button %d (GPIO %d): 检测为低电平 ✗ 无外部上拉（浮空）",
+                     button_id, gpio_num);
+        }
+    }
+    ESP_LOGI(TAG, "============================");
+}
+#endif
+
 esp_err_t gpio_manager_init(void)
 {
     if (s_initialized) {
@@ -115,6 +157,7 @@ esp_err_t gpio_manager_init(void)
     }
     
     // 创建GPIO管理器互斥锁
+    // diagnose_button_pullup();  // 如需检测按键外部上拉，取消注释此行
     s_gpio_mutex = xSemaphoreCreateMutex();
     if (s_gpio_mutex == NULL) {
         ESP_LOGE(TAG, "Failed to create GPIO mutex");
@@ -196,7 +239,8 @@ esp_err_t gpio_manager_init(void)
         .duty_resolution  = LEDC_DUTY_RES,
         .timer_num        = LEDC_TIMER,
         .freq_hz          = LEDC_FREQUENCY,
-        .clk_cfg          = LEDC_AUTO_CLK
+        .clk_cfg          = LEDC_AUTO_CLK,
+        .deconfigure      = false
     };
     esp_err_t ledc_ret = ledc_timer_config(&ledc_timer);
     if (ledc_ret != ESP_OK) {
@@ -235,8 +279,12 @@ esp_err_t gpio_manager_init(void)
             .timer_sel      = LEDC_TIMER,
             .duty           = 0,  // 初始占空比为0
             .hpoint         = 0,
+            .sleep_mode     = LEDC_SLEEP_MODE_NO_ALIVE_NO_PD,
             .flags          = {.output_invert = 0}
         };
+        // ledc_channel_config() 配置时会立即应用配置的 duty 值
+        // ledc_update_duty() 是在运行时更新占空比后的刷新操作
+        // 两者功能上是等效的
         ret = ledc_channel_config(&ledc_channel);
         if (ret != ESP_OK) {
             ESP_LOGE(TAG, "电机PWM LEDC配置失败: motor %d, error %s", 
@@ -246,14 +294,15 @@ esp_err_t gpio_manager_init(void)
         s_motor_groups[motor_id].states[1] = 0;
     }
     
-    // 初始化按键（输入模式默认上拉）
+    // 初始化按键（使用外部上拉，禁用内部上拉）
     for (int button_id = 0; button_id < BUTTON_COUNT; button_id++) {
         gpio_num_t gpio_num = s_buttons[button_id].pin;
         gpio_config_t io_conf = {};
         io_conf.intr_type = GPIO_INTR_ANYEDGE;
         io_conf.mode = GPIO_MODE_INPUT;
         io_conf.pin_bit_mask = (1ULL << gpio_num);
-        io_conf.pull_up_en = GPIO_PULLUP_ENABLE;   // 输入模式默认上拉
+        // GPIO 34/35 是输入专用引脚，无内部上拉，依赖外部上拉电阻
+        io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
         io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
         esp_err_t ret = gpio_config(&io_conf);
         if (ret != ESP_OK) {
@@ -277,7 +326,7 @@ esp_err_t gpio_manager_init(void)
         ESP_ERROR_CHECK(adc_oneshot_config_channel(adc1_handle, ADC_CHANNEL_0, &config));
     }
     
-    // s_initialized = true;  // 已移到函数开头
+    ESP_LOGI(TAG, "GPIO Manager 初始化完成");
     return ESP_OK;
 }
 

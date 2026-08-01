@@ -2,20 +2,65 @@
   "configurations": [
     {
       "name": "ESP-IDF",
-      "compilerPath": "${config:idf.toolsPath}/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc",
-      "compileCommands": "${config:idf.buildPath}/compile_commands.json",
+      "compilerPath": "C:/Espressif/tools/xtensa-esp-elf/esp-14.2.0_20251107/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc",
       "includePath": [
-        "${config:idf.espIdfPath}/components/**",
-        "${config:idf.espIdfPathWin}/components/**",
-        "${workspaceFolder}/**"
+        "${workspaceFolder}/build/config",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/**",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/esp_hw_support/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/freertos/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/freertos/include/freertos",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/freertos/FreeRTOS-Kernel/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/freertos/FreeRTOS-Kernel/portable/xtensa/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/xtensa/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/soc/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/soc/esp32/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/hal/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/hal/platform_port/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/newlib/platform_include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/newlib/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/esp_event/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/esp_wifi/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/esp_http_server/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/driver/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/driver/gpio/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/driver/i2c/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/driver/adc/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/log/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/esp_adc/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/cjson/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/spi_flash/include",
+        "C:/Espressif/frameworks/esp-idf-v5.5.3/components/nvs_flash/include",
+        "C:/Espressif/tools/xtensa-esp-elf/esp-14.2.0_20251107/xtensa-esp-elf/xtensa-esp-elf/include",
+        "C:/Espressif/tools/xtensa-esp-elf/esp-14.2.0_20251107/xtensa-esp-elf/include",
+        "C:/Espressif/tools/xtensa-esp-elf/esp-14.2.0_20251107/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/14.2.0/include",
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/components/**"
       ],
+      "defines": [
+        "CONFIG_STATE_MACHINE_V3_TEST=1",
+        "UNITY_INCLUDE_CONFIG_H",
+        "CONFIG_IDF_TARGET_ESP32=1",
+        "CONFIG_IDF_TARGET=\"esp32\"",
+        "CONFIG_FREERTOS_SMP=y"
+      ],
+      "cStandard": "c99",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "gcc-x64",
       "browse": {
         "path": [
-          "${config:idf.espIdfPath}/components",
-          "${config:idf.espIdfPathWin}/components",
-          "${workspaceFolder}"
+          "${workspaceFolder}/build/config",
+          "C:/Espressif/frameworks/esp-idf-v5.5.3/components",
+          "C:/Espressif/frameworks/esp-idf-v5.5.3/components/esp_hw_support/include",
+          "C:/Espressif/frameworks/esp-idf-v5.5.3/components/freertos/include",
+          "C:/Espressif/frameworks/esp-idf-v5.5.3/components/freertos/include/freertos",
+          "C:/Espressif/frameworks/esp-idf-v5.5.3/components/xtensa/include",
+          "C:/Espressif/tools/xtensa-esp-elf/esp-14.2.0_20251107/xtensa-esp-elf/include",
+          "C:/Espressif/tools/xtensa-esp-elf/esp-14.2.0_20251107/xtensa-esp-elf/xtensa-esp-elf/include",
+          "${workspaceFolder}",
+          "${workspaceFolder}/components"
         ],
-        "limitSymbolsToIncludedHeaders": true
+        "limitSymbolsToIncludedHeaders": true,
+        "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db"
       }
     }
   ],

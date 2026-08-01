@@ -25,12 +25,6 @@ typedef struct {
 
 
 
-// 系统状态更新函数
-esp_err_t system_update_status(system_status_t *status);
-
-// IP地址更新函数
-esp_err_t system_update_ip(const char *ip_addr);
-
 // 显示系统状态
 esp_err_t gpio_display_states(void);
 
@@ -44,10 +38,13 @@ esp_err_t gpio_monitor_deinit(void);
 esp_err_t gpio_monitor_start(void);
 
 // 更新组件状态
-esp_err_t gpio_monitor_update_status(const char* component, bool status);
+esp_err_t gpio_monitor_update_component_status(const char* component, bool status);
 
 // 更新当前步骤
 esp_err_t gpio_monitor_update_step(const char *step);
+
+// 更新 IP 地址
+esp_err_t gpio_monitor_update_ip(const char *ip_addr);
 
 #ifdef __cplusplus
 }

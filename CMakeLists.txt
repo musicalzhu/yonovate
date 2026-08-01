@@ -11,6 +11,7 @@ set(EXTRA_COMPONENT_DIRS
     components/gpio_monitor
     components/i2c_manager
     components/state_machine
+    components/state_machine_v3
     components/logic_circuit
     components/gpio_control
     components/motor_control

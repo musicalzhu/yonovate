@@ -1,0 +1,75 @@
+{
+  "compilerOptions": {
+    /* ========== 基础编译配置 ========== */
+    // 编译目标: ES2022 支持更多现代特性（私有字段、top-level await等）
+    "target": "ES2022",
+
+    // 使用 ES 类字段语法
+    "useDefineForClassFields": true,
+
+    // 标准库: 添加 ES2022 支持新特性
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    // 模块系统: ESNext 支持最新 ES 模块语法
+    "module": "ESNext",
+
+    // 跳过第三方库类型检查，加快编译速度
+    "skipLibCheck": true,
+
+    /* ========== Bundler 模式配置 ========== */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
+
+    /* ========== 严格模式配置 (增强版) ========== */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+
+    // 新增：catch 块变量类型为 unknown（需要显式类型断言）
+    "useUnknownInCatchVariables": true,
+
+    /* ========== 其他选项 ========== */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "checkJs": false,
+
+    // 类型定义文件
+    "types": ["vite/client", "node", "vitest/globals"],
+
+    /* ========== 路径别名配置 ========== */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+  },
+
+  /* ========== 文件包含/排除 ========== */
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "vite.config.ts",
+    "vitest.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "dist-vue"
+  ],
+
+  /* ========== Vue 编译器选项 ========== */
+  "vueCompilerOptions": {
+    "target": 3.5,
+    // 新增：strictTemplates 对模板进行严格类型检查
+    "strictTemplates": true
+  }
+}

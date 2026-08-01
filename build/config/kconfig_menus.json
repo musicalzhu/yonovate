@@ -5284,34 +5284,6 @@
     {
         "children": [
             {
-                "children": [],
-                "depends_on": null,
-                "help": "\u8bbe\u5907\u672a\u914d\u7f6eWiFi\u65f6\u4f7f\u7528\u7684\u9ed8\u8ba4SSID\u3002\n\u7528\u6237\u53ef\u901a\u8fc7POST /api/wifi/config\u63a5\u53e3\u4fee\u6539\u914d\u7f6e\u3002",
-                "id": "WIFI_DEFAULT_SSID",
-                "name": "WIFI_DEFAULT_SSID",
-                "range": null,
-                "title": "\u9ed8\u8ba4WiFi SSID",
-                "type": "string"
-            },
-            {
-                "children": [],
-                "depends_on": null,
-                "help": "\u8bbe\u5907\u672a\u914d\u7f6eWiFi\u65f6\u4f7f\u7528\u7684\u9ed8\u8ba4\u5bc6\u7801\u3002\n\u53ef\u4e3a\u7a7a\u5b57\u7b26\u4e32\u8868\u793a\u5f00\u653e\u7f51\u7edc\uff08\u65e0\u5bc6\u7801\uff09\u3002",
-                "id": "WIFI_DEFAULT_PASSWORD",
-                "name": "WIFI_DEFAULT_PASSWORD",
-                "range": null,
-                "title": "\u9ed8\u8ba4WiFi\u5bc6\u7801",
-                "type": "string"
-            }
-        ],
-        "depends_on": null,
-        "id": "wifi-configuration",
-        "title": "WiFi Configuration",
-        "type": "menu"
-    },
-    {
-        "children": [
-            {
                 "children": [
                     {
                         "children": [],
@@ -35303,6 +35275,96 @@
                 "depends_on": null,
                 "id": "component-config-wi-fi-provisioning-manager",
                 "title": "Wi-Fi Provisioning Manager",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "Default WiFi SSID to connect to when no NVS configuration exists.\nLeave empty to require explicit configuration.",
+                        "id": "WIFI_DEFAULT_SSID",
+                        "name": "WIFI_DEFAULT_SSID",
+                        "range": null,
+                        "title": "Default WiFi SSID",
+                        "type": "string"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "Default WiFi password. Leave empty for open networks.",
+                        "id": "WIFI_DEFAULT_PASSWORD",
+                        "name": "WIFI_DEFAULT_PASSWORD",
+                        "range": null,
+                        "title": "Default WiFi Password",
+                        "type": "string"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "SSID for AP mode (configuration hotspot).",
+                        "id": "WIFI_AP_SSID",
+                        "name": "WIFI_AP_SSID",
+                        "range": null,
+                        "title": "AP Mode SSID",
+                        "type": "string"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "Password for AP mode. Minimum 8 characters.",
+                        "id": "WIFI_AP_PASSWORD",
+                        "name": "WIFI_AP_PASSWORD",
+                        "range": null,
+                        "title": "AP Mode Password",
+                        "type": "string"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-wifi-manager-configuration",
+                "title": "WiFi Manager Configuration",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "STATE_MACHINE_V3_ENABLE",
+                                "help": "Enable simplified test suite for STEM education:\n- \u57fa\u7840\u6d4b\u8bd5: \u521d\u59cb\u5316\u3001\u914d\u7f6e\u52a0\u8f7d\u3001\u89e6\u53d1\u5668\u3001\u5b9a\u65f6\u5668\n- \u7535\u68af\u573a\u666f: \u5347\u964d\u673a\u903b\u8f91\u3001\u5b89\u5168\u4e92\u9501\n- \u6a21\u5757\u7c7b\u578b: \u6309\u94ae\u3001LED\u3001\u7535\u673a\n\n\u4f7f\u7528 Unity \u6d4b\u8bd5\u6846\u67b6\uff0c\u4e13\u6ce8 ESP32 \u5e73\u53f0\u3002",
+                                "id": "STATE_MACHINE_V3_TEST",
+                                "name": "STATE_MACHINE_V3_TEST",
+                                "range": null,
+                                "title": "Enable V3 State Machine Tests (STEM)",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "help": "Enable the V3 state machine implementation with condition-based\ntriggers and enhanced JSON configuration.",
+                        "id": "STATE_MACHINE_V3_ENABLE",
+                        "name": "STATE_MACHINE_V3_ENABLE",
+                        "range": null,
+                        "title": "Enable State Machine V3",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "Log level for V3 state machine (0=NONE, 5=VERBOSE)",
+                        "id": "STATE_MACHINE_V3_LOG_LEVEL",
+                        "name": "STATE_MACHINE_V3_LOG_LEVEL",
+                        "range": [
+                            0,
+                            5
+                        ],
+                        "title": "V3 State Machine Log Level",
+                        "type": "int"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-state-machine-v3-configuration",
+                "title": "State Machine V3 Configuration",
                 "type": "menu"
             }
         ],

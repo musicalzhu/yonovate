@@ -1,0 +1,68 @@
+import type { GPIOStatus } from '@/generated/api';
+
+export const mockGPIOStatus: GPIOStatus[] = [
+  {
+    pin: 0,
+    mode: 'input',
+    value: 0,
+    label: 'GPIO0',
+    description: '输入引脚0',
+    lastUpdated: new Date().toISOString(),
+  },
+  {
+    pin: 1,
+    mode: 'output',
+    value: 1,
+    label: 'GPIO1',
+    description: '输出引脚1',
+    lastUpdated: new Date().toISOString(),
+  },
+  {
+    pin: 2,
+    mode: 'output',
+    value: 0,
+    label: 'GPIO2',
+    description: '输出引脚2',
+    lastUpdated: new Date().toISOString(),
+  },
+  {
+    pin: 3,
+    mode: 'input_pullup',
+    value: 1,
+    label: 'GPIO3',
+    description: '上拉输入引脚3',
+    lastUpdated: new Date().toISOString(),
+  },
+  {
+    pin: 4,
+    mode: 'input',
+    value: 0,
+    label: 'GPIO4',
+    description: '输入引脚4',
+    lastUpdated: new Date().toISOString(),
+  },
+  {
+    pin: 5,
+    mode: 'output',
+    value: 1,
+    label: 'GPIO5',
+    description: '输出引脚5',
+    lastUpdated: new Date().toISOString(),
+  },
+  {
+    pin: 12,
+    mode: 'input',
+    value: 0,
+    label: 'GPIO12',
+    description: '输入引脚12',
+    lastUpdated: new Date().toISOString(),
+  },
+  {
+    pin: 13,
+    mode: 'output',
+    value: 0,
+    label: 'GPIO13',
+    description: '输出引脚13',
+    lastUpdated: new Date().toISOString(),
+  },
+];

@@ -7,7 +7,6 @@
 #include "esp_system.h"
 #include "spi_flash_mmap.h"
 #include "esp_timer.h"
-#include "esp_spi_flash.h"
 #include "system_status.h"
 #include "gpio_manager.h"
 

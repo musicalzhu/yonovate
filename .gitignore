@@ -1,1 +1,199 @@
-Nothing should be ignored in this case, as the only change is adding a README.md file, which is a source/config file and not a build artifact, dependency, or temporary file.
+# =============================================================================
+# ESP32 IoT Control System - Comprehensive .gitignore
+# =============================================================================
+
+# === Build Outputs ===
+build/
+*.bin
+*.elf
+*.map
+*.hex
+*.out
+
+# === ESP-IDF Specific ===
+sdkconfig*
+flash_project_args
+config/
+*.bin.raw
+*.flash_args
+*.partition_table
+
+# === CMake Build System ===
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# === Development Tools & IDEs ===
+.codex/
+.github/
+.vscode/
+.cursor/
+.claude/
+.windsurf/
+.qwen/
+.trae/
+
+*.code-workspace
+
+# Clangd Language Server
+.clangd/
+.clangd
+
+# JetBrains IDEs (IntelliJ, PyCharm, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Vim/Neovim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Database files
+*.db
+*.VC.DB
+*.sqlite
+*.sqlite3
+
+# === Package Management ===
+# Node.js/npm
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.npm
+.yarn-error.log
+npm-debug.log*
+.eslintcache
+
+# === Vue / Vite Projects ===
+dist/
+.vite/
+vite-env.d.ts
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# === Configuration & Environment ===
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.*.local
+
+# === Logs & Debug ===
+*.log
+log/
+logs/
+*.out
+*.err
+debug.log
+error.log
+
+# === Temporary Files ===
+*.tmp
+*.temp
+*.bak
+*.backup
+*.cache
+*.pid
+*.seed
+*.pid.lock
+
+# === Operating System Files ===
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# === Testing & Coverage ===
+coverage/
+*.coverage
+.coverage
+.nyc_output
+.pytest_cache/
+.tox/
+htmlcov/
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+
+# === Documentation Generation ===
+docs/_build/
+site/
+.sphinx-cache/
+.doctrees/
+
+# === Security & Keys ===
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+.private/
+*.gpg
+
+# === Performance & Profiling ===
+*.prof
+*.profraw
+*.gcda
+*.gcno
+*.gcov
+coverage.info
+
+# === Archive & Compression ===
+*.tar.gz
+*.zip
+*.rar
+*.7z
+*.tar
+*.tgz

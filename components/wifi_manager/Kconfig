@@ -1,0 +1,28 @@
+menu "WiFi Manager Configuration"
+
+    config WIFI_DEFAULT_SSID
+        string "Default WiFi SSID"
+        default ""
+        help
+            Default WiFi SSID to connect to when no NVS configuration exists.
+            Leave empty to require explicit configuration.
+
+    config WIFI_DEFAULT_PASSWORD
+        string "Default WiFi Password"
+        default ""
+        help
+            Default WiFi password. Leave empty for open networks.
+
+    config WIFI_AP_SSID
+        string "AP Mode SSID"
+        default ""
+        help
+            SSID for AP mode (configuration hotspot).
+
+    config WIFI_AP_PASSWORD
+        string "AP Mode Password"
+        default ""
+        help
+            Password for AP mode. Minimum 8 characters.
+
+endmenu

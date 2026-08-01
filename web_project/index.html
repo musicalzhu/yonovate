@@ -3,113 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32控制中心</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>ESP32 设备控制平台</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🔧</text></svg>">
 </head>
 <body>
-    <div class="container">
-        <h1>ESP32控制中心</h1>
-        <div style="text-align: center; color: #999; font-size: 12px; margin-bottom: 10px;">v1.6</div>
-        <div class="main-menu">
-            <h2>请选择功能模块</h2>
-            <p style="color: #666; font-style: italic;">注意：此界面可在离线环境中运行，但需要连接到ESP32设备才能控制GPIO和配置逻辑电路。</p>
-            <ul>
-                <li><a href="pages/gpio_control.html">GPIO控制</a></li>
-                <li><a href="pages/logic_circuit.html">逻辑电路</a></li>
-                <li><a href="pages/state_machine.html">状态转移</a></li>
-                <li><a href="pages/wifi_config.html">WiFi配置</a></li>
-            </ul>
-            
-            <!-- 设备连接配置 -->
-            <div style="margin-top: 30px; padding: 20px; border-top: 1px solid #ddd; background: #f9f9f9; border-radius: 8px;">
-                <h3>ESP32设备连接</h3>
-                <div style="margin-bottom: 15px;">
-                    <label for="esp32-ip" style="display: block; margin-bottom: 5px; font-weight: bold;">设备IP地址:</label>
-                    <input type="text" id="esp32-ip" placeholder="例如: 192.168.4.1 或 192.168.3.55" value="192.168.3.55" 
-                           style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 250px;">
-                </div>
-                
-                <!-- Ping连通性测试 -->
-                <div style="margin-top: 15px;">
-                    <p style="margin-bottom: 10px;">测试设备是否在线：</p>
-                    <button id="pingBtn" onclick="pingDevice()" style="padding: 8px 16px; background: #007acc; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                        Ping设备
-                    </button>
-                    <span id="pingResult" style="margin-left: 10px; color: #666;"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/config.js"></script>
-    <script>
-        /**
-         * @brief 获取ESP32完整URL
-         * @returns {string} 完整URL
-         */
-        function getESP32URL() {
-            // 1. 优先使用输入框中的IP
-            const ipInput = document.getElementById('esp32-ip');
-            if (ipInput && ipInput.value) {
-                return `http://${ipInput.value}`;
-            }
-            
-            // 2. 使用config.js中的配置
-            if (window.ESP32_CONFIG) {
-                return window.ESP32_CONFIG.getBaseURL();
-            }
-            
-            // 3. 使用默认值
-            return 'http://192.168.3.55';
-        }
-        
-        /**
-         * @brief Ping设备连通性测试
-         * @details 调用GET /ping接口验证设备在线状态
-         *          成功返回 {"status":"ok"}
-         */
-        async function pingDevice() {
-            const resultEl = document.getElementById('pingResult');
-            const btn = document.getElementById('pingBtn');
-            
-            resultEl.textContent = '检测中...';
-            btn.disabled = true;
-            
-            // 构建完整URL
-            const baseUrl = getESP32URL();
-            
-            try {
-                const response = await fetch(`${baseUrl}/ping`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.status === 'ok') {
-                    resultEl.textContent = '✅ 设备在线';
-                    resultEl.style.color = '#28a745';
-                } else {
-                    resultEl.textContent = '⚠️ 响应异常: ' + JSON.stringify(data);
-                    resultEl.style.color = '#ffc107';
-                }
-            } catch (error) {
-                if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-                    resultEl.innerHTML = `❌ <strong>连接失败</strong><br>${error.message}<br><small>可能原因：<br>1. 未连接到ESP32设备<br>2. IP地址不正确<br>3. 设备未启动Web服务器</small>`;
-                } else {
-                    resultEl.textContent = '❌ 连接失败: ' + error.message;
-                }
-                resultEl.style.color = '#dc3545';
-            } finally {
-                btn.disabled = false;
-            }
-        }
-    </script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

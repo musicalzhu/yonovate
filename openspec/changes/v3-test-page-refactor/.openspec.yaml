@@ -1,0 +1,8 @@
+schema: spec-driven
+name: v3-test-page-refactor
+description: V3 状态机 Web 测试页重构 — 完整格式编辑器 + 模块化与字段/校验分层 + Vue 3框架渐进式迁移（历史上并行推进的同类专题已废止，统一收口至本变更）
+created: 2026-05-11
+artifacts:
+  proposal: proposal.md
+  design: design.md
+  tasks: tasks.md

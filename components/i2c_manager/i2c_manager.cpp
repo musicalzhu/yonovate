@@ -12,7 +12,16 @@
 
 static const char *TAG = "i2c_manager";
 
-
+// 静态变量声明
+static i2c_master_bus_handle_t s_i2c_bus_handle = NULL;
+static bool s_initialized = false;
+static SemaphoreHandle_t s_i2c_mutex = NULL;
+static SemaphoreHandle_t s_reset_mutex = NULL;
+static TaskHandle_t s_reset_task_handle = NULL;
+static int s_bus_error_count = 0;
+static const int MAX_ERROR_COUNT = 10;
+static bool s_reset_requested = false;
+static int s_device_error_count[128] = {0}; // 使用I2C地址作为索引
 
 // 函数前向声明
 static void i2c_complete_software_reset(void);
@@ -23,7 +32,13 @@ static void i2c_complete_software_reset(void);
  * @return i2c_bus_status_t 总线状态枚举值
  */
 static i2c_bus_status_t i2c_diagnose_bus(void) {
-    // 配置引脚为输入模式
+    // 如果I2C已初始化，直接使用I2C驱动检查，避免GPIO冲突
+    if (s_initialized && s_i2c_bus_handle != NULL) {
+        // I2C已初始化时，总线状态由驱动管理，假设正常
+        return I2C_BUS_STATUS_OK;
+    }
+    
+    // 配置引脚为输入模式（仅当I2C未初始化时）
     gpio_set_direction(I2C_SDA_PIN, GPIO_MODE_INPUT);
     gpio_set_direction(I2C_SCL_PIN, GPIO_MODE_INPUT);
     gpio_pullup_en(I2C_SDA_PIN);
@@ -65,6 +80,11 @@ static const char* i2c_get_bus_status_string(i2c_bus_status_t status) {
  * @brief 清理I2C总线（释放SDA和SCL引脚）
  */
 static void i2c_cleanup_bus(void) {
+    // 如果I2C已初始化，跳过GPIO清理以避免与I2C驱动冲突
+    if (s_initialized && s_i2c_bus_handle != NULL) {
+        return;
+    }
+    
     // 重置引脚配置
     gpio_reset_pin(I2C_SDA_PIN);
     gpio_reset_pin(I2C_SCL_PIN);
@@ -76,17 +96,7 @@ static void i2c_cleanup_bus(void) {
     gpio_pullup_en(I2C_SCL_PIN);
 }
 
-static i2c_master_bus_handle_t s_i2c_bus_handle = NULL;
-static bool s_initialized = false;
-static SemaphoreHandle_t s_i2c_mutex = NULL;
-static SemaphoreHandle_t s_reset_mutex = NULL;
-static TaskHandle_t s_reset_task_handle = NULL;
-static int s_bus_error_count = 0;
-// 错误计数阈值 - 增加到10以减少不必要的重置
-static const int MAX_ERROR_COUNT = 10;
-static bool s_reset_requested = false;
-// 设备特定的错误计数
-static int s_device_error_count[128] = {0}; // 使用I2C地址作为索引
+// 静态变量已在文件开头声明
 // 保持向后兼容性的错误计数变量
 static int s_aw9523_error_count = 0; // AW9523设备的错误计数
 static int s_oled_error_count = 0; // OLED设备的错误计数

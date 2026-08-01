@@ -1,0 +1,43 @@
+# 依赖目录
+node_modules
+dist
+build
+
+# 缓存目录
+.cache
+.vite
+.nuxt
+
+# 测试覆盖率
+coverage
+
+# 环境配置文件
+.env
+.env.local
+.env.*.local
+
+# 日志文件
+*.log
+logs
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# IDE 配置
+.vscode
+.idea
+*.swp
+*.swo
+
+# 临时文件
+*.tmp
+*.temp
+
+# 构建产物
+public/mockServiceWorker.js
+
+# 其他
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
