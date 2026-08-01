@@ -88,6 +88,12 @@ dist/
 .vite/
 vite-env.d.ts
 
+# === web_project 子项目生成/测试输出 ===
+/web_project/playwright-report/
+/web_project/test-results/
+/web_project/coverage/
+/web_project/vitest-coverage/
+
 # Python
 __pycache__/
 *.py[cod]
