@@ -81,7 +81,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { StateMachineConfig, Transition } from '@/types/domain/stateMachine';
-import { useStateMachineLogic, getAvailableStates, evaluateTriggers } from '@/services/businessLogic';
+import {
+  useStateMachineLogic,
+  getAvailableStates,
+  evaluateTriggers,
+} from '@/services/businessLogic';
 import { useNotificationsStore } from '@/stores/notifications';
 import { createDefaultStateMachineConfig } from '@/types/domain/stateMachine';
 import BaseCard from '../base/BaseCard.vue';

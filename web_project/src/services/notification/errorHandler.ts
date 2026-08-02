@@ -262,7 +262,6 @@ export function handleError(error: unknown, options: ErrorHandlerOptions = {}): 
   if (showToast) {
     const message = getDefaultMessage(apiError.status) || apiError.message;
     try {
-      const ElMessage = (window as any).$message || require('element-plus').ElMessage;
       ElMessage.error(message);
     } catch {
       console.warn('ElMessage not available, using alert');

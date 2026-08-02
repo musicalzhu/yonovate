@@ -25,11 +25,8 @@
    - overlay: 是否全屏遮罩（默认false）
 
    使用示例：
-   <!-- 按钮内加载 -->
-<LoadingSpinner size="sm" />
-
-<!-- 页面加载遮罩 -->
-<LoadingSpinner size="lg" text="加载中..." overlay />
+   <LoadingSpinner size="sm" />
+   <LoadingSpinner size="lg" text="加载中..." overlay />
 -->
 <template>
   <div :class="spinnerClasses" :style="spinnerStyle">

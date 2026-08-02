@@ -305,13 +305,7 @@ const {
  * - refetchGPIO: 重新获取GPIO状态
  * - setPinValue: 设置GPIO引脚值
  */
-const {
-  gpioStatus,
-  isLoadingGPIO,
-  isFetchingGPIO,
-  refetchGPIO,
-  setPinValue,
-} = useGPIOStatus();
+const { gpioStatus, isLoadingGPIO, isFetchingGPIO, refetchGPIO, setPinValue } = useGPIOStatus();
 
 /**
  * useTemplates - 模板管理 composable

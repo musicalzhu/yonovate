@@ -145,15 +145,18 @@ window.addEventListener('unhandledrejection', (event) => {
  * 用于拦截和模拟 API 请求
  */
 if (import.meta.env.DEV) {
-  worker.start({
-    onUnhandledRequest: 'bypass',
-  }).then(() => {
-    console.log('MSW worker started successfully');
-    app.mount('#app');
-  }).catch((err) => {
-    console.error('Failed to start MSW worker:', err);
-    app.mount('#app');
-  });
+  worker
+    .start({
+      onUnhandledRequest: 'bypass',
+    })
+    .then(() => {
+      console.log('MSW worker started successfully');
+      app.mount('#app');
+    })
+    .catch((err) => {
+      console.error('Failed to start MSW worker:', err);
+      app.mount('#app');
+    });
 } else {
   app.mount('#app');
 }

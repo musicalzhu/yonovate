@@ -9,6 +9,7 @@
 ## 🚀 技术栈
 
 ### 核心框架
+
 - **Vue 3.5+** - 使用 Composition API + Reactivity Transform
 - **TypeScript 5.3+** - 严格类型安全
 - **Vite 5.0+** - 极速构建工具
@@ -16,12 +17,14 @@
 - **Pinia 2.1+** - 状态管理（Setup 语法）
 
 ### UI 组件库
+
 - **Element Plus 2.5+** - UI 组件库
 - **@element-plus/icons-vue 2.3+** - 图标库
 - **VueUse 10.0+** - 组合式函数工具库
 - **TailwindCSS 3.4+** - CSS 框架
 
 ### 开发工具
+
 - **ESLint 8.56+** - 代码检查
 - **Prettier 3.1+** - 代码格式化
 - **Vitest 1.1+** - 单元测试
@@ -31,6 +34,7 @@
 ## 🚀 功能特性
 
 ### 核心功能
+
 - ✅ **状态机配置编辑器** - 支持完整 V3 格式配置
 - ✅ **多触发器支持** - 支持 1-3 个触发器配置
 - ✅ **逻辑运算** - AND/OR/XOR 逻辑选择
@@ -102,57 +106,61 @@ web_project/
 ### 组件开发规范
 
 #### 组件命名
+
 - 组件文件名使用 PascalCase：`StateMachineV3Page.vue`
 - 组件注册名使用 kebab-case：`state-machine-v3-page`
 
 #### 组件结构
+
 ```vue
 <template>
   <!-- 模板内容 -->
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue';
 
-  interface Props {
-    // props 定义
-  }
+interface Props {
+  // props 定义
+}
 
-  const props = defineProps<Props>()
-  const emit = defineEmits<{
-    (e: 'event-name', payload: any): void
-  }>()
+const props = defineProps<Props>();
+const emit = defineEmits<{
+  (e: 'event-name', payload: any): void;
+}>();
 
-  const state = ref()
-  const computedValue = computed(() => {})
-  const method = () => {}
+const state = ref();
+const computedValue = computed(() => {});
+const method = () => {};
 
-  onMounted(() => {})
+onMounted(() => {});
 </script>
 
 <style scoped>
-  /* 组件样式 */
+/* 组件样式 */
 </style>
 ```
 
 ### 状态管理规范
 
 使用 Pinia Setup 语法：
+
 ```typescript
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
 
 export const useExampleStore = defineStore('example', () => {
-  const state = ref()
-  const computedValue = computed(() => {})
+  const state = ref();
+  const computedValue = computed(() => {});
   const updateState = (newValue: any) => {
-    state.value = newValue
-  }
-  return { state, computedValue, updateState }
-})
+    state.value = newValue;
+  };
+  return { state, computedValue, updateState };
+});
 ```
 
 ### 环境要求
+
 - Node.js >= 20.0.0
 - npm >= 10.0.0
 
@@ -200,25 +208,25 @@ npm run test:watch
 
 ### 状态机接口
 
-| 接口 | 方法 | 描述 |
-|------|------|------|
-| `/api/v3/state-machine` | GET | 获取状态机配置 |
-| `/api/v3/state-machine` | POST | 保存状态机配置 |
-| `/api/v3/state-machine/status` | GET | 获取状态机状态 |
-| `/api/v3/state-machine/trigger` | POST | 手动触发状态机 |
-| `/api/v3/state-machine/reset` | POST | 重置状态机 |
+| 接口                             | 方法 | 描述           |
+| -------------------------------- | ---- | -------------- |
+| `/api/v3/state-machine`          | GET  | 获取状态机配置 |
+| `/api/v3/state-machine`          | POST | 保存状态机配置 |
+| `/api/v3/state-machine/status`   | GET  | 获取状态机状态 |
+| `/api/v3/state-machine/trigger`  | POST | 手动触发状态机 |
+| `/api/v3/state-machine/reset`    | POST | 重置状态机     |
 | `/api/v3/state-machine/validate` | POST | 验证状态机配置 |
 
 ### 设备接口
 
-| 接口 | 方法 | 描述 |
-|------|------|------|
-| `/api/v3/device/info` | GET | 获取设备信息 |
-| `/api/v3/device/gpio` | GET | 获取GPIO状态 |
-| `/api/v3/device/gpio` | POST | 设置GPIO输出 |
-| `/api/v3/device/wifi` | GET | 获取WiFi配置 |
-| `/api/v3/device/wifi` | POST | 设置WiFi配置 |
-| `/api/v3/device/reboot` | POST | 重启设备 |
+| 接口                    | 方法 | 描述         |
+| ----------------------- | ---- | ------------ |
+| `/api/v3/device/info`   | GET  | 获取设备信息 |
+| `/api/v3/device/gpio`   | GET  | 获取GPIO状态 |
+| `/api/v3/device/gpio`   | POST | 设置GPIO输出 |
+| `/api/v3/device/wifi`   | GET  | 获取WiFi配置 |
+| `/api/v3/device/wifi`   | POST | 设置WiFi配置 |
+| `/api/v3/device/reboot` | POST | 重启设备     |
 
 ## 📋 数据格式
 
@@ -249,34 +257,35 @@ npm run test:watch
 
 ### 触发源规范
 
-| 类别 | 格式 | 示例 |
-|------|------|------|
-| GPIO | P0-P11 | "P0", "P5", "P11" |
-| 定时器 | T0-T2 | "T0", "T1", "T2" |
-| 手动 | MANUAL | "MANUAL" |
+| 类别   | 格式   | 示例              |
+| ------ | ------ | ----------------- |
+| GPIO   | P0-P11 | "P0", "P5", "P11" |
+| 定时器 | T0-T2  | "T0", "T1", "T2"  |
+| 手动   | MANUAL | "MANUAL"          |
 
 ### 运算符映射
 
-| 运算符 | 值 |
-|--------|-----|
-| == | 0 |
-| < | 1 |
-| > | 2 |
-| <= | 3 |
-| >= | 4 |
-| != | 5 |
+| 运算符 | 值  |
+| ------ | --- |
+| ==     | 0   |
+| <      | 1   |
+| >      | 2   |
+| <=     | 3   |
+| >=     | 4   |
+| !=     | 5   |
 
 ### 逻辑类型
 
-| 逻辑 | 值 |
-|------|-----|
-| AND | 0 |
-| OR | 1 |
-| XOR | 2 |
+| 逻辑 | 值  |
+| ---- | --- |
+| AND  | 0   |
+| OR   | 1   |
+| XOR  | 2   |
 
 ## 🧪 测试覆盖
 
 ### 单元测试
+
 - ✅ StateMachineEditor 组件测试
 - ✅ useTheme 组合式函数测试
 - ✅ StateMachineService 服务测试
@@ -293,13 +302,15 @@ npm run test:coverage       # 覆盖率报告
 ## 🎨 主题系统
 
 支持三种主题模式：
+
 - **light** - 亮色主题
-- **dark** - 暗色主题  
+- **dark** - 暗色主题
 - **auto** - 跟随系统主题
 
 ## 📝 开发规范
 
 ### 代码风格
+
 - 使用 TypeScript 严格模式
 - 使用 Composition API (`<script setup>`)
 - 使用 Pinia Setup 语法
@@ -307,6 +318,7 @@ npm run test:coverage       # 覆盖率报告
 - 文件命名使用 kebab-case
 
 ### 目录结构
+
 - `components/` - 可复用组件
 - `composables/` - 组合式函数
 - `services/` - API服务
@@ -317,6 +329,7 @@ npm run test:coverage       # 覆盖率报告
 ## 📄 页面功能
 
 ### 1. 状态机 V3 (StateMachineV3Page)
+
 - 完整格式状态机配置
 - 多触发器支持（1-3个）
 - AND/OR 逻辑选择
@@ -325,6 +338,7 @@ npm run test:coverage       # 覆盖率报告
 - 模板管理（电梯、红绿灯、风扇等）
 
 ### 2. 设备控制 (DeviceControlPage)
+
 - GPIO 组模式配置
 - 输入/输出模块配置
 - 实时状态监控
@@ -335,34 +349,37 @@ npm run test:coverage       # 覆盖率报告
 ## 🏗️ 服务层架构
 
 ### API 服务层
+
 Vue 版本使用全新的服务层架构：
 
 ```typescript
-import { StateMachineService } from '@/services/api/stateMachine'
+import { StateMachineService } from '@/services/api/stateMachine';
 
-const service = new StateMachineService()
-const config = await service.getConfig()
+const service = new StateMachineService();
+const config = await service.getConfig();
 ```
 
 ### 数据验证服务
+
 使用 ValidationService 进行配置验证：
 
 ```typescript
-import { ValidationService } from '@/services/validation'
+import { ValidationService } from '@/services/validation';
 
-const validationService = new ValidationService()
-const result = validationService.validateConfig(config)
+const validationService = new ValidationService();
+const result = validationService.validateConfig(config);
 ```
 
 ### 数据转换服务
+
 使用 DataConverter 进行格式转换：
 
 ```typescript
-import { DataConverter } from '@/services/validation/dataConverter'
+import { DataConverter } from '@/services/validation/dataConverter';
 
-const converter = new DataConverter()
-const backendConfig = converter.toBackend(config)
-const frontendConfig = converter.toFrontend(response)
+const converter = new DataConverter();
+const backendConfig = converter.toBackend(config);
+const frontendConfig = converter.toFrontend(response);
 ```
 
 ## 🔧 故障排除
@@ -370,11 +387,13 @@ const frontendConfig = converter.toFrontend(response)
 ### 常见问题
 
 1. **依赖安装失败**
+
    ```bash
    npm install --legacy-peer-deps
    ```
 
 2. **TypeScript 错误**
+
    ```bash
    npm run vue:build
    ```

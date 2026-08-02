@@ -105,7 +105,9 @@ export function useStateMachineConfig() {
   };
 
   const removeTransition = (index: number) => {
-    partialUpdateConfig({ transitions: config.value.transitions.filter((_: Transition, i: number) => i !== index) });
+    partialUpdateConfig({
+      transitions: config.value.transitions.filter((_: Transition, i: number) => i !== index),
+    });
   };
 
   const updateTransition = (index: number, transition: Transition) => {
@@ -158,7 +160,9 @@ export function useStateMachineConfig() {
   };
 
   const removeStateEffect = (index: number) => {
-    partialUpdateConfig({ stateEffects: config.value.stateEffects.filter((_: StateEffect, i: number) => i !== index) });
+    partialUpdateConfig({
+      stateEffects: config.value.stateEffects.filter((_: StateEffect, i: number) => i !== index),
+    });
   };
 
   const updateStateEffect = (index: number, effect: StateEffect) => {

@@ -13,9 +13,13 @@ import { useQueryClient } from '@tanstack/vue-query';
 export function useDeviceStatus(deviceIP: ComputedRef<string>) {
   const queryClient = useQueryClient();
 
-  watch(deviceIP, (newIP) => {
-    localStorage.setItem('esp32-ip', newIP);
-  }, { immediate: true });
+  watch(
+    deviceIP,
+    (newIP) => {
+      localStorage.setItem('esp32-ip', newIP);
+    },
+    { immediate: true }
+  );
 
   const {
     data: infoData,

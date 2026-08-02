@@ -268,19 +268,9 @@ const lastUpdate = ref('N/A');
  */
 const { deviceInfoData, isLoadingDeviceInfo, errorDevice } = useDeviceStatus(deviceIP);
 
-const {
-  gpioStatus,
-  isLoadingGPIO,
-  isFetchingGPIO,
-  refetchGPIO,
-  setPinValue,
-} = useGPIOStatus();
+const { gpioStatus, isLoadingGPIO, isFetchingGPIO, refetchGPIO, setPinValue } = useGPIOStatus();
 
-const {
-  wifiStatusData,
-  isSaving: isFetchingWiFiStatus,
-  refetchWiFiStatus,
-} = useWiFiConfig();
+const { wifiStatusData, isSaving: isFetchingWiFiStatus, refetchWiFiStatus } = useWiFiConfig();
 
 /**
  * useDeviceConnection - 设备连接管理 composable

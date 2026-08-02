@@ -47,8 +47,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    },
-
+    }
   },
 
   /* ========== 文件包含/排除 ========== */
@@ -60,11 +59,7 @@
     "vite.config.ts",
     "vitest.config.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "dist-vue"
-  ],
+  "exclude": ["node_modules", "dist", "dist-vue"],
 
   /* ========== Vue 编译器选项 ========== */
   "vueCompilerOptions": {

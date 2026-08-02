@@ -1,7 +1,7 @@
 export default {
   esp32: {
     input: {
-      target: './openapi.yaml'
+      target: './openapi.yaml',
     },
     output: {
       target: './src/generated/api.ts',
@@ -11,15 +11,15 @@ export default {
       override: {
         mutator: {
           path: './src/services/mutator.ts',
-          name: 'customInstance'
+          name: 'customInstance',
         },
         query: {
           useQuery: true,
           useMutation: true,
           useBaseQuery: true,
-          queryKey: true
-        }
-      }
-    }
-  }
-}
+          queryKey: true,
+        },
+      },
+    },
+  },
+};

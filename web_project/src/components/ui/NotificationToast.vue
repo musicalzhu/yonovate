@@ -93,8 +93,8 @@ const emit = defineEmits<Emits>();
 
 const visible = ref(false);
 const progress = ref(0);
-let progressTimer: NodeJS.Timeout | null = null;
-let closeTimer: NodeJS.Timeout | null = null;
+let progressTimer: ReturnType<typeof setTimeout> | null = null;
+let closeTimer: ReturnType<typeof setTimeout> | null = null;
 
 // 图标组件
 const iconComponent = computed(() => {

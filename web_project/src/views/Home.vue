@@ -165,8 +165,8 @@ const {
   refetchAllDeviceData,
 } = useDeviceStatus(computed(() => deviceConfig.value.ip));
 
-const isRefreshing = computed(() =>
-  isFetchingDeviceInfo.value || isFetchingDeviceStatus.value || isFetchingDeviceMetrics.value
+const isRefreshing = computed(
+  () => isFetchingDeviceInfo.value || isFetchingDeviceStatus.value || isFetchingDeviceMetrics.value
 );
 /**
  * 连接状态文本
@@ -233,7 +233,6 @@ const handleSaveConfig = () => {
   setStorage('esp32-ip', deviceConfig.value.ip);
   ElMessage.success('配置已保存');
 };
-
 </script>
 
 <style scoped>

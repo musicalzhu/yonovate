@@ -36,17 +36,22 @@ interface Props {
   fallbackMessage?: string;
   showDetails?: boolean;
 }
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   fallbackMessage: '组件加载失败',
   showDetails: false,
 });
-interface Emits {
-  (e: 'retry'): void;
-}
-const emit = defineEmits<Emits>();
+
 const hasError = ref(false);
 const error = ref<Error | null>(null);
-const errorInfo = ref<any>(null);
+const errorInfo = ref<Error | null>(null);
+
+onErrorCaptured((err, _instance, info) => {
+  hasError.value = true;
+  error.value = err as Error;
+  errorInfo.value = info as Error;
+  console.error('ErrorBoundary caught error:', err, info);
+  return false;
+});
 /**
  * 处理子组件错误
  */
