@@ -8,7 +8,7 @@ import type {
   ExportOptions,
   ImportOptions,
   ImportResult,
-} from '@/types/exportable';
+} from '@/types/common/exportable';
 
 /**
  * 默认导出版本号，所有导出实体都会携带该版本标识。

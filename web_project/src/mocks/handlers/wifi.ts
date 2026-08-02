@@ -7,13 +7,31 @@ export const wifiHandlers = [
   }),
 
   http.put('/api/v3/wifi/config', async ({ request }) => {
-    const body = await request.json();
-    return HttpResponse.json({ ...mockWiFiConfig, ...body });
+    const body = (await request.json()) as Partial<typeof mockWiFiConfig>;
+    const mergedBody = {
+      ssid: body.ssid ?? mockWiFiConfig.ssid,
+      password: body.password ?? mockWiFiConfig.password,
+      ip: body.ip ?? mockWiFiConfig.ip,
+      gateway: body.gateway ?? mockWiFiConfig.gateway,
+      subnet: body.subnet ?? mockWiFiConfig.subnet,
+      dns: body.dns ?? mockWiFiConfig.dns,
+      dhcp: body.dhcp ?? mockWiFiConfig.dhcp,
+    };
+    return HttpResponse.json(mergedBody);
   }),
 
   http.post('/api/v3/wifi/config', async ({ request }) => {
-    const body = await request.json();
-    return HttpResponse.json({ ...mockWiFiConfig, ...body });
+    const body = (await request.json()) as Partial<typeof mockWiFiConfig>;
+    const mergedBody = {
+      ssid: body.ssid ?? mockWiFiConfig.ssid,
+      password: body.password ?? mockWiFiConfig.password,
+      ip: body.ip ?? mockWiFiConfig.ip,
+      gateway: body.gateway ?? mockWiFiConfig.gateway,
+      subnet: body.subnet ?? mockWiFiConfig.subnet,
+      dns: body.dns ?? mockWiFiConfig.dns,
+      dhcp: body.dhcp ?? mockWiFiConfig.dhcp,
+    };
+    return HttpResponse.json(mergedBody);
   }),
 
   http.get('/api/v3/wifi/status', () => {
@@ -33,13 +51,31 @@ export const wifiHandlers = [
   }),
 
   http.put('/api/v3/device/wifi/config', async ({ request }) => {
-    const body = await request.json();
-    return HttpResponse.json({ ...mockWiFiConfig, ...body });
+    const body = (await request.json()) as Partial<typeof mockWiFiConfig>;
+    const mergedBody = {
+      ssid: body.ssid ?? mockWiFiConfig.ssid,
+      password: body.password ?? mockWiFiConfig.password,
+      ip: body.ip ?? mockWiFiConfig.ip,
+      gateway: body.gateway ?? mockWiFiConfig.gateway,
+      subnet: body.subnet ?? mockWiFiConfig.subnet,
+      dns: body.dns ?? mockWiFiConfig.dns,
+      dhcp: body.dhcp ?? mockWiFiConfig.dhcp,
+    };
+    return HttpResponse.json(mergedBody);
   }),
 
   http.post('/api/v3/device/wifi/config', async ({ request }) => {
-    const body = await request.json();
-    return HttpResponse.json({ ...mockWiFiConfig, ...body });
+    const body = (await request.json()) as Partial<typeof mockWiFiConfig>;
+    const mergedBody = {
+      ssid: body.ssid ?? mockWiFiConfig.ssid,
+      password: body.password ?? mockWiFiConfig.password,
+      ip: body.ip ?? mockWiFiConfig.ip,
+      gateway: body.gateway ?? mockWiFiConfig.gateway,
+      subnet: body.subnet ?? mockWiFiConfig.subnet,
+      dns: body.dns ?? mockWiFiConfig.dns,
+      dhcp: body.dhcp ?? mockWiFiConfig.dhcp,
+    };
+    return HttpResponse.json(mergedBody);
   }),
 
   http.get('/api/v3/device/wifi/status', () => {

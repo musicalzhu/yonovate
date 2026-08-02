@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import type { Notification } from '../../types/common';
+import type { Notification } from '@/types/common/common';
 import { ElMessage, ElNotification } from 'element-plus';
 
 export interface ErrorHandlerOptions {

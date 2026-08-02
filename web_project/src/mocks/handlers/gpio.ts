@@ -28,7 +28,7 @@ export const gpioHandlers = [
   }),
 
   http.post('/api/v3/device/gpio', async ({ request }) => {
-    const body = await request.json();
-    return HttpResponse.json({ ...body, success: true });
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json({ ...(body as Record<string, unknown>), success: true });
   }),
 ];

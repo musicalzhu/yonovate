@@ -4,7 +4,7 @@ import type {
   StateEffect as ApiStateEffect,
   StateMachineConfig as ApiStateMachineConfig,
   StateMachineStatus as ApiStateMachineStatus,
-} from '../generated/api';
+} from '../../generated/api';
 
 export enum TriggerType {
   NONE = 0,

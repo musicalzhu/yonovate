@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useQueryClient } from '@tanstack/vue-query';
 import {
   useGetAllGPIOStatusQuery,
@@ -6,8 +6,6 @@ import {
   useUpdateGPIOConfigMutation,
   QUERY_KEYS,
 } from '@/generated/api';
-import type { GPIOStatus, GPIOSetRequest, GPIOConfigRequest } from '@/generated/api';
-import { useDebounce } from './useDebounce';
 
 export function useGPIOStatus() {
   const queryClient = useQueryClient();
@@ -24,7 +22,7 @@ export function useGPIOStatus() {
 
   const gpioStatus = computed(() => gpioData.value ?? []);
 
-  const { mutate: setPinValue, isPending: isSettingPin } = useSetGPIOValueMutation({
+  const { mutate: setPinValueMutation, isPending: isSettingPin } = useSetGPIOValueMutation({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.gpioStatus });
     },
@@ -36,7 +34,9 @@ export function useGPIOStatus() {
     },
   });
 
-  const setPinValueDebounced = useDebounce(setPinValue, { delay: 300 });
+  const setPinValue = (pin: number, value: number) => {
+    setPinValueMutation({ pin, value });
+  };
 
   return {
     gpioStatus,
@@ -44,7 +44,7 @@ export function useGPIOStatus() {
     isFetchingGPIO,
     errorGPIO,
     refetchGPIO,
-    setPinValue: setPinValueDebounced.debouncedFn,
+    setPinValue,
     updatePinConfig,
     isSettingPin,
     isUpdatingConfig,

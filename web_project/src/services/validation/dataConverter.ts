@@ -1,6 +1,6 @@
 // Vue 3.5+ 数据转换工具（纯函数）
-import type { StateMachineConfig } from '../../types/domain/stateMachine';
-import type { AnyObject } from '../../types/common';
+import type { StateMachineConfig } from '@/types/domain/stateMachine';
+import type { AnyObject } from '@/types/common/common';
 
 /**
  * 字段名映射表，用于在前后端数据结构之间做键名转换。

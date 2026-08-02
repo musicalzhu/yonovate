@@ -28,9 +28,9 @@ export function useDeviceConnection(deviceIP: ComputedRef<string>) {
     () => deviceStatusComposable.deviceInfoData.value?.ipAddress ?? '未连接'
   );
   const lastSeen = computed(() => deviceStatusComposable.deviceInfoData.value?.lastSeen ?? '未知');
-  const gpioCount = computed(() => gpioComposable.gpioStatus.value?.data?.length ?? 0);
+  const gpioCount = computed(() => gpioComposable.gpioStatus.value?.length ?? 0);
   const activeGpios = computed(
-    () => gpioComposable.gpioStatus.value?.data?.filter((g) => g.value === 1).length ?? 0
+    () => gpioComposable.gpioStatus.value?.filter((g) => g.value === 1).length ?? 0
   );
 
   const connect = async () => {
@@ -38,7 +38,7 @@ export function useDeviceConnection(deviceIP: ComputedRef<string>) {
     await Promise.all([
       deviceStatusComposable.refetchDeviceInfo(),
       deviceStatusComposable.refetchDeviceStatus(),
-      gpioComposable.refetch(),
+      gpioComposable.refetchGPIO(),
       wifiConfigComposable.refetchConfig(),
       wifiConfigComposable.refetchWiFiStatus(),
     ]);
@@ -116,7 +116,7 @@ export function useDeviceConnection(deviceIP: ComputedRef<string>) {
     reboot,
     refreshDeviceInfo: deviceStatusComposable.refetchDeviceInfo,
     refreshDeviceStatus: deviceStatusComposable.refetchDeviceStatus,
-    refreshGPIOStatus: gpioComposable.refetch,
+    refreshGPIOStatus: gpioComposable.refetchGPIO,
     refreshWiFiConfig: wifiConfigComposable.refetchConfig,
   };
 }

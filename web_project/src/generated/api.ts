@@ -1,16 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
-import type {
-  QueryClient,
-  QueryFunction,
-  QueryKey,
-  UseMutationOptions,
-  UseMutationReturnType,
-  UseQueryOptions,
-  UseQueryReturnType,
-} from '@tanstack/vue-query';
-
-import { computed, unref } from 'vue';
-import type { MaybeRef } from 'vue';
+import { useMutation, useQuery } from '@tanstack/vue-query';
+import type { QueryKey, UseMutationOptions, UseQueryOptions } from '@tanstack/vue-query';
 
 import { customInstance } from '../services/httpClient';
 
@@ -434,7 +423,8 @@ export const useUpdateGPIOConfigMutation = (
   > = {}
 ) => {
   return useMutation({
-    mutationFn: ({ pin, data }) => updateGPIOConfig(pin, data),
+    mutationFn: ({ pin, data }: { pin: number; data: GPIOConfigRequest }) =>
+      updateGPIOConfig(pin, data),
     ...options,
   });
 };

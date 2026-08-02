@@ -3,7 +3,7 @@
  * 提供项目中常用的基础类型、工具类型和类型守卫函数
  */
 
-import type { PaginationParams } from './api';
+import type { PaginationParams } from '../generated/api';
 
 /**
  * 统一封装常见的基础类型判断逻辑，避免各处重复编写相似的条件表达。

@@ -71,7 +71,7 @@ export function validateConfig(config: StateMachineConfig): ValidationResult {
   // 验证状态效果
   if (config.stateEffects) {
     config.stateEffects.forEach((effect, index) => {
-      if (!effect.stateName.trim()) {
+      if (!effect.stateName?.trim()) {
         errors.push(`状态效果${index + 1}: 状态名称不能为空`);
       } else if (!stateNames.has(effect.stateName)) {
         errors.push(`状态效果${index + 1}: 状态"${effect.stateName}"未在转换中定义`);
